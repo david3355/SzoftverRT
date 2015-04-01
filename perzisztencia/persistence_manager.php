@@ -3,6 +3,7 @@
 class PersistenceManager
 {
     private $dbconnection;
+    private $mainObjectTableName;
 
     static private $instance;
 
@@ -15,6 +16,7 @@ class PersistenceManager
     final function __construct(DatabaseConnection $connection)
     {
         $this->dbconnection = $connection;
+        $this->mainObjectTableName = "objects";
     }
 
     /**
@@ -63,6 +65,11 @@ class PersistenceManager
     final function getTableNameForClass($classname)
     {
         return $classname::getTableName();
+    }
+
+    public final function getMainObjectTableName()
+    {
+        return $this->mainObjectTableName;
     }
 
 }

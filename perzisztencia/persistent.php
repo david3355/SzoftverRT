@@ -7,12 +7,14 @@ abstract class Persistent
     private $id;
     private $pm;
     private $db;
+    private $mainObjectTable;
 
     final function __construct($id = null)
     {
         $this->id = $id;
         $this->pm = PersistenceManager::getInstance();
         $this->db = DatabaseConnection::getInstance();
+        $this->mainObjectTable = $this->pm->getMainObjectTableName();
     }
 
     final function getID()
@@ -29,9 +31,8 @@ abstract class Persistent
         if (isset($this->id)) return;
 
         //1. objektum bejegyzése a fő objektum táblába
-        $objecttable = "objects";
         $class = get_class($this);
-        $sql = sprintf("INSERT INTO %s (class) VALUES ('%s')", $objecttable, $class);
+        $sql = sprintf("INSERT INTO %s (class) VALUES ('%s')", $this->mainObjectTable, $class);
         $this->db->query($sql);
 
         //2. auto generált id lekérdezése, és beállítása $this->id -be
@@ -106,9 +107,14 @@ abstract class Persistent
 
         $sql = sprintf("DELETE FROM %s WHERE id  = %s", $table, $this->id);
 
-        $result = $this->db->query($sql);
+        $result1 = $this->db->query($sql);
 
-        return (boolean)count($result);
+        // Töröljük a fő objektumtáblából:
+
+        $sql = sprintf("DELETE FROM %s WHERE id = %s", $this->mainObjectTable, $this->id);
+        $result2 = $this->db->query($sql);
+
+        return (boolean)count($result1) && (boolean)count($result2);
 
     }
 
