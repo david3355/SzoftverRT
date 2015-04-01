@@ -36,12 +36,13 @@ abstract class Persistent
         $this->db->query($sql);
 
         //2. auto generált id lekérdezése, és beállítása $this->id -be
-        $sql = sprintf("SELECT max(id) FROM %s", $objecttable);
+        $sql = sprintf("SELECT max(id) FROM %s", $this->mainObjectTable);
         $data = $this->db->query($sql);
         $this->id = $data[0][0];
 
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         $table = $this->getTableName();
+
 
         //4. alosztályok létrehozási tevékenységének futtatása
         $this->onAfterCreate($params);
