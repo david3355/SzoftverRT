@@ -31,11 +31,13 @@ abstract class Persistent
         //1. objektum bejegyzése a fő objektum táblába
         $objecttable = "objects";
         $class = get_class($this);
-
         $sql = sprintf("INSERT INTO %s (class) VALUES ('%s')", $objecttable, $class);
+        $this->db->query($sql);
 
         //2. auto generált id lekérdezése, és beállítása $this->id -be
         $sql = sprintf("SELECT max(id) FROM %s", $objecttable);
+        $data = $this->db->query($sql);
+        $this->id = $data[0][0];
 
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         $table = $this->getTableName();
