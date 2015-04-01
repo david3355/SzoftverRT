@@ -50,8 +50,12 @@ class PersistenceManager{
   }
   
   /**
+  - Vagy switch case az osztályhoz és a táblához, vagy a táblanév mindig ugyanaz mint az osztály, vagy minden osztály eltárolja a táblanevet
   return table name string
   */
-  final function getTableNameForClass($classname){}
+  final function getTableNameForClass($classname)
+  {
+		return $classname::getTableName();
+  }
   
 }

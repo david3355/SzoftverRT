@@ -1,10 +1,14 @@
 <?
 
+require_once("persistence_manager.php");
+
 abstract class Persistent{
   private $id;
+  private $pm;
 
   final function __construct($id=null){
     $this->id=$id;
+	$pm = PersistenceManager::getInstance();
   }
   
   final function getID(){
@@ -19,14 +23,20 @@ abstract class Persistent{
     if (isset($this->id)) return;
   
     //1. objektum bejegyzése a fő objektum táblába
-    
+      $objecttable = "objects";
+      $class = get_class($this);
+    $table = $this->getTableName();
+      $sql = sprintf("INSERT INTO %s (class) VALUES ('%s')", $objecttable, $class);
+
     //2. auto generált id lekérdezése, és beállítása $this->id -be
+      $sql = sprintf("SELECT max(id) FROM %s", $objecttable);
     
     //3. objektum bejegyzése az osztályaihoz tartozó táblákba 
     
     //4. alosztályok létrehozási tevékenységének futtatása
     $this->onAfterCreate($params);
   }
+
   
   /**
   Attribútumok lekérdezése
@@ -67,6 +77,8 @@ abstract class Persistent{
   Tetszőleges létrehozási tevékenység. 
   Alosztály implementálja  
   */
-  abstract protected function onAfterCreate(array $params=null);      
+  abstract protected function onAfterCreate(array $params=null);
+
+    abstract  protected  static function getTableName();
   
 }

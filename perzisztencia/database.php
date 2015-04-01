@@ -42,7 +42,7 @@ class DatabaseConnection{
     - ha hiba van, akkor Exception    
   */
 	final function query($sql) {
-    $this->queries[]=$sql;		// EZ mi?? (J)
+    $this->queries[]=$sql;		// hozzáadjuk a lekérdezést a queries tömbhöz (olyan, mint egy list.add művelet)
     
     $res = mysqli_query($this->resource,$sql);
 	if ($res===false) throw new Exception(mysqli_error($this->resource));

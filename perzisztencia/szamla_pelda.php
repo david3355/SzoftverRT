@@ -42,8 +42,12 @@ class Szamla extends Persistent{
   //Számla adatai csak olvashatóak  
   function getSzamlaAdatok(){
     return $this->getFields();
-  }      
-  
+  }
+
+    protected static function getTableName()
+    {
+        return "Szamla";
+    }
 }
 
 

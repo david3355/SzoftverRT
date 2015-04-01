@@ -1,10 +1,10 @@
 <?
 
 class DBConfig{
-  static $user=""
-        ,$password=""
+  static $user="fejleszt_erp"
+        ,$password="erp2015"
         ,$location="localhost"
-        ,$dbname=""
+        ,$dbname="fejleszt_ugyfelkapu"
         ,$charset="utf8"
         ;
 }
