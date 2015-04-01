@@ -3,10 +3,10 @@
 $pm = PersistenceManager::getInstance();
 
 $szamla_adatok = array(
-    'kiallitas_datuma' => '2015-03-28'
-, 'tetelek' => array(
-        array('megnevezes' => 'Oktatás', 'osszeg' => '5000')
-    , array('megnevezes' => 'Tárhely', 'osszeg' => '15000')
+    'kiallitas_datuma' => '2015-03-28',
+    'tetelek' => array(
+        array('megnevezes' => 'Oktatás', 'osszeg' => '5000'),
+        array('megnevezes' => 'Tárhely', 'osszeg' => '15000')
     )
 );
 

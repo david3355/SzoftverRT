@@ -29,13 +29,14 @@ abstract class Persistent
         //1. objektum bejegyzése a fő objektum táblába
         $objecttable = "objects";
         $class = get_class($this);
-        $table = $this->getTableName();
+
         $sql = sprintf("INSERT INTO %s (class) VALUES ('%s')", $objecttable, $class);
 
         //2. auto generált id lekérdezése, és beállítása $this->id -be
         $sql = sprintf("SELECT max(id) FROM %s", $objecttable);
 
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
+        $table = $this->getTableName();
 
         //4. alosztályok létrehozási tevékenységének futtatása
         $this->onAfterCreate($params);
@@ -53,6 +54,26 @@ abstract class Persistent
     final protected function getFields(array $field_names = null)
     {
         //megadott mezők lekérdezése a megfelelő táblákból
+
+        // Lekérdezzük az adatbázisobjektumot
+        $db = DatabaseConnection::getInstance();
+
+        // Lekérdezzük az osztályhoz tartozó táblát
+        $table = $this->getTableName();
+
+        // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
+        if (isset($field_names))
+            $sql = sprintf("SELECT %s FROM %s WHERE id = %s", implode(',', $field_names), $table, $this->id);
+        else {
+            $sql = sprintf("SELECT * FROM %s WHERE id  = %s", $table, $this->id);
+        }
+
+        $result = $db->query($sql);
+
+        // Visszaadjuk az adatokat
+
+        return $result[0];
+
     }
 
     /**
