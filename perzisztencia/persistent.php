@@ -42,20 +42,14 @@ abstract class Persistent
 
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         // Nem a legszebb, és az array attribútumokat még kezelni kell
+        // Szebbé tettem, de az array attribútumokkal majd foglalkozzon valaki más :D
         if(!is_null($params)) {
             $table = $this->getTableName();
 
-            $attribs = "";
-            $values = "";
-            foreach ($params as $a => $v) {
-                $attribs .= $a . ',';
-                $values .= "'" . $v . "',";
+            $attribs = array_keys($params);
+            $values = array_values($params);
 
-            }
-            $attribs = trim($attribs, ',');
-            $values = trim($values, ',');
-
-            $sql = sprintf("INSERT INTO %s (%s) VALUES (%s)", $this->getTableName(), $attribs, $values);
+            $sql = sprintf("INSERT INTO %s (%s) VALUES (%s)", $table, implode(',',$attribs), implode(',',$values));
             $data = $this->db->query($sql);
         }
         //4. alosztályok létrehozási tevékenységének futtatása
