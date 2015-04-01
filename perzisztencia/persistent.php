@@ -57,9 +57,6 @@ abstract class Persistent
     {
         //megadott mezők lekérdezése a megfelelő táblákból
 
-        // Lekérdezzük az adatbázisobjektumot
-
-
         // Lekérdezzük az osztályhoz tartozó táblát
         $table = $this->getTableName();
 
@@ -70,7 +67,7 @@ abstract class Persistent
             $sql = sprintf("SELECT * FROM %s WHERE id  = %s", $table, $this->id);
         }
 
-        $result = $db->query($sql);
+        $result = $this->db->query($sql);
 
         // Visszaadjuk az adatokat
 
@@ -91,6 +88,18 @@ abstract class Persistent
     final function delete()
     {
         //objektum törlése a megfelelő táblákból
+
+        // Lekérdezzük az osztályhoz tartozó táblát
+        $table = $this->getTableName();
+
+        // Töröljük az objektumot a táblából
+
+        $sql = sprintf("DELETE FROM %s WHERE id  = %s", $table, $this->id);
+
+        $result = $this->db->query($sql);
+
+        return (boolean)count($result);
+
     }
 
     /**
