@@ -85,6 +85,14 @@ abstract class Persistent
     final protected function setFields(array $field_values)
     {
         //megadott mezők beállítása a megfelelő táblákba
+
+        // Lekérdezzük az osztályhoz tartozó táblát
+        $table = $this->getTableName();
+
+        foreach($field_values as $field => $value){
+            $sql = sprintf("UPDATE %s SET %s = %s WHERE id = %s",$table,$field,$value,$this->id);
+        }
+
     }
 
     final function delete()
