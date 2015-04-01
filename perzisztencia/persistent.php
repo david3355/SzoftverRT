@@ -6,11 +6,13 @@ abstract class Persistent
 {
     private $id;
     private $pm;
+    private $db;
 
     final function __construct($id = null)
     {
         $this->id = $id;
-        $pm = PersistenceManager::getInstance();
+        $this->pm = PersistenceManager::getInstance();
+        $this->db = DatabaseConnection::getInstance();
     }
 
     final function getID()
@@ -56,7 +58,7 @@ abstract class Persistent
         //megadott mezők lekérdezése a megfelelő táblákból
 
         // Lekérdezzük az adatbázisobjektumot
-        $db = DatabaseConnection::getInstance();
+
 
         // Lekérdezzük az osztályhoz tartozó táblát
         $table = $this->getTableName();
