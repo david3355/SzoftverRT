@@ -49,7 +49,7 @@ abstract class Persistent
             $attribs = array_keys($params);
             $values = array_values($params);
 
-            $sql = sprintf("INSERT INTO %s (%s) VALUES (%s)", $table, implode(",",$attribs), "'".implode("','",$values)."'");
+            $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", $table, implode(",",$attribs), implode("','",$values));
             $data = $this->db->query($sql);
         }
         //4. alosztályok létrehozási tevékenységének futtatása
