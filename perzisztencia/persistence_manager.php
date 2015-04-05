@@ -1,4 +1,6 @@
-<?
+<?php
+
+require_once("database.php");
 
 class PersistenceManager
 {
@@ -24,6 +26,12 @@ class PersistenceManager
      */
     final function getObject($id)
     {
+        $sql = sprintf("SELECT * FROM %s WHERE id  = %s", $this->mainObjectTableName, $id);
+        $result = $this->dbconnection->query($sql);
+        
+        $object = new $result[0]['class']($result[0]['id']);
+        
+        return $object;
     }
 
 

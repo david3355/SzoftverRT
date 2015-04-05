@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("persistence_manager.php");
 
@@ -36,15 +36,17 @@ abstract class Persistent
         $this->db->query($sql);
 
         //2. auto generált id lekérdezése, és beállítása $this->id -be
-        $sql = sprintf("SELECT max(id) FROM %s", $this->mainObjectTable);
+        $sql = sprintf("SELECT max(id) as last_id FROM %s", $this->mainObjectTable);
         $data = $this->db->query($sql);
-        $this->id = $data[0][0];
-
+        $this->id = $data[0]['last_id'];
+        
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         // Az array objektumokat kivesszük, és minden alosztály az OnAfterCreate-ben dolgozza fel
 		// Az ott feldolgozott objektumokat össze kell kapcsolni a hozzá tartozó objektummal: a fő objektum id-ját felvesszük minden hozzá kapcsolódó objektumhoz
 		
         if(!is_null($params)) {
+            $params['id'] = $this->id;
+            
             $table = $this->getTableName();
 			
 			foreach($params as $key=>$value)
@@ -105,7 +107,8 @@ abstract class Persistent
         $table = $this->getTableName();
 
         foreach($field_values as $field => $value){
-            $sql = sprintf("UPDATE %s SET %s = %s WHERE id = %s",$table,$field,$value,$this->id);
+            $sql = sprintf("UPDATE %s SET %s = '%s' WHERE id = %s",$table,$field,$value,$this->id);
+            $this->db->query($sql);
         }
 
     }
