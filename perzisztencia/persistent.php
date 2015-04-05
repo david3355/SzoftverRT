@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("persistence_manager.php");
 
@@ -36,7 +36,7 @@ abstract class Persistent
         $this->db->query($sql);
 
         //2. auto generált id lekérdezése, és beállítása $this->id -be
-        $sql = sprintf("SELECT max(id) FROM %s", $this->mainObjectTable);
+        $sql = sprintf("SELECT max(id) as id FROM %s", $this->mainObjectTable);
         $data = $this->db->query($sql);
         $this->id = $data[0]['id'];
 
@@ -47,6 +47,7 @@ abstract class Persistent
         $arrayValues = array();
 
         if (!is_null($params)) {
+            $params['id'] = $this->id;
             $table = $this->getTableName();
 
             foreach ($params as $key => $value) {
@@ -113,7 +114,7 @@ abstract class Persistent
         $values = array_values($field_values);
 
         $sql = sprintf("UPDATE %s SET (%s) VALUES ('%s') WHERE id = %s", $table, implode(",", $attribs), implode("','", $values), $this->id);
-
+        
         $result = $this->db->query($sql);
 
         return $result;
