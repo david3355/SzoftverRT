@@ -110,10 +110,11 @@ abstract class Persistent
         // Lekérdezzük az osztályhoz tartozó táblát
         $table = $this->getTableName();
 
-        $attribs = array_keys($field_values);
-        $values = array_values($field_values);
+        foreach($field_values as $key => $value){
+            $updates[] = $key."='".$value."'";
+        }
 
-        $sql = sprintf("UPDATE %s SET (%s) VALUES ('%s') WHERE id = %s", $table, implode(",", $attribs), implode("','", $values), $this->id);
+        $sql = sprintf("UPDATE %s SET %s WHERE id = %s", $table,implode(", ",$updates) , $this->id);
         
         $result = $this->db->query($sql);
 
