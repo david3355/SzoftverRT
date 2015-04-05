@@ -38,26 +38,31 @@ abstract class Persistent
         //2. auto generált id lekérdezése, és beállítása $this->id -be
         $sql = sprintf("SELECT max(id) FROM %s", $this->mainObjectTable);
         $data = $this->db->query($sql);
-        $this->id = $data[0][0];
+        $this->id = $data[0]['id'];
 
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         // Az array objektumokat kivesszük, és minden alosztály az OnAfterCreate-ben dolgozza fel
-		// Az ott feldolgozott objektumokat össze kell kapcsolni a hozzá tartozó objektummal: a fő objektum id-ját felvesszük minden hozzá kapcsolódó objektumhoz
-		
-        if(!is_null($params)) {
+        // Az ott feldolgozott objektumokat össze kell kapcsolni a hozzá tartozó objektummal: a fő objektum id-ját felvesszük minden hozzá kapcsolódó objektumhoz
+
+        $arrayValues = array();
+
+        if (!is_null($params)) {
             $table = $this->getTableName();
-			
-			foreach($params as $key=>$value)
-				if(is_array($value)) unset($params[$key]);
-			
+
+            foreach ($params as $key => $value) {
+                if (is_array($value)) {
+                    $arrayValues[$key] = $value;
+                    unset($params[$key]);
+                }
+            }
             $attribs = array_keys($params);
             $values = array_values($params);
 
-            $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", $table, implode(",",$attribs), implode("','",$values));
+            $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", $table, implode(",", $attribs), implode("','", $values));
             $data = $this->db->query($sql);
         }
         //4. alosztályok létrehozási tevékenységének futtatása
-        $this->onAfterCreate($params);
+        $this->onAfterCreate($arrayValues);
     }
 
 
@@ -70,7 +75,7 @@ abstract class Persistent
      * Ha $field_names üres, akkor adjon vissza minden mezőt.
      */
     final protected function getFields(array $field_names = null)
-    {		
+    {
         //megadott mezők lekérdezése a megfelelő táblákból
 
         // Lekérdezzük az osztályhoz tartozó táblát
@@ -97,16 +102,21 @@ abstract class Persistent
      * $field_values=array(mezőnév=>érték, mezőnév=>érték, ...)
      */
     final protected function setFields(array $field_values)
-    {	
-		
+    {
+
         //megadott mezők beállítása a megfelelő táblákba
 
         // Lekérdezzük az osztályhoz tartozó táblát
         $table = $this->getTableName();
 
-        foreach($field_values as $field => $value){
-            $sql = sprintf("UPDATE %s SET %s = %s WHERE id = %s",$table,$field,$value,$this->id);
-        }
+        $attribs = array_keys($field_values);
+        $values = array_values($field_values);
+
+        $sql = sprintf("UPDATE %s SET (%s) VALUES ('%s') WHERE id = %s", $table, implode(",", $attribs), implode("','", $values), $this->id);
+
+        $result = $this->db->query($sql);
+
+        return $result;
 
     }
 
@@ -128,7 +138,7 @@ abstract class Persistent
         $sql = sprintf("DELETE FROM %s WHERE id = %s", $this->mainObjectTable, $this->id);
         $result2 = $this->db->query($sql);
 
-        return (boolean)count($result1) && (boolean)count($result2);
+        return $result1 && $result2;
 
     }
 

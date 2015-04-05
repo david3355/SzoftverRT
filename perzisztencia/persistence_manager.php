@@ -24,6 +24,7 @@ class PersistenceManager
      */
     final function getObject($id)
     {
+
     }
 
 
