@@ -1,10 +1,8 @@
-<?php
-
-require_once("database.php");
+<?
 
 class PersistenceManager
 {
-    private $dbconnection;
+    private $db;
     private $mainObjectTableName;
 
     static private $instance;
@@ -17,7 +15,7 @@ class PersistenceManager
 
     final function __construct(DatabaseConnection $connection)
     {
-        $this->dbconnection = $connection;
+        $this->db = $connection;
         $this->mainObjectTableName = "objects";
     }
 
@@ -26,12 +24,11 @@ class PersistenceManager
      */
     final function getObject($id)
     {
-        $sql = sprintf("SELECT * FROM %s WHERE id  = %s", $this->mainObjectTableName, $id);
-        $result = $this->dbconnection->query($sql);
-        
-        $object = new $result[0]['class']($result[0]['id']);
-        
-        return $object;
+        $sql = sprintf("SELECT * FROM %s WHERE id = %s",$this->mainObjectTableName,$id);
+
+        $result = $this->db->query($sql);
+
+        return new $result[0]['class'];
     }
 
 
