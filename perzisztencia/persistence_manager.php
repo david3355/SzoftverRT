@@ -30,7 +30,7 @@ class PersistenceManager
 
         $result = $this->db->query($sql);
 
-        return new $result[0]['class'];
+        return new $result[0]['class']($result[0]['id']);
     }
 
 
