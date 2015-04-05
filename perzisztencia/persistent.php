@@ -41,11 +41,15 @@ abstract class Persistent
         $this->id = $data[0][0];
 
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
-        // Nem a legszebb, és az array attribútumokat még kezelni kell
-        // Szebbé tettem, de az array attribútumokkal majd foglalkozzon valaki más :D
+        // Az array objektumokat kivesszük, és minden alosztály az OnAfterCreate-ben dolgozza fel
+		// Az ott feldolgozott objektumokat össze kell kapcsolni a hozzá tartozó objektummal: a fő objektum id-ját felvesszük minden hozzá kapcsolódó objektumhoz
+		
         if(!is_null($params)) {
             $table = $this->getTableName();
-
+			
+			foreach($params as $key=>$value)
+				if(is_array($value)) unset($params[$key]);
+			
             $attribs = array_keys($params);
             $values = array_values($params);
 
@@ -66,7 +70,7 @@ abstract class Persistent
      * Ha $field_names üres, akkor adjon vissza minden mezőt.
      */
     final protected function getFields(array $field_names = null)
-    {
+    {		
         //megadott mezők lekérdezése a megfelelő táblákból
 
         // Lekérdezzük az osztályhoz tartozó táblát
@@ -93,7 +97,8 @@ abstract class Persistent
      * $field_values=array(mezőnév=>érték, mezőnév=>érték, ...)
      */
     final protected function setFields(array $field_values)
-    {
+    {	
+		
         //megadott mezők beállítása a megfelelő táblákba
 
         // Lekérdezzük az osztályhoz tartozó táblát
