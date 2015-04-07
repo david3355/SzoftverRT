@@ -79,14 +79,14 @@ CREATE TABLE IF NOT EXISTS `fejleszt_erp`.`penztar` (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `fejleszt_erp`.`penztar_tetel` ;
 
-CREATE TABLE IF NOT EXISTS `fejleszt_erp`.`penztar_tetel` (
+CREATE TABLE IF NOT EXISTS `fejleszt_erp`.`penztartetel` (
   `id` INT NOT NULL,
   `penztar_fk` INT NOT NULL,
   `sorszam` INT NOT NULL,
   `megnevezes` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
   `osszeg` FLOAT NOT NULL,
   `datum` DATE NOT NULL,
-  `storno` VARCHAR(45) NULL,
+  `storno` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `penztar_tetel_penztar_idx` (`penztar_fk` ASC),
   CONSTRAINT `penztar_tetel_object`

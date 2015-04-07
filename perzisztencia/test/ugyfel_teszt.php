@@ -23,6 +23,7 @@ require_once("../ugyfel.php");
 $pm = PersistenceManager::getInstance();
 
 $ugyfel_adatok = array(
+    'azonosito' => '12345678',
     'nev' => 'Elek',
     'cim_irszam' => '4031',
     'cim_varos' => 'Debrecen',
@@ -45,6 +46,9 @@ $ugyfel->setUgyfelAdatok($adatok);
 echo implode(', ',$ugyfel->getUgyfelAdatok()).'<br/>';
 
 echo implode(', ', $pm->getObject($ugyfel->getID())->getUgyfelAdatok());
+
+echo 'Törlés sikeressége: ';
+echo $ugyfel->deleteUgyfel();
 ?>
     </body>
     
