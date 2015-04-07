@@ -45,7 +45,7 @@ $ugyfel->setUgyfelAdatok($adatok);
 
 echo implode(', ',$ugyfel->getUgyfelAdatok()).'<br/>';
 
-echo implode(', ', $pm->getObject($ugyfel->getID())->getUgyfelAdatok());
+echo implode(', ', $pm->getObject($ugyfel->getID())->getUgyfelAdatok()).'<br/>';
 
 echo 'Törlés sikeressége: ';
 echo $ugyfel->deleteUgyfel();

@@ -15,6 +15,8 @@ class Penztar extends Persistent
     public function validate(array $params = null) {
         $errors = array();
         
+        if (empty($params['megnevezes'])) $errors[] = 'MEGNEVEZES_NINCS_MEGADVA';
+        
         return $errors;
     }
     

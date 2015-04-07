@@ -15,6 +15,10 @@ class Szamlatomb extends Persistent
     public function validate(array $params = null) {
         $errors = array();
         
+        if (empty($params['megnevezes'])) $errors[] = 'MEGNEVEZES_NINCS_MEGADVA';
+        if (empty($params['szamla_elotag'])) $errors[] = 'SZAMLA_ELOTAG_NINCS_MEGADVA';
+        if (empty($params['szamla_kezdoszam'])) $errors[] = 'SZAMLA_KEZDOSZAM_NINCS_MEGADVA';
+        
         return $errors;
     }
     
