@@ -21,7 +21,26 @@ class Ugyfel extends Persistent
         if (empty($params['cim_varos'])) $errors[] = 'CIM_VAROS_NINCS_MEGADVA';
         if (empty($params['cim_utca_hsz'])) $errors[] = 'CIM_UTCA_HSZ_NINCS_MEGADVA';
 
-        
+        /*azonosító:
+			-csak szám
+			-10karakter
+			-nincs 4 azonos karakter egymás után*/
+		if(preg_match('/^[0-9]*$/', $params['azonosito']))
+		{
+			if(strlen($params['azonosito'])!=10)
+			{
+				//IDE KELL MÉG
+			}
+			else
+			{
+				$errors[]="AZONOSITO_HOSSZ_HIBAS";
+			}
+		}
+		else
+		{
+			$errors[]="CSAK_SZAM_AZONOSITO";
+		}
+		
         return $errors;
     }
     
