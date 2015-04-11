@@ -38,5 +38,13 @@ class Szamla extends Persistent
     function setSzamlaAdatok(array $adatok) {
         $this->setFields($adatok);
     }
+	
+	//megadja a kapott számla előtag következő sorszámát
+	public function getNextSzlaID()
+	{
+		$this->db->query("SELECT * FROM {$this->getTableName()} WHERE sorszam_elotag = '{$this->getFields('sorszam_elotag')}' ORDER BY sorszam_szam DESC LIMIT 1");
+		$nextid=$res['sorszam_szam']+1;
+		return $nextid;
+	}
 }
 
