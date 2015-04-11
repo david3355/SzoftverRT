@@ -15,7 +15,8 @@ class SzamlaTetel extends Persistent
     public function validate(array $params = null) {
         $errors = array();
         
-        if (empty($params['szamla_fk'])) $errors[] = 'SZAMLA_FK_NINCS_MEGADVA';
+        if (empty($params['szamla_sorszam_elotag'])) $errors[] = 'SZAMLA_FK_NINCS_MEGADVA';
+		if (empty($params['szamla_sorszam_szam'])) $errors[] = 'SZAMLA_FK_NINCS_MEGADVA';
         if (empty($params['vamtarifaszam'])) $errors[] = 'VAMTARIFASZAM_NINCS_MEGADVA';
         if (empty($params['megnevezes'])) $errors[] = 'MEGNEVEZES_NINCS_MEGADVA';
         if (empty($params['mennyiseg_egyseg'])) $errors[] = 'MENNYISEG_EGYSEG_NINCS_MEGADVA';
@@ -34,5 +35,14 @@ class SzamlaTetel extends Persistent
     function setSzamlaTetelAdatok(array $adatok) {
         $this->setFields($adatok);
     }
+	
+	/*a kapott számlához tartozó következő tételszámot adja meg
+		példa: A-7/45-4*/
+	public function getNextSzlaTetelID()
+	{
+		$this->db->query("SELECT * FROM {$this->getTableName()} WHERE szamla_sorszam_elotag = '{$this->getFields('szamla_sorszam_elotag')}' AND szamla_sorszam_szam = '{$this->getFields('szamla_sorszam_szam')}' ORDER BY sorszam DESC LIMIT 1");
+		$nextid=$res['sorszam']+1;
+		return $nextid;
+	}
 }
 

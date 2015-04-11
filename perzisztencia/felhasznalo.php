@@ -17,7 +17,6 @@ class Felhasznalo extends Persistent
         
         if (empty($params['nev'])) $errors[] = 'NEV_NINCS_MEGADVA';
 		if (empty($params['email'])) $errors[] = 'EMAIL_NINCS_MEGADVA';
-        if (empty($params['jelszo'])) $errors[] = 'JELSZO_NINCS_MEGADVA';
         
 		/*user_nev:
 			-nem üres
@@ -44,6 +43,34 @@ class Felhasznalo extends Persistent
 		{
 			$errors[]="USERNEV_NINCS_MEGADVA";
 		}
+		
+		/*jelszo:
+			-nem üres
+			-min. 6 hosszú
+			-kis-nagy betű, szám*/
+		if(!empty($params['jelszo']))
+		{
+			if(strlen($params['jelszo'])>=6)
+			{
+				if()
+				{
+					//ide kell még
+				}
+				else
+				{
+					$errors[]="TARTALMAZZON_KIS_NAGY_B_SZ_A_JELSZO";
+				}
+			}
+			else
+			{
+				$errors[]="ROVID_JELSZO";
+			}
+		}
+		else
+		{
+			$errors[]="JELSZO_NINCS_MEGADVA";
+		}
+		
 		
         return $errors;
     }
