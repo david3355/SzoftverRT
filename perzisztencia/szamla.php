@@ -4,9 +4,22 @@ require_once("../persistent.php");
 
 class Szamla extends Persistent
 {
+    /**
+     * @param array $params
+     */
     protected function onAfterCreate(array $params = null) {
-        
+        // Számlatételek létrehozása
+
+        foreach ($params['tetelek'] as $tetel_adatok) {
+            $szamla_id = array($params['sorszam_elotag'], $params['sorszam_szam']);
+            $this->pm->createObject('SzamlaTetel', array_merge($szamla_id, $tetel_adatok));
+        }
     }
+
+    protected function onBeforeDelete() {
+        // Számlatételek törlése
+    }
+
 
     protected static function getTableName() {
         return "szamla";
@@ -42,7 +55,7 @@ class Szamla extends Persistent
 	//megadja a kapott számla előtag következő sorszámát
 	public function getNextSzlaID()
 	{
-		$this->db->query("SELECT * FROM {$this->getTableName()} WHERE sorszam_elotag = '{$this->getFields('sorszam_elotag')}' ORDER BY sorszam_szam DESC LIMIT 1");
+		$res = $this->db->query("SELECT * FROM {$this->getTableName()} WHERE sorszam_elotag = '{$this->getFields('sorszam_elotag')}' ORDER BY sorszam_szam DESC LIMIT 1");
 		$nextid=$res['sorszam_szam']+1;
 		return $nextid;
 	}

@@ -22,6 +22,8 @@ class PersistenceManager
     }
 
     /**
+     * Az id alapján kikeresi a fő objektumtáblából a hozzá tartozó osztályt, és vakpéldányt készít belőle
+     *
      * return object
      */
     final function getObject($id)
@@ -30,11 +32,15 @@ class PersistenceManager
 
         $result = $this->db->query($sql);
 
+        // Visszatérés vak példánnyal
         return new $result[0]['class']($result[0]['id']);
     }
 
 
     /**
+     * Példányosítja az adott osztályt (vak példány), azonban a példányt adja vissza,
+     * hanem a megadott paraméterek alapján végrehajtja a validációt, és a hibakódokkal tér vissza
+     *
      * return hiba kódok array
      */
     final function validateCreateObject($class, array $params = null)
@@ -45,6 +51,9 @@ class PersistenceManager
     }
 
     /**
+     * Létrehozza a vakpéldányt, validálja a megadott paraméterek alapján,
+     * majd létrehozza a tényleges objektumot az adatbázisban, és visszatér az objektummal
+     *
      * return object
      */
     final function createObject($class, array $params = null, array &$errors = null)

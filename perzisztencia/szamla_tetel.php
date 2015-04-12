@@ -5,7 +5,11 @@ require_once("../persistent.php");
 class SzamlaTetel extends Persistent
 {
     protected function onAfterCreate(array $params = null) {
-        
+        // Foreign key constraint megadása a sorszam_elotag és sorszam_szam attribútumokra
+    }
+
+    protected function onBeforeDelete() {
+
     }
 
     protected static function getTableName() {

@@ -5,9 +5,9 @@ require_once("persistence_manager.php");
 abstract class Persistent
 {
     private $id;
-    private $pm;
-    private $db;
-    private $mainObjectTable;
+    protected $pm;
+    protected $db;
+    protected $mainObjectTable;
 
     final function __construct($id = null)
     {
@@ -27,7 +27,7 @@ abstract class Persistent
      */
     final function create(array $params = null)
     {
-        //Csak vak pélányon futhat.
+        //Csak vak pélányon futhat, amelynek még nincs id beállíva
         if (isset($this->id)) return;
 
         //1. objektum bejegyzése a fő objektum táblába
@@ -42,9 +42,8 @@ abstract class Persistent
 
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         // Az array objektumokat kivesszük, és minden alosztály az OnAfterCreate-ben dolgozza fel
-        // Az ott feldolgozott objektumokat össze kell kapcsolni a hozzá tartozó objektummal: a fő objektum id-ját felvesszük minden hozzá kapcsolódó objektumhoz
-
-        $arrayValues = array();
+        // Az ott feldolgozott gyerekobjektumokat össze kell kapcsolni a hozzá tartozó ősobjektummal
+        // Minden paramétert át kell adni az onAfterCreate-nek, nem csak a tömbértékűekre lehet szükség
 
         if (!is_null($params)) {
             $params['id'] = $this->id;
@@ -52,7 +51,6 @@ abstract class Persistent
 
             foreach ($params as $key => $value) {
                 if (is_array($value)) {
-                    $arrayValues[$key] = $value;
                     unset($params[$key]);
                 }
             }
@@ -63,7 +61,7 @@ abstract class Persistent
             $data = $this->db->query($sql);
         }
         //4. alosztályok létrehozási tevékenységének futtatása
-        $this->onAfterCreate($arrayValues);
+        $this->onAfterCreate($params);
     }
 
 
@@ -126,6 +124,9 @@ abstract class Persistent
     {
         //objektum törlése a megfelelő táblákból
 
+        // Ha vannak kompozícióval hozzá kapcsolódó objektumok, itt töröljük
+        $result3 = $this->onBeforeDelete();
+
         // Lekérdezzük az osztályhoz tartozó táblát
         $table = $this->getTableName();
 
@@ -140,7 +141,9 @@ abstract class Persistent
         $sql = sprintf("DELETE FROM %s WHERE id = %s", $this->mainObjectTable, $this->id);
         $result2 = $this->db->query($sql);
 
-        return $result1 && $result2;
+
+
+        return $result1 && $result2 && $result3;
 
     }
 
@@ -159,6 +162,13 @@ abstract class Persistent
      * Alosztály implementálja
      */
     abstract protected function onAfterCreate(array $params = null);
+
+    /**
+     *  Mielőtt az objektumot kitöröljük az adatbázisból, a kompozícióval hozzákapcsolt gyerekobjektumokat is törölni kell
+     *  Csak utána törölhetjük az ősobjektumot
+     *  return bool
+     */
+    abstract protected function onBeforeDelete();
 
     abstract protected static function getTableName();
 
