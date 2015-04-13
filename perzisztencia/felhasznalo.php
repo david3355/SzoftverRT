@@ -9,11 +9,7 @@ class Felhasznalo extends Persistent
     }
 
     protected function onBeforeCreate(array &$params = null) {
-        /*Itt lenne kérdésem, hogy milyen hosszú jelszót ad vissza, mert én a DB-ben 64 hosszúra állítottam,
-		illetve hogyan lesz tárolva majd a salt, mert később szükség van rá?
-		én sha-256 hasht szoktam használni, salttal*/
-		
-		//$params['jelszo'] = hash('sha256', $params['jelszo'].ide jön a salt);
+        /*Beraktam sha-256 hash-be, hogy pontosan 64 karakter legyen a jelszó a DB-hez!*/
 		
 		// Salted hash:
         $params['salt']=$this->generateSalt();
