@@ -8,6 +8,10 @@ class Szamlatomb extends Persistent
         
     }
 
+    protected function onBeforeDelete() {
+
+    }
+
     protected static function getTableName() {
         return "szamlatomb";
     }

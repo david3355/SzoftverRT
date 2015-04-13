@@ -8,6 +8,10 @@ class Ugyfel extends Persistent
         
     }
 
+    protected function onBeforeDelete() {
+
+    }
+
     protected static function getTableName() {
         return "ugyfel";
     }

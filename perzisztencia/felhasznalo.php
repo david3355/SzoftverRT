@@ -8,6 +8,10 @@ class Felhasznalo extends Persistent
         
     }
 
+    protected function onBeforeDelete() {
+
+    }
+
     protected static function getTableName() {
         return "felhasznalo";
     }

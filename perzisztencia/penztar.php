@@ -8,6 +8,10 @@ class Penztar extends Persistent
         
     }
 
+    protected function onBeforeDelete() {
+
+    }
+
     protected static function getTableName() {
         return "penztar";
     }

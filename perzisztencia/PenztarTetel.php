@@ -8,6 +8,10 @@ class PenztarTetel extends Persistent
         
     }
 
+    protected function onBeforeDelete() {
+
+    }
+
     protected static function getTableName() {
         return "penztar_tetel";
     }
