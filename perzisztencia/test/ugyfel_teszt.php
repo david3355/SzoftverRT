@@ -17,8 +17,8 @@
     <body>
 <?php
 
-require_once("../persistence_manager.php");
-require_once("../ugyfel.php");
+require_once("../PersistenceManager.php");
+require_once("../Ugyfel.php");
 
 $pm = PersistenceManager::getInstance();
 

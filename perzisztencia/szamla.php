@@ -1,6 +1,6 @@
 <?php
 
-require_once("../persistent.php");
+require_once("../Persistent.php");
 
 class Szamla extends Persistent
 {

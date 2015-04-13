@@ -1,6 +1,6 @@
 <?php
 
-require_once("persistence_manager.php");
+require_once("PersistenceManager.php");
 
 abstract class Persistent
 {
