@@ -1,9 +1,13 @@
 <?php
 
-require_once("../Persistent.php");
+require_once('autoload.php');
 
 class PenztarTetel extends Persistent
 {
+    protected function onBeforeCreate(array &$params = null) {
+
+    }
+
     protected function onAfterCreate(array $params = null) {
         
     }

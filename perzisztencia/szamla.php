@@ -1,9 +1,13 @@
 <?php
 
-require_once("../Persistent.php");
+require_once('autoload.php');
 
 class Szamla extends Persistent
 {
+    protected function onBeforeCreate(array &$params = null) {
+
+    }
+
     /**
      * @param array $params
      */

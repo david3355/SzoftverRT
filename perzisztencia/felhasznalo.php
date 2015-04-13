@@ -1,6 +1,6 @@
 <?php
 
-require_once("../Persistent.php");
+require_once('autoload.php');
 
 class Felhasznalo extends Persistent
 {

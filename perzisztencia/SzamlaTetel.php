@@ -1,9 +1,13 @@
 <?php
 
-require_once("../persistent.php");
+require_once('autoload.php');
 
 class SzamlaTetel extends Persistent
 {
+    protected function onBeforeCreate(array &$params = null) {
+
+    }
+
     protected function onAfterCreate(array $params = null) {
 
     }
