@@ -9,7 +9,13 @@ class Felhasznalo extends Persistent
     }
 
     protected function onBeforeCreate(array &$params = null) {
-        // Salted hash:
+        /*Itt lenne kérdésem, hogy milyen hosszú jelszót ad vissza, mert én a DB-ben 64 hosszúra állítottam,
+		illetve hogyan lesz tárolva majd a salt, mert később szükség van rá?
+		én sha-256 hasht szoktam használni, salttal*/
+		
+		//$params['jelszo'] = hash('sha256', $params['jelszo'].ide jön a salt);
+		
+		// Salted hash:
         $params['salt']=$this->generateSalt();
         $params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
     }
@@ -31,15 +37,13 @@ class Felhasznalo extends Persistent
 		/*user_nev:
 			-nem üres
 			-egyedi
-			-min. 3 hosszú
-			-strtolower*/
-		$nev_strtolower=strtolower($params['user_nev']);
-		if(!empty($nev_strtolower))
+			-min. 3 hosszú*/
+		if(!empty($params['user_nev']))
 		{
-			if(strlen($nev_strtolower)>=3)
+			if(strlen($params['user_nev'])>=3)
 			{
 				//nem egyedi, mert már van ilyen user_nev
-				if($this->db->query("SELECT * FROM {$this->getTableName()} WHERE user_nev = '{$nev_strtolower}'") == true)
+				if($this->db->query("SELECT * FROM {$this->getTableName()} WHERE user_nev = '{$params['user_nev']}'") == true)
 				{
 					$errors[]="USED_USER_NEV";
 				}
