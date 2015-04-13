@@ -14,6 +14,7 @@ class Felhasznalo extends Persistent
 		// Salted hash:
         $params['salt']=$this->generateSalt();
         $params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
+		//$params['jelszo'] = hash('sha256', $params['jelszo']);
     }
 
     protected function onBeforeDelete() {
