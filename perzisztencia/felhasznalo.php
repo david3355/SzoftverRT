@@ -56,13 +56,9 @@ class Felhasznalo extends Persistent
 		{
 			if(strlen($params['jelszo'])>=6)
 			{
-				if()
+				if(!isPasswordSecure($params['jelszo']))
 				{
-					//ide kell még
-				}
-				else
-				{
-					$errors[]="TARTALMAZZON_KIS_NAGY_B_SZ_A_JELSZO";
+                    $errors[]="KIS_BETU_NAGY_BETU_SZAM_SZUKSEGES";
 				}
 			}
 			else
@@ -77,6 +73,11 @@ class Felhasznalo extends Persistent
 		
 		
         return $errors;
+    }
+
+    private function isPasswordSecure($pwd)
+    {
+        return preg_match('/[A-Z]+/', $pwd) && preg_match('/[0-9]+/', $pwd) && preg_match('/[a-z]+/', $pwd);
     }
     
     function getFelhasznaloAdatok() {   
