@@ -11,13 +11,18 @@ class Szamla extends Persistent
         // Számlatételek létrehozása
 
         foreach ($params['tetelek'] as $tetel_adatok) {
-            $szamla_id = array($params['sorszam_elotag'], $params['sorszam_szam']);
-            $this->pm->createObject('SzamlaTetel', array_merge($szamla_id, $tetel_adatok));
+            $szamla_id = array('szamla_sorszam_elotag' => $params['sorszam_elotag'], 'szamla_sorszam_szam' => $params['sorszam_szam']);
+            $this->pm->createObject('SzamlaTetel', array_merge($tetel_adatok, $szamla_id));
         }
     }
 
     protected function onBeforeDelete() {
         // Számlatételek törlése
+        $szt_table = SzamlaTetel::getTableName();   // A getTableName-nek publicnak kéne lennie, illetve kérdés, hogy ez a megoldás marad-e
+        $sql = sprintf("SELECT sorszam_elotag, sorszam_szam FROM %s WHERE id=%s", self::getTableName(), $this->getID());
+        $sorszam = $this->db->query($sql);
+        $sql = sprintf("DELETE FROM %s WHERE szamla_sorszam_elotag=%s AND szamla_sorszam_szam=%s", $szt_table, $sorszam[0]['sorszam_elotag'], $sorszam[0]['sorszam_szam']);
+        return $this->db->query($sql);
     }
 
 
