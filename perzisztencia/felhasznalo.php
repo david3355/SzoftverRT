@@ -8,6 +8,12 @@ class Felhasznalo extends Persistent
         
     }
 
+    protected function onBeforeCreate(array &$params = null) {
+        // Salted hash:
+        $params['salt']=$this->generateSalt();
+        $params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
+    }
+
     protected function onBeforeDelete() {
 
     }
@@ -79,6 +85,11 @@ class Felhasznalo extends Persistent
     {
         return preg_match('/[A-Z]+/', $pwd) && preg_match('/[0-9]+/', $pwd) && preg_match('/[a-z]+/', $pwd);
     }
+
+    private function generateSalt()
+    {
+        return mcrypt_create_iv(8, MCRYPT_DEV_URANDOM);
+    }
     
     function getFelhasznaloAdatok() {   
         return $this->getFields();   
@@ -87,5 +98,6 @@ class Felhasznalo extends Persistent
     function setFelhasznaloAdatok(array $adatok) {
         $this->setFields($adatok);
     }
+
 }
 

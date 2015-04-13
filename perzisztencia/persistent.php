@@ -40,6 +40,9 @@ abstract class Persistent
         $data = $this->db->query($sql);
         $this->id = $data[0]['id'];
 
+        // Az adatok felvétele előtt van lehetőség módosítani a paramétereken (a paramétereket referencia szerint adjuk át):
+        $this->onBeforeCreate($params);
+
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         // Az array objektumokat kivesszük, és minden alosztály az OnAfterCreate-ben dolgozza fel
         // Az ott feldolgozott gyerekobjektumokat össze kell kapcsolni a hozzá tartozó ősobjektummal
@@ -162,6 +165,11 @@ abstract class Persistent
      * Alosztály implementálja
      */
     abstract protected function onAfterCreate(array $params = null);
+
+    /**
+     * Az objektum létrehozása előtt lehetőség van a paraméterek módosítására, ellenőrzésére
+     */
+    abstract protected function onBeforeCreate(array &$params = null);
 
     /**
      *  Mielőtt az objektumot kitöröljük az adatbázisból, a kompozícióval hozzákapcsolt gyerekobjektumokat is törölni kell
