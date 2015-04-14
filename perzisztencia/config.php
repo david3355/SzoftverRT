@@ -8,7 +8,7 @@ return [
     'SzamlaKifizetes' => 'szamla_kifizetes',
     'SzamlaTetel' => 'szamla_tetel',
     'Szamla' => 'szamla',
-    'SzamlaTomb' => 'szamla_tomb',
+    'Szamlatomb' => 'szamlatomb',
     'Felhasznalo' => 'felhasznalo',
     'Ugyfel' => 'ugyfel',
 ];
