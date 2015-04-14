@@ -80,7 +80,9 @@ class PersistenceManager
      */
     final function getTableNameForClass($classname)
     {
-        return $classname::getTableName();
+        $config = include 'config.php';
+        
+        return $config[$classname];
     }
 
     public final function getMainObjectTableName()
