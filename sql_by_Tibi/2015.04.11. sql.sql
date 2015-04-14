@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `felhasznalok` (
   `aktiv` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `objectID` int(11) unsigned NOT NULL,
   PRIMARY KEY (`felhasznalo_id`),
-  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `user_nev` (`user_nev`),
   KEY `object_id_FK` (`objectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='User adatok' AUTO_INCREMENT=1 ;
 
