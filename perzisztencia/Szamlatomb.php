@@ -16,10 +16,6 @@ class Szamlatomb extends Persistent
 
     }
 
-    protected static function getTableName() {
-        return "szamlatomb";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
