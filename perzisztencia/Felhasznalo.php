@@ -21,10 +21,6 @@ class Felhasznalo extends Persistent
 
     }
 
-    protected static function getTableName() {
-        return "felhasznalo";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
