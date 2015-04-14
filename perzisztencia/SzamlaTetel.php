@@ -16,10 +16,6 @@ class SzamlaTetel extends Persistent
 
     }
 
-    protected static function getTableName() {
-        return "szamlatetel";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
