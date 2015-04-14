@@ -29,11 +29,6 @@ class Szamla extends Persistent
         return $this->db->query($sql);
     }
 
-
-    protected static function getTableName() {
-        return "szamla";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
