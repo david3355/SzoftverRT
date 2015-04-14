@@ -16,10 +16,6 @@ class PenztarTetel extends Persistent
 
     }
 
-    protected static function getTableName() {
-        return "penztar_tetel";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
