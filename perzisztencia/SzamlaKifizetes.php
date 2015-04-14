@@ -16,10 +16,6 @@ class SzamlaKifizetes extends Persistent
 
     }
 
-    protected static function getTableName() {
-        return "szamla_kifizetes";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
