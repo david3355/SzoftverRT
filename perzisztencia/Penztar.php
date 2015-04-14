@@ -16,10 +16,6 @@ class Penztar extends Persistent
 
     }
 
-    protected static function getTableName() {
-        return "penztar";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
