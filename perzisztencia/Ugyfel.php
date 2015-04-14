@@ -16,10 +16,6 @@ class Ugyfel extends Persistent
 
     }
 
-    protected static function getTableName() {
-        return "ugyfel";
-    }
-
     public function validate(array $params = null) {
         $errors = array();
         
