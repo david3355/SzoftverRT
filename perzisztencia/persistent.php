@@ -36,9 +36,7 @@ abstract class Persistent
         $this->db->query($sql);
 
         //2. auto generált id lekérdezése, és beállítása $this->id -be
-        $sql = sprintf("SELECT max(id) as id FROM %s", $this->mainObjectTable);
-        $data = $this->db->query($sql);
-        $this->id = $data[0]['id'];
+        $this->id = $this->db->getLastInsertID();
 
         // Az adatok felvétele előtt van lehetőség módosítani a paramétereken (a paramétereket referencia szerint adjuk át):
         $this->onBeforeCreate($params);
