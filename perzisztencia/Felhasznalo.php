@@ -12,9 +12,9 @@ class Felhasznalo extends Persistent
         /*Beraktam sha-256 hash-be, hogy pontosan 64 karakter legyen a jelszó a DB-hez!*/
 		
 		// Salted hash:
-        $params['salt']=$this->generateSalt();
-        $params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
-		//$params['jelszo'] = hash('sha256', $params['jelszo']);
+		$params['salt']=$this->generateSalt();
+		//$params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
+		$params['jelszo'] = hash('sha256', $params['jelszo'].$params['salt']);
     }
 
     protected function onBeforeDelete() {
