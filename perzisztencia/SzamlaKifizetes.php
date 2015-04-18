@@ -25,12 +25,16 @@ class SzamlaKifizetes extends Persistent
         return $errors;
     }
     
-    function getSzamlaKifizetesAdatok() {   
+    /*function getSzamlaKifizetesAdatok() {   
         return $this->getFields();   
-    }
+    }*/
     
     function setSzamlaKifizetesAdatok(array $adatok) {
-        $this->setFields($adatok);
+        $err=$this->validate($adatok);
+		if(empty($err))
+		{
+			$this->setFields($adatok);
+		}
     }
 }
 

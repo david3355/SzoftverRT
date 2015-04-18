@@ -59,12 +59,16 @@ class Ugyfel extends Persistent
         return $this->delete();
     }
     
-    function getUgyfelAdatok() {   
+    /*function getUgyfelAdatok() {   
         return $this->getFields();   
-    }
+    }*/
     
     function setUgyfelAdatok(array $adatok) {
-        $this->setFields($adatok);
+        $err=$this->validate($adatok);
+		if(empty($err))
+		{
+			$this->setFields($adatok);
+		}
     }
 }
 

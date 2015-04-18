@@ -26,12 +26,21 @@ class Szamlatomb extends Persistent
         return $errors;
     }
     
-    function getSzamlatombAdatok() {   
+    /*function getSzamlatombAdatok() {   
         return $this->getFields();   
-    }
+    }*/
     
     function setSzamlatombAdatok(array $adatok) {
-        $this->setFields($adatok);
+        $err=$this->validate($adatok);
+		if(empty($err))
+		{
+			$this->setFields($adatok);
+		}
     }
+	
+	public function getNextSzlaID()
+	{
+		//return ;
+	}
 }
 

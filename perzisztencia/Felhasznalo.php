@@ -88,12 +88,16 @@ class Felhasznalo extends Persistent
         return mcrypt_create_iv(8, MCRYPT_DEV_URANDOM);
     }
     
-    function getFelhasznaloAdatok() {   
+    /*function getFelhasznaloAdatok() {   
         return $this->getFields();   
-    }
+    }*/
     
     function setFelhasznaloAdatok(array $adatok) {
-        $this->setFields($adatok);
+        $err=$this->validate($adatok);
+		if(empty($err))
+		{
+			$this->setFields($adatok);
+		}
     }
 
 }

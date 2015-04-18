@@ -48,20 +48,24 @@ class Szamla extends Persistent
         return $errors;
     }
     
-    function getSzamlaAdatok() {   
+    /*function getSzamlaAdatok() {   
         return $this->getFields();   
-    }
+    }*/
     
     function setSzamlaAdatok(array $adatok) {
-        $this->setFields($adatok);
+        $err=$this->validate($adatok);
+		if(empty($err))
+		{
+			$this->setFields($adatok);
+		}
     }
 	
-	//megadja a kapott számla előtag következő sorszámát
+	/*megadja a kapott számla előtag következő sorszámát
 	public function getNextSzlaID()
 	{
 		$res = $this->db->query("SELECT * FROM {$this->getTableName()} WHERE sorszam_elotag = '{$this->getFields('sorszam_elotag')}' ORDER BY sorszam_szam DESC LIMIT 1");
 		$nextid=$res['sorszam_szam']+1;
 		return $nextid;
-	}
+	}*/
 }
 

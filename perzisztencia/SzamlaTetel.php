@@ -32,21 +32,25 @@ class SzamlaTetel extends Persistent
         return $errors;
     }
     
-    function getSzamlaTetelAdatok() {   
+    /*function getSzamlaTetelAdatok() {   
         return $this->getFields();   
-    }
+    }*/
     
     function setSzamlaTetelAdatok(array $adatok) {
-        $this->setFields($adatok);
+        $err=$this->validate($adatok);
+		if(empty($err))
+		{
+			$this->setFields($adatok);
+		}
     }
 	
 	/*a kapott számlához tartozó következő tételszámot adja meg
-		példa: A-7/45-4*/
+		példa: A-7/45-4
 	public function getNextSzlaTetelID()
 	{
 		$this->db->query("SELECT * FROM {$this->getTableName()} WHERE szamla_sorszam_elotag = '{$this->getFields('szamla_sorszam_elotag')}' AND szamla_sorszam_szam = '{$this->getFields('szamla_sorszam_szam')}' ORDER BY sorszam DESC LIMIT 1");
 		$nextid=$res['sorszam']+1;
 		return $nextid;
-	}
+	}*/
 }
 
