@@ -81,16 +81,15 @@ abstract class Persistent
         // Lekérdezzük az osztályhoz tartozó táblát
         $table = $this->getTableName();
 
-        // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
-
+       // Feltételek meghatározása
         if($condition_fields == null) $conditions = sprintf('id = %s', $this->id());
         else $conditions = $this->catConditions($condition_fields, 'AND');
 
-
+        // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
         if (isset($field_names))
             $sql = sprintf("SELECT %s FROM %s WHERE %s", implode(',', $field_names), $table, $conditions);
         else {
-            $sql = sprintf("SELECT * FROM %s WHERE id  = %s", $table, $this->id);
+            $sql = sprintf("SELECT * FROM %s WHERE %s", $table, $conditions);
         }
 
         $result = $this->db->query($sql);
