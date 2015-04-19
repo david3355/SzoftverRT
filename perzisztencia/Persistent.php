@@ -79,6 +79,7 @@ abstract class Persistent
         //megadott mezők lekérdezése a megfelelő táblákból
 
         // Lekérdezzük az osztályhoz tartozó táblát
+        // Itt egyrészt nem ezt kell használni, hanem a PersistentManagerből lekérdezni, másrészt öröklődéses lekérdezésnél össze kell joinolni az összes ősosztályhoz tartozó táblát, és úgy lekérni az adatokat object id alapján
         $table = $this->getTableName();
 
        // Feltételek meghatározása
