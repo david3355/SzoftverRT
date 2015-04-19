@@ -22,11 +22,15 @@ class Szamla extends Persistent
 
     protected function onBeforeDelete() {
         // Számlatételek törlése
-        $szt_table = SzamlaTetel::getTableName();   // A getTableName-nek publicnak kéne lennie, illetve kérdés, hogy ez a megoldás marad-e
-        $sql = sprintf("SELECT sorszam_elotag, sorszam_szam FROM %s WHERE id=%s", self::getTableName(), $this->getID());
-        $sorszam = $this->db->query($sql);
-        $sql = sprintf("DELETE FROM %s WHERE szamla_sorszam_elotag=%s AND szamla_sorszam_szam=%s", $szt_table, $sorszam[0]['sorszam_elotag'], $sorszam[0]['sorszam_szam']);
-        return $this->db->query($sql);
+        $szt = new SzamlaTetel();
+        $sztetelek = $szt->getFields(['id'], ['szamla_fk'=>$this->getID()]);    // a getFields-t úgy kéne megírni, hogy lehessen where feltételt megadni, ha a feltételek egy null array, akkor a where feltételbe az id kerül
+        $deleted = 0;
+        foreach($sztetelek as $szt_rekord)
+        {
+            $szt_objektum = new SzamlaTetel($szt_rekord['id']);
+            $deleted += $szt_objektum->delete();
+        }
+        return $deleted;
     }
 
     public function validate(array $params = null) {

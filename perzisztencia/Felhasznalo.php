@@ -36,7 +36,7 @@ class Felhasznalo extends Persistent
 			if(strlen($params['user_nev'])>=3)
 			{
 				//nem egyedi, mert már van ilyen user_nev
-				if($this->db->query("SELECT * FROM {$this->getTableName()} WHERE user_nev = '{$params['user_nev']}'") == true)
+				if($this->getFields(['user_nev'],['user_nev'=>$params['user_nev']])[0]['user_nev'] == true)
 				{
 					$errors[]="USED_USER_NEV";
 				}

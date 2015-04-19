@@ -74,7 +74,7 @@ abstract class Persistent
      * return array(mezőnév=>érték, mezőnév=>érték, ...)
      * Ha $field_names üres, akkor adjon vissza minden mezőt.
      */
-    final protected function getFields(array $field_names = null)
+    final protected function getFields(array $field_names = null, array $condition_fields = null)
     {
         //megadott mezők lekérdezése a megfelelő táblákból
 
@@ -82,8 +82,13 @@ abstract class Persistent
         $table = $this->getTableName();
 
         // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
+
+        if($condition_fields == null) $conditions = sprintf('id = %s', $this->id());
+        else $conditions = $this->catConditions($condition_fields, 'AND');
+
+
         if (isset($field_names))
-            $sql = sprintf("SELECT %s FROM %s WHERE id = %s", implode(',', $field_names), $table, $this->id);
+            $sql = sprintf("SELECT %s FROM %s WHERE %s", implode(',', $field_names), $table, $conditions);
         else {
             $sql = sprintf("SELECT * FROM %s WHERE id  = %s", $table, $this->id);
         }
@@ -94,6 +99,20 @@ abstract class Persistent
 
         return $result[0];
 
+    }
+
+    // Ha erre tud valaki szebb megoldást, írja nyugodtan :D
+    private function catConditions(array $cond, $operator)
+    {
+        $sql = "";
+        $i = 0;
+        foreach($cond as $key=>$val)
+        {
+            $sql .= $key.'='.$val;
+            if($i < count($cond) - 1) $sql .= ' '.$operator.' ';
+            $i++;
+        }
+        return $sql;
     }
 
     /**
@@ -175,7 +194,5 @@ abstract class Persistent
      *  return bool
      */
     abstract protected function onBeforeDelete();
-
-    abstract protected static function getTableName();
 
 }
