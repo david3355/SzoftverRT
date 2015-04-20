@@ -1,14 +1,33 @@
 <?php
 
-require_once("PersistenceManager.php");
-
+/**
+ * Class Persistent
+ */
 abstract class Persistent
 {
+    /**
+     * @var null
+     */
     private $id;
+
+    /**
+     * @var PersistenceManager
+     */
     protected $pm;
+
+    /**
+     * @var DatabaseConnection
+     */
     protected $db;
+
+    /**
+     * @var
+     */
     protected $mainObjectTable;
 
+    /**
+     * @param null $id
+     */
     final function __construct($id = null)
     {
         $this->id = $id;
@@ -17,6 +36,9 @@ abstract class Persistent
         $this->mainObjectTable = $this->pm->getMainObjectTableName();
     }
 
+    /**
+     * @return null
+     */
     final function getID()
     {
         return $this->id;
@@ -82,8 +104,8 @@ abstract class Persistent
         // Itt egyrészt nem ezt kell használni, hanem a PersistentManagerből lekérdezni, másrészt öröklődéses lekérdezésnél össze kell joinolni az összes ősosztályhoz tartozó táblát, és úgy lekérni az adatokat object id alapján
         $table = $this->getTableName();
 
-       // Feltételek meghatározása
-        if($condition_fields == null) $conditions = sprintf('id = %s', $this->id());
+        // Feltételek meghatározása
+        if ($condition_fields == null) $conditions = sprintf('id = %s', $this->id());
         else $conditions = $this->catConditions($condition_fields, 'AND');
 
         // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
@@ -106,10 +128,9 @@ abstract class Persistent
     {
         $sql = "";
         $i = 0;
-        foreach($cond as $key=>$val)
-        {
-            $sql .= $key.'='.$val;
-            if($i < count($cond) - 1) $sql .= ' '.$operator.' ';
+        foreach ($cond as $key => $val) {
+            $sql .= $key . '=' . $val;
+            if ($i < count($cond) - 1) $sql .= ' ' . $operator . ' ';
             $i++;
         }
         return $sql;
@@ -128,12 +149,12 @@ abstract class Persistent
         // Lekérdezzük az osztályhoz tartozó táblát
         $table = $this->getTableName();
 
-        foreach($field_values as $key => $value){
-            $updates[] = $key."='".$value."'";
+        foreach ($field_values as $key => $value) {
+            $updates[] = $key . "='" . $value . "'";
         }
 
-        $sql = sprintf("UPDATE %s SET %s WHERE id = %s", $table,implode(", ",$updates) , $this->id);
-        
+        $sql = sprintf("UPDATE %s SET %s WHERE id = %s", $table, implode(", ", $updates), $this->id);
+
         $result = $this->db->query($sql);
 
         return $result;
@@ -162,9 +183,21 @@ abstract class Persistent
         $result2 = $this->db->query($sql);
 
 
-
         return $result1 && $result2 && $result3;
 
+    }
+
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    final protected function getNextUniqueId()
+    {
+        $result = $this->db->query("UPDATE sequence SET id = LAST_INSERT_ID(id+1)");
+        $result2 = $this->db->query("SELECT LAST_INSERT_ID()");
+
+        return $result2[0];
     }
 
     /**
@@ -194,5 +227,6 @@ abstract class Persistent
      *  return bool
      */
     abstract protected function onBeforeDelete();
+
 
 }

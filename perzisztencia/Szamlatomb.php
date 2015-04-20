@@ -1,46 +1,72 @@
 <?php
 
-require_once('autoload.php');
-
+/**
+ * Class Szamlatomb
+ */
 class Szamlatomb extends Persistent
 {
-    protected function onBeforeCreate(array &$params = null) {
+    /**
+     * @param array $params
+     */
+    protected function onBeforeCreate(array &$params = null)
+    {
 
     }
 
-    protected function onAfterCreate(array $params = null) {
-        
+    /**
+     * @param array $params
+     */
+    protected function onAfterCreate(array $params = null)
+    {
+
     }
 
-    protected function onBeforeDelete() {
+    /**
+     *
+     */
+    protected function onBeforeDelete()
+    {
 
     }
 
-    public function validate(array $params = null) {
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function validate(array $params = null)
+    {
         $errors = array();
-        
+
         if (empty($params['megnevezes'])) $errors[] = 'MEGNEVEZES_NINCS_MEGADVA';
         if (empty($params['szamla_elotag'])) $errors[] = 'SZAMLA_ELOTAG_NINCS_MEGADVA';
         if (empty($params['szamla_kezdoszam'])) $errors[] = 'SZAMLA_KEZDOSZAM_NINCS_MEGADVA';
-        
+
         return $errors;
     }
-    
+
     /*function getSzamlatombAdatok() {   
         return $this->getFields();   
     }*/
-    
-    function setSzamlatombAdatok(array $adatok) {
-        $err=$this->validate($adatok);
-		if(empty($err))
-		{
-			$this->setFields($adatok);
-		}
+
+    /**
+     * @param array $adatok
+     * @return array|bool
+     */
+    function setSzamlatombAdatok(array $adatok)
+    {
+        $err = $this->validate($adatok);
+        if (empty($err)) {
+            return $this->setFields($adatok);
+        }
+
+        return $err;
     }
-	
-	public function getNextSzlaID()
-	{
-		//return ;
-	}
+
+    /*
+    public function getNextSzlaID()
+    {
+        //return ;
+    }
+    */
 }
 

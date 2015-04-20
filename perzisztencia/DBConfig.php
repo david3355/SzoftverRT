@@ -1,5 +1,9 @@
 <?
 
+/**
+ * Class DBConfig
+ */
+
 class DBConfig
 {
     static $user = "fejleszt_erp"

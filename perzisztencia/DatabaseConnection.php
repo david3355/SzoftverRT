@@ -2,13 +2,30 @@
 
 require_once("DBConfig.php");
 
+/**
+ * Class DatabaseConnection
+ */
 class DatabaseConnection
 {
+    /**
+     * @var
+     */
     protected $user, $password, $location, $dbname, $charset;
+
+    /**
+     * @var null
+     */
     protected $resource = null;
 
+    /**
+     * @var
+     */
     static private $instance;
 
+    /**
+     * @return DatabaseConnection
+     * @throws Exception
+     */
     static function getInstance()
     {
         if (!isset(self::$instance)) {
@@ -19,6 +36,13 @@ class DatabaseConnection
         return self::$instance;
     }
 
+    /**
+     * @param $user
+     * @param $password
+     * @param $location
+     * @param $dbname
+     * @param $charset
+     */
     function __construct($user, $password, $location, $dbname, $charset)
     {
         $this->user = $user;
@@ -28,6 +52,10 @@ class DatabaseConnection
         $this->charset = $charset;
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     final function connect()
     {
         if (isset($this->resource)) return false;
@@ -64,11 +92,18 @@ class DatabaseConnection
         return $result;
     }
 
+    /**
+     * @return int|string
+     */
     final function getLastInsertID()
     {
         return mysqli_insert_id($this->resource);
     }
 
+    /**
+     * @param $str
+     * @return string
+     */
     final function getEscaped($str)
     {
         return mysqli_real_escape_string($this->resource, $str);
