@@ -1,14 +1,50 @@
 <?php
 
-return [
-    
-    // Az osztályokhoz tartozó táblanevek
-    'PenztarTetel' => 'penztar_tetel',
-    'Penztar' => 'penztar',
-    'SzamlaKifizetes' => 'szamla_kifizetes',
-    'SzamlaTetel' => 'szamla_tetel',
-    'Szamla' => 'szamla',
-    'Szamlatomb' => 'szamlatomb',
-    'Felhasznalo' => 'felhasznalo',
-    'Ugyfel' => 'ugyfel',
-];
+/**
+ * Class Config
+ */
+class Config
+{
+    /**
+     * @var
+     */
+    private $config;
+
+    /**
+     * @param string $path
+     */
+    public function __construct($path = 'configFile.php')
+    {
+        $this->config = include $path;
+    }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function exists($key)
+    {
+        return array_key_exists($key, $this->config);
+    }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function get($key)
+    {
+        if ($this->exists($key)) {
+            return $this->config['key'];
+        }
+
+        return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function all()
+    {
+        return $this->config;
+    }
+}
