@@ -15,6 +15,8 @@ class PersistentLoader extends AbstractLoader
                 return $this->myfolder."/persistence_manager.php";
             case "Persistent":
                 return $this->myfolder."/persistent.php";
+            case "Config":
+                return $this->myfolder."/config.php";
             default:
                 return null;
         }
