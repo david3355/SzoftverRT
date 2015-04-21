@@ -1,6 +1,6 @@
 <?php
 
-class Loader extends AbstractLoader
+class SzamlatombLoader extends AbstractLoader
 {
 
     /**

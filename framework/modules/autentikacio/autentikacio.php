@@ -1,6 +1,6 @@
 <?php
 
-class Autentikacio
+class Autentikacio extends Site_Authenticator
 {
 
     const USER_SESSION_KEY = "ACTUAL_USER";
@@ -16,10 +16,6 @@ class Autentikacio
         return self::$instance;
     }
 
-    function __construct()
-    {
-
-    }
 
     public function login($user)
     {
@@ -36,5 +32,15 @@ class Autentikacio
         return $_SESSION[self::USER_SESSION_KEY];
     }
 
+    /**
+     * return:
+     * true: ha felhasználó be van lépve és jogosult az adott belépési pontra
+     * false: ha felhasználó be nincs lépve vagy nem jogosult az adott belépési pontra
+     */
+    function isUserAuthorized()
+    {
+        // TODO: Implement isUserAuthorized() method.
+        return true;
+    }
 }
 

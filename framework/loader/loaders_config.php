@@ -12,9 +12,11 @@ return array(
     "DB_Loader" => "/modules/database/db_loader.php",
     "Teszt_Loader" => "/modules/elek/teszt_loader.php",
     "Uzenetek_Loader" => "/modules/uzenetek/loader.php",
-    "Felhasznalo_Loader" => "/modules/felhasznalo/loader.php",
-    "Penztar_Loader" => "/modules/penztar/loader.php",
-    "Szamla_Loader" => "/modules/szamla/loader.php",
-    "Szamlatomb_Loader" => "/modules/szamlatomb/loader.php",
+    "FelhasznaloLoader" => "/modules/felhasznalo/loader.php",
+    "PenztarLoader" => "/modules/penztar/loader.php",
+    "SzamlaLoader" => "/modules/szamla/loader.php",
+    "SzamlatombLoader" => "/modules/szamlatomb/loader.php",
+    "AutentikacioLoader" => "/modules/autentikacio/loader.php",
+    "PersistentLoader" => "/modules/szamlatomb/loader.php",
 );
 

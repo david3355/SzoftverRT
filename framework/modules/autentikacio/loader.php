@@ -1,6 +1,6 @@
 <?php
 
-class Loader extends AbstractLoader
+class AutentikacioLoader extends AbstractLoader
 {
 
     /**
