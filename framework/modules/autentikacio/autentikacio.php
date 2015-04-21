@@ -1,6 +1,6 @@
 <?php
 
-class Autentikacio extends Site_Authenticator
+class Autentikacio
 {
 
     const USER_SESSION_KEY = "ACTUAL_USER";
