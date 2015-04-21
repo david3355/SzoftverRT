@@ -205,7 +205,7 @@ abstract class Persistent
      */
     final protected function getNextUniqueId()
     {
-        $result = $this->db->query("UPDATE sequence SET id = LAST_INSERT_ID(id+1)");
+        $result = $this->db->query("UPDATE {$táblanév} SET {$id név} = LAST_INSERT_ID({$id név}+1)");
         $result2 = $this->db->query("SELECT LAST_INSERT_ID()");
 
         return $result2[0];
