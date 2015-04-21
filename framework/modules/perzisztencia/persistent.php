@@ -86,7 +86,7 @@ abstract class Persistent
                 $data = $this->db->query($sql);
 
                 $object->onAfterCreate($paramsForActual);
-            }while($class = get_parent_class($class)!=null);
+            }while(($class = get_parent_class($class))!=null);
 
         }
         //4. alosztályok létrehozási tevékenységének futtatása
@@ -102,23 +102,28 @@ abstract class Persistent
      * return array(mezőnév=>érték, mezőnév=>érték, ...)
      * Ha $field_names üres, akkor adjon vissza minden mezőt.
      */
-    final protected function getFields(array $field_names = null, array $condition_fields = null)
+    final protected function getFields(array $select = null, array $where = null)
     {
         //megadott mezők lekérdezése a megfelelő táblákból
 
-        // Lekérdezzük az osztályhoz tartozó táblát
-        // Itt egyrészt nem ezt kell használni, hanem a PersistentManagerből lekérdezni, másrészt öröklődéses lekérdezésnél össze kell joinolni az összes ősosztályhoz tartozó táblát, és úgy lekérni az adatokat object id alapján
-        $table = $this->getTableName();
+        $class = get_class($this);
+        $from = $last = $table = $this->pm->getTableNameForClass($class);
+        while(($class = get_parent_class($class))!=null)
+        {
+            $table = $this->pm->getTableNameForClass($class);
+            $from .= ' INNER JOIN '.$table. ' ON '.$last.'.id='.$table.'.id';
+            $last = $table;
+        }
 
         // Feltételek meghatározása
-        if ($condition_fields == null) $conditions = sprintf('id = %s', $this->id());
-        else $conditions = $this->catConditions($condition_fields, 'AND');
+        if ($where == null) $conditions = sprintf('id = %s', $this->id());
+        else $conditions = $this->catConditions($where, 'AND');
 
         // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
-        if (isset($field_names))
-            $sql = sprintf("SELECT %s FROM %s WHERE %s", implode(',', $field_names), $table, $conditions);
+        if (isset($select))
+            $sql = sprintf("SELECT %s FROM %s WHERE %s", implode(',', $select), $from, $conditions);
         else {
-            $sql = sprintf("SELECT * FROM %s WHERE %s", $table, $conditions);
+            $sql = sprintf("SELECT * FROM %s WHERE %s", $from, $conditions);
         }
 
         $result = $this->db->query($sql);
@@ -135,7 +140,7 @@ abstract class Persistent
         $sql = "";
         $i = 0;
         foreach ($cond as $key => $val) {
-            $sql .= $key . '=' . $val;
+            $sql .= $key . '=' ."'" .$val."'";
             if ($i < count($cond) - 1) $sql .= ' ' . $operator . ' ';
             $i++;
         }
