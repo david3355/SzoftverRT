@@ -1,6 +1,6 @@
 <?
 return array(
-    'default_menu' => array('page' => 'felhasznalo'),
+    'default_menu' => array(),
     'template_class' => "Admin_Template",
     'component_slots' => array(
         'menu' => '',

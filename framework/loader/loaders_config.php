@@ -17,6 +17,6 @@ return array(
     "SzamlaLoader" => "/modules/szamla/loader.php",
     "SzamlatombLoader" => "/modules/szamlatomb/loader.php",
     "AutentikacioLoader" => "/modules/autentikacio/loader.php",
-    "PersistentLoader" => "/modules/szamlatomb/loader.php",
+    "PersistentLoader" => "/modules/perzisztencia/loader.php",
 );
 
