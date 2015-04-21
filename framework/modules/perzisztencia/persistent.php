@@ -60,9 +60,6 @@ abstract class Persistent
         //2. auto generált id lekérdezése, és beállítása $this->id -be
         $this->id = $this->db->getLastInsertID();
 
-        // Az adatok felvétele előtt van lehetőség módosítani a paramétereken (a paramétereket referencia szerint adjuk át):
-        $this->onBeforeCreate($params);
-
         //3. objektum bejegyzése az osztályaihoz tartozó táblákba
         // Az array objektumokat kivesszük, és minden alosztály az OnAfterCreate-ben dolgozza fel
         // Az ott feldolgozott gyerekobjektumokat össze kell kapcsolni a hozzá tartozó ősobjektummal
@@ -70,21 +67,30 @@ abstract class Persistent
 
         if (!is_null($params)) {
             $params['id'] = $this->id;
-            $table = $this->getTableName();
+            do
+            {
+                $table = $this->pm->getTableNameForClass($class);
+                $object = new $class();
+                $paramsForActual = $object->getOwnParameters($params);      // Mindegyik paraméterlista ugyanazt az id-t tartalmazza, de az adott osztályhoz tartozó paraméterekkel
+                $object->onBeforeCreate($paramsForActual);
 
-            foreach ($params as $key => $value) {
-                if (is_array($value)) {
-                    unset($params[$key]);
+                foreach ($paramsForActual as $key => $value) {
+                    if (is_array($value)) {
+                        unset($paramsForActual[$key]);
+                    }
                 }
-            }
-            $attribs = array_keys($params);
-            $values = array_values($params);
+                $attribs = array_keys($paramsForActual);
+                $values = array_values($paramsForActual);
 
-            $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", $table, implode(",", $attribs), implode("','", $values));
-            $data = $this->db->query($sql);
+                $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", $table, implode(",", $attribs), implode("','", $values));
+                $data = $this->db->query($sql);
+
+                $object->onAfterCreate($paramsForActual);
+            }while($class = get_parent_class($class)!=null);
+
         }
         //4. alosztályok létrehozási tevékenységének futtatása
-        $this->onAfterCreate($params);
+
     }
 
 
@@ -227,6 +233,14 @@ abstract class Persistent
      *  return bool
      */
     abstract protected function onBeforeDelete();
+
+
+    /**
+     *  Minden osztály a saját paramétereit adja vissza az összes paraméter közül
+     * @param array $params
+     * @return mixed array
+     */
+    abstract protected function getOwnParameters(array $params = null);
 
 
 }
