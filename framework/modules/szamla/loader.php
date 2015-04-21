@@ -13,6 +13,8 @@ class SzamlaLoader extends AbstractLoader
         switch ($classname) {
             case "Szamla":
                 return $this->myfolder."/szamla.php";
+            case "SzamlaKomponens":
+                return $this->myfolder."/szamla_komponens.php";
             case "SzamlaKifizetes":
                 return $this->myfolder."/szamla_kifizetes.php";
             case "SzamlaTetel":

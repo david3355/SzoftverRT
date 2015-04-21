@@ -14,5 +14,6 @@ class UgyfelKomponens extends Site_Component
     function show()
     {
         // TODO: Implement show() method.
+        echo "<h1>Ügyfél komponens!</h1>";
     }
 }

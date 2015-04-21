@@ -13,6 +13,8 @@ class FelhasznaloLoader extends AbstractLoader
         switch ($classname) {
             case "Felhasznalo":
                 return $this->myfolder."/felhasznalo.php";
+            case "FelhasznaloKomponens":
+                return $this->myfolder."/felhasznalo_komponens.php";
             default:
                 return null;
         }

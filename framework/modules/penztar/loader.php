@@ -13,6 +13,8 @@ class PenztarLoader extends AbstractLoader
         switch ($classname) {
             case "Penztar":
                 return $this->myfolder."/penztar.php";
+            case "PenztarKomponens":
+                return $this->myfolder."/penztar_komponens.php";
             case "PenztarTetel":
                 return $this->myfolder."/penztar_tetel.php";
             default:

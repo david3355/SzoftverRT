@@ -1,7 +1,7 @@
 <?
 return array(
-    'default_menu' => array('page' => 'teszt'),
-    'template_class' => "Admin_Template",
+    'default_menu' => array('page' => 'penztar'),
+    'template_class' => 'Admin_Template',
     'component_slots' => array(
         'menu' => '',
         'login' => '',
@@ -9,8 +9,8 @@ return array(
         'messages' => 'uzenetek'
     ),
     'components' => array(
-        'teszt' => array(
-            'class' => 'Teszt_Komponens',
+        'penztar' => array(
+            'class' => 'PenztarKomponens',
             'params' => array(),
             'allowed_slots' => array('page')
         ),

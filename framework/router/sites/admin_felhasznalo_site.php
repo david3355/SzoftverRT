@@ -1,6 +1,6 @@
 <?
 return array(
-    'default_menu' => array('page' => 'teszt'),
+    'default_menu' => array('page' => 'felhasznalo'),
     'template_class' => "Admin_Template",
     'component_slots' => array(
         'menu' => '',
@@ -9,8 +9,8 @@ return array(
         'messages' => 'uzenetek'
     ),
     'components' => array(
-        'teszt' => array(
-            'class' => 'Teszt_Komponens',
+        'felhasznalo' => array(
+            'class' => 'FelhasznaloKomponens',
             'params' => array(),
             'allowed_slots' => array('page')
         ),

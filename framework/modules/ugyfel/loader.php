@@ -13,6 +13,8 @@ class UgyfelLoader extends AbstractLoader
         switch ($classname) {
             case "Ugyfel":
                 return $this->myfolder."/ugyfel.php";
+            case "UgyfelKomponens":
+                return $this->myfolder."/ugyfel_komponens.php";
             default:
                 return null;
         }

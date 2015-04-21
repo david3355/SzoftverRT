@@ -13,6 +13,8 @@ class SzamlatombLoader extends AbstractLoader
         switch ($classname) {
             case "Szamlatomb":
                 return $this->myfolder."/szamlatomb.php";
+            case "SzamlatombKomponens":
+                return $this->myfolder."/szamlatomb_komponens.php";
             default:
                 return null;
         }

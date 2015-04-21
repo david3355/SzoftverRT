@@ -14,5 +14,6 @@ class SzamlaKomponens extends Site_Component
     function show()
     {
         // TODO: Implement show() method.
+        echo "<h1>Számla komponens!</h1>";
     }
 }
