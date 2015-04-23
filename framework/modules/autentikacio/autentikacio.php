@@ -2,7 +2,8 @@
 
 class Autentikacio
 {
-
+	private $db;
+	$this->db = DatabaseConnection::getInstance();
     const USER_SESSION_KEY = "ACTUAL_USER";
 
     static private $instance;
@@ -17,17 +18,20 @@ class Autentikacio
     }
 
 	/*login from webApp
+	Lekérdezi a kapott usernév - jelszó párosra egyező felhasználót.
 	@params
 		-usernév
 		-jelszó
 	@return true|false, exception*/
 	public function webAppLogin($username, $jelszo)
 	{
-		$jelszo=
-		if()
+		$user0=$this->db->query("SELECT * FROM felhasznalo WHERE user_nev = '{$username}'");
+		$pass=hash('sha256', $jelszo.$user0['salt']);
+		$user=$this->db->query("SELECT * FROM felhasznalo WHERE user_nev = '{$username}' AND jelszo = '{$pass}'");
+		if(!empty($user))
 		{
-			$_SESSION['session']=hash('sha256', $username.date("Y-m-d H:i:s").salt);
-			
+			$_SESSION['session']=hash('sha256', $username.date("Y-m-d H:i:s").$user['salt']);
+			$this->db->query("INSERT INTO session(session, userID) VALUES('{$_SESSION['session']}', '{$user['id']}')");
 		}
 		else
 		{
