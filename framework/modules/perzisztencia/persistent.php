@@ -5,7 +5,9 @@
  */
 abstract class Persistent
 {
-    /**
+    private $table_name;
+	
+	/**
      * @var null
      */
     private $id;
@@ -34,6 +36,7 @@ abstract class Persistent
         $this->pm = PersistenceManager::getInstance();
         $this->db = DatabaseConnection::getInstance();
         $this->mainObjectTable = $this->pm->getMainObjectTableName();
+		$this->table_name = $this->pm->getTableNameForClass(get_class($this));
     }
 
     /**
@@ -203,13 +206,12 @@ abstract class Persistent
      * @return mixed
      * @throws Exception
      */
-    /*final protected function getNextUniqueId()
+    final protected function getNextUniqueId($azon_nev)
     {
-        $result = $this->db->query("UPDATE {$táblanév} SET {$id név} = LAST_INSERT_ID({$id név}+1)");
-        $result2 = $this->db->query("SELECT LAST_INSERT_ID()");
-
-        return $result2[0];
-    }*/
+        $result = $this->db->query("UPDATE {$this->table_name} SET {$azon_nev} = LAST_INSERT_ID({$azon_nev}+1)");
+        
+		return $this->db->query("SELECT LAST_INSERT_ID()")[0];
+    }
 
     /**
      * return hiba kódok array
