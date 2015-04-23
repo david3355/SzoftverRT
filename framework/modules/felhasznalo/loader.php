@@ -15,6 +15,8 @@ class FelhasznaloLoader extends AbstractLoader
                 return $this->myfolder."/felhasznalo.php";
             case "FelhasznaloKomponens":
                 return $this->myfolder."/felhasznalo_komponens.php";
+			case "XFelhasznalo":
+                return $this->myfolder."/Xfelhasznalo.php";
             default:
                 return null;
         }

@@ -203,13 +203,13 @@ abstract class Persistent
      * @return mixed
      * @throws Exception
      */
-    final protected function getNextUniqueId()
+    /*final protected function getNextUniqueId()
     {
         $result = $this->db->query("UPDATE {$táblanév} SET {$id név} = LAST_INSERT_ID({$id név}+1)");
         $result2 = $this->db->query("SELECT LAST_INSERT_ID()");
 
         return $result2[0];
-    }
+    }*/
 
     /**
      * return hiba kódok array

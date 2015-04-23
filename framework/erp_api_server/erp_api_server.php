@@ -11,7 +11,7 @@
 		-data: array, a kért adatok
 		-msg: hibakódok*/
 	
-	
+	require_once($_SERVER["DOCUMENT_ROOT"]."/SzoftverRT/framework/loader/loader_main.php");
 	try
 	{
 		$params=$_REQUEST;
@@ -19,7 +19,7 @@
 		$method=$params['method'];
 		
 		//ellenőrzi, h létezik-e az adott osztály, autoload=true -> ha még nem betöltött, de létezik is true
-		if(class_exists($class)===false)
+		if(class_exists($class, $autoload=true)===false)
 		{
 			throw new Exception("INVALID_CLASS");
 		}
