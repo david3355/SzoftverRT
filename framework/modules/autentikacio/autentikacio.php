@@ -16,7 +16,25 @@ class Autentikacio
         return self::$instance;
     }
 
-
+	/*login from webApp
+	@params
+		-usernév
+		-jelszó
+	@return true|false, exception*/
+	public function webAppLogin($username, $jelszo)
+	{
+		$jelszo=
+		if()
+		{
+			$_SESSION['session']=hash('sha256', $username.date("Y-m-d H:i:s").salt);
+			
+		}
+		else
+		{
+			throw new Exception("INVALID_USER");
+		}
+	}
+	
     public function login($user)
     {
         $_SESSION[self::USER_SESSION_KEY] = $user;
@@ -24,7 +42,7 @@ class Autentikacio
 
     public function logout()
     {
-        session_destroy();
+        $_SESSION['session']=NULL;
     }
 
     public function getActualUser()
