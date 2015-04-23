@@ -1,6 +1,7 @@
 <?
 	//initialize and setup the curl handler
 	//$params=array();
+	$params['class']="XFelhasznalo";
 	$params['method']="validate";
 	
 	$ch = curl_init();
