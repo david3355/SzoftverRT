@@ -210,7 +210,7 @@ abstract class Persistent
     {
         $result = $this->db->query("UPDATE {$this->table_name} SET {$azon_nev} = LAST_INSERT_ID({$azon_nev}+1)");
         
-		return $this->db->query("SELECT LAST_INSERT_ID()")[0];
+		return $this->db->getLastInsertID();
     }
 
     /**
