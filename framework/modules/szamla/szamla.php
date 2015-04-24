@@ -49,8 +49,7 @@ class Szamla extends Persistent
     public function validate(array $params = null)
     {
         $errors = array();
-
-
+		
         if (empty($params['sorszam_elotag'])) $errors[] = 'SORSZAM_ELOTAG_NINCS_MEGADVA';
         if (empty($params['sorszam_szam'])) $errors[] = 'SORSZAM_SZAM_NINCS_MEGADVA';
         if (empty($params['kiallito_neve'])) $errors[] = 'KIALLITO_NEVE_NINCS_MEGADVA';
@@ -66,10 +65,6 @@ class Szamla extends Persistent
         return $errors;
     }
 
-    /*function getSzamlaAdatok() {   
-        return $this->getFields();   
-    }*/
-
     /**
      * @param array $adatok
      * @return array|bool
@@ -83,13 +78,5 @@ class Szamla extends Persistent
 
         return $err;
     }
-
-    /*megadja a kapott számla előtag következő sorszámát
-    public function getNextSzlaID()
-    {
-        $res = $this->db->query("SELECT * FROM {$this->getTableName()} WHERE sorszam_elotag = '{$this->getFields('sorszam_elotag')}' ORDER BY sorszam_szam DESC LIMIT 1");
-        $nextid=$res['sorszam_szam']+1;
-        return $nextid;
-    }*/
 }
 

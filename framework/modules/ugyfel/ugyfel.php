@@ -72,10 +72,6 @@ class Ugyfel extends Persistent
         return $this->delete();
     }
 
-    /*function getUgyfelAdatok() {   
-        return $this->getFields();   
-    }*/
-
     /**
      * @param array $adatok
      * @return array|bool

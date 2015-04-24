@@ -99,10 +99,6 @@ class Felhasznalo extends Persistent
         return mcrypt_create_iv(8, MCRYPT_DEV_URANDOM);
     }
 
-    /*function getFelhasznaloAdatok() {   
-        return $this->getFields();   
-    }*/
-
     /**
      * @param array $adatok
      * @return array|bool
@@ -116,6 +112,5 @@ class Felhasznalo extends Persistent
 
         return $err;
     }
-
 }
 

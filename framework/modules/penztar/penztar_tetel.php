@@ -10,7 +10,15 @@ class PenztarTetel extends Persistent
      */
     protected function onBeforeCreate(array &$params = null)
     {
-
+		//ellenőrzi, hogy van-e fedzet a megadott összegre, ha kiadás (- előjelű)
+		if($params['osszeg']<0)
+		{
+			$penztar=new Penztar($params['penztarID']);
+			if($penztar->getFields('egyenleg')<$params['osszeg'])
+			{
+				throw new Exception("NINCS_FEDEZET");
+			}
+		}
     }
 
     /**
@@ -46,10 +54,6 @@ class PenztarTetel extends Persistent
         return $errors;
     }
 
-    /*function getPenztarTetelAdatok() {   
-        return $this->getFields();   
-    }*/
-
     /**
      * @param array $adatok
      * @return array|bool
@@ -63,15 +67,5 @@ class PenztarTetel extends Persistent
 
         return $err;
     }
-
-    /*a kapott pénztárhoz tartozó következő tételszámot adja meg
-        -a pénztár tétel minden pénztár_id -vel egyedi, azaz pl. 47-es tételből több is lehet, de
-        példa: 4-es pénztárhoz 45-ös tétel -ből csak 1!
-    public function getNextPenztarTetelID()
-    {
-        $this->db->query("SELECT * FROM {$this->getTableName()} WHERE penztarID = '{$this->getFields('penztarID')}' ORDER BY tetel_sorszam DESC LIMIT 1");
-        $nextid=$res['tetel_sorszam']+1;
-        return $nextid;
-    }*/
 }
 

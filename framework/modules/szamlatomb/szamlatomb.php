@@ -39,7 +39,7 @@ class Szamlatomb extends Persistent
 
         if (empty($params['megnevezes'])) $errors[] = 'MEGNEVEZES_NINCS_MEGADVA';
         if (empty($params['szamla_elotag'])) $errors[] = 'SZAMLA_ELOTAG_NINCS_MEGADVA';
-        //if (empty($params['szamla_aktual_szam'])) $errors[] = 'SZAMLA_KEZDOSZAM_NINCS_MEGADVA';
+        if (empty($params['szamla_aktual_szam'])) $errors[] = 'SZAMLA_KEZDOSZAM_NINCS_MEGADVA';
 
         return $errors;
     }
@@ -50,12 +50,13 @@ class Szamlatomb extends Persistent
      */
     function setSzamlatombAdatok(array $adatok)
     {
-        $err = $this->validate($adatok);
-        if (empty($err)) {
-            return $this->setFields($adatok);
-        }
+		/*ITT FIGYELNI KELL RÁ, HOGY NE LEHESSEN FELÜLÍRNI A 'SZAMLA_AKTUAL_SZAM' MEZŐT*/
+		$errors = array();
 
-        return $err;
+		if (empty($params['megnevezes'])) $errors[] = 'MEGNEVEZES_NINCS_MEGADVA';
+		if (empty($params['szamla_elotag'])) $errors[] = 'SZAMLA_ELOTAG_NINCS_MEGADVA';
+
+		return $errors;
     }
 }
 

@@ -10,7 +10,15 @@ class SzamlaKifizetes extends Persistent
      */
     protected function onBeforeCreate(array &$params = null)
     {
-
+		//fedzetellenőrzés a kifizetésre (összeg - előjelű)
+		if($params['osszeg']<0)
+		{
+			$penztar=new Penztar($params['penztarID']);
+			if($penztar->getFields('egyenleg')<$params['osszeg'])
+			{
+				throw new Exception("NINCS_FEDEZET");
+			}
+		}
     }
 
     /**
@@ -42,10 +50,6 @@ class SzamlaKifizetes extends Persistent
 
         return $errors;
     }
-
-    /*function getSzamlaKifizetesAdatok() {   
-        return $this->getFields();   
-    }*/
 
     /**
      * @param array $adatok

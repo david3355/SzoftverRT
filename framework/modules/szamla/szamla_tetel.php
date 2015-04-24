@@ -50,10 +50,6 @@ class SzamlaTetel extends Persistent
         return $errors;
     }
 
-    /*function getSzamlaTetelAdatok() {   
-        return $this->getFields();   
-    }*/
-
     /**
      * @param array $adatok
      * @return array|bool
@@ -67,14 +63,5 @@ class SzamlaTetel extends Persistent
 
         return $err;
     }
-
-    /*a kapott számlához tartozó következő tételszámot adja meg
-        példa: A-7/45-4
-    public function getNextSzlaTetelID()
-    {
-        $this->db->query("SELECT * FROM {$this->getTableName()} WHERE szamla_sorszam_elotag = '{$this->getFields('szamla_sorszam_elotag')}' AND szamla_sorszam_szam = '{$this->getFields('szamla_sorszam_szam')}' ORDER BY sorszam DESC LIMIT 1");
-        $nextid=$res['sorszam']+1;
-        return $nextid;
-    }*/
 }
 

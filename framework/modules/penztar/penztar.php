@@ -42,10 +42,6 @@ class Penztar extends Persistent
         return $errors;
     }
 
-    /*function getPenztarAdatok() {   
-        return $this->getFields();   
-    }*/
-
     /**
      * @param array $adatok
      * @return array|bool
