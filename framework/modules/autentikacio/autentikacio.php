@@ -3,8 +3,14 @@
 class Autentikacio
 {
     const USER_SESSION_KEY = "ACTUAL_USER";
+    
+    private $pm;
 
     static private $instance;
+    
+    public function __construct(){
+    	$this->pm = PersistanceManager::getInstance();
+    }
 
     static function getInstance()
     {
