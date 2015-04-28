@@ -14,6 +14,26 @@ return array(
             'params' => array(),
             'allowed_slots' => array('page')
         ),
+        'felhasznalo' => array(
+            'class' => 'FelhasznaloKomponens',
+            'params' => '',
+            'allowed_slots' => array('page')
+        ),
+        'ugyfel'=> array(
+            'class'=>'UgyfelKomponens',
+            'params' => '',
+            'allowed_slots' => array('page')
+        ),
+        'penztar' => array(
+            'class' => 'PenztarKomponens',
+            'params' => '',
+            'allowed_slots' => array('page')
+        ),
+        'szamla' => array(
+            'class' => 'SzamlaKomponens',
+            'params' => '',
+            'allowed_slots' => array('page')
+        ),
         'uzenetek' => array(
             'class' => 'Uzenetek_Site_Component',
             'allowed_slots' => array()
