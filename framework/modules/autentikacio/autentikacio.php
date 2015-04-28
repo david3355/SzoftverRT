@@ -53,7 +53,7 @@ class Autentikacio
             -usernév
             -jelszó
     @return true|false, exception*/
-    public function login($username, $jelszo)
+    /*public function login($username, $jelszo)
     {
         $user = $this->getFields(null,['user_nev' => $username]);
         
@@ -69,6 +69,6 @@ class Autentikacio
         } else {
             return false;
         }
-    }
+    }*/
 }
 
