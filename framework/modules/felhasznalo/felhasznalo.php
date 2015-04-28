@@ -112,5 +112,30 @@ class Felhasznalo extends Persistent
 
         return $err;
     }
+    
+    /*login from webApp
+    Lekérdezi a kapott usernév - jelszó párosra egyező felhasználót.
+    @params
+            -usernév
+            -jelszó
+    @return true|false, exception*/
+    public function login($username, $jelszo)
+    {
+        $user = $this->getFields(null,['user_nev' => $username]);
+        
+        if(empty($user)){
+            return false;
+        }
+        
+        $pass=hash('sha256', $jelszo.$user['salt']);
+        
+        if($pass == $user['jelszo']){
+            Autentikacio::getInstance()->login($user['id']);
+            return true;
+        } else {
+            return false;
+        }
+    }
+  
 }
 
