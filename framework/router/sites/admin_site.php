@@ -16,22 +16,22 @@ return array(
         ),
         'felhasznalo' => array(
             'class' => 'FelhasznaloKomponens',
-            'params' => '',
+            'params' => array(),
             'allowed_slots' => array('page')
         ),
         'ugyfel'=> array(
             'class'=>'UgyfelKomponens',
-            'params' => '',
+            'params' => array(),
             'allowed_slots' => array('page')
         ),
         'penztar' => array(
             'class' => 'PenztarKomponens',
-            'params' => '',
+            'params' => array(),
             'allowed_slots' => array('page')
         ),
         'szamla' => array(
             'class' => 'SzamlaKomponens',
-            'params' => '',
+            'params' => array(),
             'allowed_slots' => array('page')
         ),
         'uzenetek' => array(
