@@ -1,8 +1,8 @@
 <?
 	//initialize and setup the curl handler
 	//$params=array();
-	$params['class']="XFelhasznalo";
-	$params['method']="validate";
+	$params['class']="Erpugyfel";
+	$params['method']="getAllUgyfel";
 	
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, "http://localhost:801/SzoftverRT/framework/erp_api_server/erp_api_server.php");

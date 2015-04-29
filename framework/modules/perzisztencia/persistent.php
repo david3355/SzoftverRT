@@ -175,6 +175,44 @@ abstract class Persistent
 
     }
 
+	/*Lista lekérdezés
+		-attr: tömbben megadva a lekérendő attributumok, ha üres, akkor *
+		-where: natívan megadva a where feltétele
+		-order_by: natívan megadva mi szerint hogyan legyen rendezve
+		-limit: tömbben a kezdőérték és darab megadva*/
+	final function select(array $attr, $where, $order_by, array $limit)
+	{
+		if(!empty($attr))
+		{
+			foreach($attr as $k)
+			{
+				$attr.=$k.", ";
+			}
+			$attr=rtrim($attr, ',');
+		}
+		else
+		{
+			$attr="*";
+		}
+		
+		if(!empty($where))
+		{
+			$where="WHERE ".$where;
+		}
+		
+		if(!empty($order_by))
+		{
+			$order_by="ORDER BY ".$order_by;
+		}
+		
+		if(!empty($limit))
+		{
+			$limit="LIMIT {$limit[0]}, {$limit[1]}";
+		}
+		
+		return $this->db->query("SELECT {$attr} FROM {$this->table_name} {$where} {$order_by} {$limit}");
+	}
+	
     final function delete()
     {
         //objektum törlése a megfelelő táblákból
