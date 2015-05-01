@@ -112,6 +112,10 @@ class Felhasznalo extends Persistent
 
         return $err;
     }
-  
+
+    protected function getOwnParameters(array $params = null) {
+        
+    }
+
 }
 
