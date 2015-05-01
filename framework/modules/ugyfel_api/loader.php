@@ -1,6 +1,7 @@
 <?php
 
-class AutentikacioLoader extends AbstractLoader
+
+class Ugyfel_API_Loader extends AbstractLoader
 {
 
     /**
@@ -11,10 +12,8 @@ class AutentikacioLoader extends AbstractLoader
     protected function getFileNameForClass($classname)
     {
         switch ($classname) {
-            case "Autentikacio":
-                return $this->myfolder."/autentikacio.php";
-            case "AutentikacioKomponens":
-                return $this->myfolder."/autentikacio_komponens.php";
+            case "Ugyfel_API":
+                return $this->myfolder . "/ugyfel_api.php";
             default:
                 return null;
         }
