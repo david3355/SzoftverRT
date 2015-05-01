@@ -1,16 +1,10 @@
 <?php
 
-class Autentikacio
+class Autentikacio extends Site_Authenticator
 {
     const USER_SESSION_KEY = "ACTUAL_USER";
-    
-    private $pm;
 
     static private $instance;
-    
-    public function __construct(){
-    	$this->pm = PersistanceManager::getInstance();
-    }
 
     static function getInstance()
     {
@@ -23,6 +17,10 @@ class Autentikacio
 	
     public function login($user)
     {
+        $pm = PersistenceManager::getInstance();
+
+
+
         $_SESSION[self::USER_SESSION_KEY] = $user;
     }
 
