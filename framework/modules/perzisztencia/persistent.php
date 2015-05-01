@@ -34,7 +34,7 @@ abstract class Persistent
     {
         $this->id = $id;
         $this->pm = PersistenceManager::getInstance();
-        $this->db = DatabaseConnection::getInstance();
+        $this->db = Database::getInstance();
         $this->mainObjectTable = $this->pm->getMainObjectTableName();
 		$this->table_name = $this->pm->getTableNameForClass(get_class($this));
     }

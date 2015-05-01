@@ -25,14 +25,14 @@ class PersistenceManager
      */
     static function getInstance()
     {
-        if (!isset(self::$instance)) self::$instance = new self(DatabaseConnection::getInstance());
+        if (!isset(self::$instance)) self::$instance = new self(Database::getInstance());
         return self::$instance;
     }
 
     /**
      * @param DatabaseConnection $connection
      */
-    final function __construct(DatabaseConnection $connection)
+    final function __construct(Database $connection)
     {
         $this->db = $connection;
         $this->mainObjectTableName = "objects";

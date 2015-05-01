@@ -64,5 +64,15 @@ class SzamlaKifizetes extends Persistent
 
         return $err;
     }
+
+    /**
+     *  Minden osztály a saját paramétereit adja vissza az összes paraméter közül
+     * @param array $params
+     * @return mixed array
+     */
+    protected function getOwnParameters(array $params = null)
+    {
+        // TODO: Implement getOwnParameters() method.
+    }
 }
 
