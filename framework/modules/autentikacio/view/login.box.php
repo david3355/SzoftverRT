@@ -1,21 +1,27 @@
-<form class="actions" action="" method="POST">
+<form class="form_box" action="" method="POST">
     <table>
         <tbody>
         <tr>
             <td>
-                <input name="username" type="text" placeholder="Felhasználónév"/>
+                Felhasználónév
+            </td>
+            <td>
+                <input name="username" type="text"/>
             </td>
         </tr>
         <tr>
             <td>
-                <input name="password" type="password" placeholder="Jelszó"/>
+                Jelszó
             </td>
-        </tr>
-        <tr>
             <td>
-                <input type="submit" name="login" value="Bejelentkezés"/>
+                <input name="password" type="password"/>
             </td>
         </tr>
         </tbody>
     </table>
+    <div class="actions">
+        <div class="float_right">
+            <input type="submit" name="login" value="Belépés"/>
+        </div>
+    </div>
 </form>

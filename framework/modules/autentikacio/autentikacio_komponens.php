@@ -12,7 +12,14 @@ class AutentikacioKomponens extends Site_Component
 
     function process()
     {
-        // TODO: Implement process() method.
+
+        if (isset($_POST['login']) && !empty($_POST['login'])) {
+            $this->auth->login($_POST['username'], $_POST['password']);
+        }
+
+        if (isset($_POST['logout']) && !empty($_POST['logout'])) {
+            $this->auth->logout();
+        }
     }
 
     function show()

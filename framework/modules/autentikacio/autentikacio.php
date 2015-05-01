@@ -14,19 +14,18 @@ class Autentikacio extends Site_Authenticator
 
         return self::$instance;
     }
-	
-    public function login($user)
+
+    public function login($username, $password)
     {
-        $pm = PersistenceManager::getInstance();
+        //$pm = PersistenceManager::getInstance();
 
 
-
-        $_SESSION[self::USER_SESSION_KEY] = $user;
+        $_SESSION[self::USER_SESSION_KEY] = true;
     }
 
     public function logout()
     {
-        $_SESSION[self::USER_SESSION_KEY]=NULL;
+        unset($_SESSION[self::USER_SESSION_KEY]);
     }
 
     public function getActualUser()
@@ -41,16 +40,15 @@ class Autentikacio extends Site_Authenticator
      */
     function isUserAuthorized()
     {
-        // TODO: Implement isUserAuthorized() method.
-        return true;
+        return isset($_SESSION[self::USER_SESSION_KEY]) && !empty($_SESSION[self::USER_SESSION_KEY]);
     }
-    
-       /*login from webApp
-    Lekérdezi a kapott usernév - jelszó párosra egyező felhasználót.
-    @params
-            -usernév
-            -jelszó
-    @return true|false, exception*/
+
+    /*login from webApp
+ Lekérdezi a kapott usernév - jelszó párosra egyező felhasználót.
+ @params
+         -usernév
+         -jelszó
+ @return true|false, exception*/
     /*public function login($username, $jelszo)
     {
         $user = $this->getFields(null,['user_nev' => $username]);
