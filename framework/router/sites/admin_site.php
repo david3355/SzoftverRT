@@ -4,7 +4,7 @@ return array(
     'template_class' => "Admin_Template",
     'component_slots' => array(
         'menu' => '',
-        'login' => '',
+        'login' => 'autentikacio',
         'page' => '',
         'messages' => 'uzenetek'
     ),
@@ -33,6 +33,10 @@ return array(
             'class' => 'SzamlaKomponens',
             'params' => array(),
             'allowed_slots' => array('page')
+        ),
+        'autentikacio' => array(
+            'class' => 'AutentikacioKomponens',
+            'allowed_slots' => array()
         ),
         'uzenetek' => array(
             'class' => 'Uzenetek_Site_Component',

@@ -1,12 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Gábor
- * Date: 2015.05.01.
- * Time: 11:36
- */
 
-class AutentikacioKomponens extends Site_Component{
+class AutentikacioKomponens extends Site_Component
+{
+
+    private $auth;
+
+    protected function afterConstruction()
+    {
+        $this->auth = Autentikacio::getInstance();
+    }
 
     function process()
     {
@@ -15,6 +17,10 @@ class AutentikacioKomponens extends Site_Component{
 
     function show()
     {
-        // TODO: Implement show() method.
+        if (!$this->auth->isUserAuthorized()) {
+            include_once 'view/login.box.php';
+        } else {
+            include_once 'view/logout.box.php';
+        }
     }
 }
