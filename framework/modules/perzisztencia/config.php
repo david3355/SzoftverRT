@@ -34,7 +34,7 @@ class Config
     public function get($key)
     {
         if ($this->exists($key)) {
-            return $this->config['key'];
+            return $this->config[$key];
         }
 
         return false;

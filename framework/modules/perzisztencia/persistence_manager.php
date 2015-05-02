@@ -21,6 +21,11 @@ class PersistenceManager
     static private $instance;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * @return PersistenceManager
      */
     static function getInstance()
@@ -35,6 +40,7 @@ class PersistenceManager
     final function __construct(Database $connection)
     {
         $this->db = $connection;
+        $this->config = new Config();
         $this->mainObjectTableName = "objects";
     }
 
@@ -97,7 +103,7 @@ class PersistenceManager
      */
     final function getTableNameForClass($classname)
     {
-        return (new Config())->get($classname);
+        return $this->config->get($classname);
     }
 
     /**

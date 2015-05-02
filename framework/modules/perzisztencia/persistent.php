@@ -89,7 +89,7 @@ abstract class Persistent
                 $data = $this->db->query($sql);
 
                 $object->onAfterCreate($paramsForActual);
-            }while(($class = get_parent_class($class))!=null);
+            }while(($class = get_parent_class($class))!="Persistent");
 
         }
         //4. alosztályok létrehozási tevékenységének futtatása
@@ -119,7 +119,7 @@ abstract class Persistent
         }
 
         // Feltételek meghatározása
-        if ($where == null) $conditions = sprintf('id = %s', $this->id());
+        if ($where == null) $conditions = sprintf('id = %s', $this->getID());
         else $conditions = $this->catConditions($where, 'AND');
 
         // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
