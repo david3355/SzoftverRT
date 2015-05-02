@@ -42,42 +42,26 @@ class Felhasznalo extends Persistent
     {
         $errors = array();
 
-        if (empty($params['nev'])) $errors[] = 'NEV_NINCS_MEGADVA';
         if (empty($params['email'])) $errors[] = 'EMAIL_NINCS_MEGADVA';
 
-        /*user_nev:
+        /*nev:
             -nem üres
             -egyedi
             -min. 3 hosszú*/
-        if (!empty($params['user_nev'])) {
-            if (strlen($params['user_nev']) >= 3) {
-                //nem egyedi, mert már van ilyen user_nev
-                if ($this->getFields(['user_nev'], ['user_nev' => $params['user_nev']])[0]['user_nev'] == true) {
-                    $errors[] = "USED_USER_NEV";
-                }
-            } else {
-                $errors[] = "ROVID_USER_NEV";
-            }
-        } else {
-            $errors[] = "USERNEV_NINCS_MEGADVA";
-        }
+        if (empty($params['nev'])) $errors[] = "USERNEV_NINCS_MEGADVA";
+        if (strlen($params['nev']) < 3) $errors[] = "ROVID_USER_NEV";
+        //nem egyedi, mert már van ilyen user_nev
+        $users = $this->getFields(['nev'], ['nev' => $params['nev']]);
+
+        if ($users && $users[0]['nev'] != true) $errors[] = "HASZNALT_USER_NEV";
 
         /*jelszo:
             -nem üres
             -min. 6 hosszú
             -kis-nagy betű, szám*/
-        if (!empty($params['jelszo'])) {
-            if (strlen($params['jelszo']) >= 6) {
-                if (!isPasswordSecure($params['jelszo'])) {
-                    $errors[] = "KIS_BETU_NAGY_BETU_SZAM_SZUKSEGES";
-                }
-            } else {
-                $errors[] = "ROVID_JELSZO";
-            }
-        } else {
-            $errors[] = "JELSZO_NINCS_MEGADVA";
-        }
-
+        if (empty($params['jelszo'])) $errors[] = "JELSZO_NINCS_MEGADVA";
+        if (strlen($params['jelszo']) < 6) $errors[] = "ROVID_JELSZO";
+        if (!$this->isPasswordSecure($params['jelszo'])) $errors[] = "KIS_BETU_NAGY_BETU_SZAM_SZUKSEGES";
 
         return $errors;
     }

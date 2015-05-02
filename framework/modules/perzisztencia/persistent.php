@@ -68,14 +68,18 @@ abstract class Persistent
         // Az ott feldolgozott gyerekobjektumokat össze kell kapcsolni a hozzá tartozó ősobjektummal
         // Minden paramétert át kell adni az onAfterCreate-nek, nem csak a tömbértékűekre lehet szükség
 
+
         if (!is_null($params)) {
+
+            // Ha a gyerekosztályok nem írják felül az onBeforeCreate-et, akkor az ősé fog lefutni, ha pedig implementálja a gyerekosztály, meg kell hívni az ős onBeforeCreate-jét
+            $this->onBeforeCreate($params);					// Az még kérdéses, hogy ezt hol hívjuk és hogyan.
+
             $params['id'] = $this->id;
             do
             {
                 $table = $this->pm->getTableNameForClass($class);
-                $object = new $class();
-                $paramsForActual = $object->getOwnParameters($params);      // Mindegyik paraméterlista ugyanazt az id-t tartalmazza, de az adott osztályhoz tartozó paraméterekkel
-                $object->onBeforeCreate($paramsForActual);
+                $paramsForActual = $class::getOwnParameters($params);      // Mindegyik paraméterlista ugyanazt az id-t tartalmazza, de az adott osztályhoz tartozó paraméterekkel
+
 
                 foreach ($paramsForActual as $key => $value) {
                     if (is_array($value)) {
@@ -88,12 +92,13 @@ abstract class Persistent
                 $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", $table, implode(",", $attribs), implode("','", $values));
                 $data = $this->db->query($sql);
 
-                $object->onAfterCreate($paramsForActual);
+
             }while(($class = get_parent_class($class))!="Persistent");
+
+            $this->onAfterCreate($paramsForActual);					// Az még kérdéses, hogy ezt hol hívjuk és hogyan
 
         }
         //4. alosztályok létrehozási tevékenységének futtatása
-
     }
 
 
@@ -105,36 +110,48 @@ abstract class Persistent
      * return array(mezőnév=>érték, mezőnév=>érték, ...)
      * Ha $field_names üres, akkor adjon vissza minden mezőt.
      */
-    final protected function getFields(array $select = null, array $where = null)
+    final protected function getFields(array $select = null, array $where = null, array $order = null, $limit = "")
     {
         //megadott mezők lekérdezése a megfelelő táblákból
-
         $class = get_class($this);
+
+        // Ha id-t akarunk lekérdezni, akkor azt minősíteni kell az egyik táblával, a többi attribútumnak különböznie kell a táblákban
+        $idx = array_search('id', $select);
+        if($idx !== false) $select[$idx] = $class.'.'.$select[$idx];
+
+        if($order != null)
+        {
+            $idx = array_search('id', $order);
+            if($idx !== false) $order[$idx] = $class.'.'.$order[$idx];
+            $order = 'ORDER BY '.implode(',', $order);
+        }
+        else $order = "";
+
+        // Feltételek meghatározása
+        if ($where == null) $where = sprintf('%s.id = %s', $this->pm->getTableNameForClass($class), $this->getID());
+        else $where = 'WHERE '.$this->catConditions($where, 'AND');
+
         $from = $last = $table = $this->pm->getTableNameForClass($class);
-        while(($class = get_parent_class($class))!=null)
+
+        while(($class = get_parent_class($class))!="Persistent")
         {
             $table = $this->pm->getTableNameForClass($class);
             $from .= ' INNER JOIN '.$table. ' ON '.$last.'.id='.$table.'.id';
             $last = $table;
         }
 
-        // Feltételek meghatározása
-        if ($where == null) $conditions = sprintf('id = %s', $this->getID());
-        else $conditions = $this->catConditions($where, 'AND');
+        if(!empty($limit)) $limit = "LIMIT ".$limit;
+
+        if (isset($select)) $select = implode(',', $select);
+        else $select = "*";
 
         // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
-        if (isset($select))
-            $sql = sprintf("SELECT %s FROM %s WHERE %s", implode(',', $select), $from, $conditions);
-        else {
-            $sql = sprintf("SELECT * FROM %s WHERE %s", $from, $conditions);
-        }
+        $sql = sprintf("SELECT %s FROM %s %s %s %s", $select, $from, $where, $order, $limit);
+
 
         $result = $this->db->query($sql);
 
-        // Visszaadjuk az adatokat
-
-        return $result[0];
-
+        return $result;
     }
 
     // Ha erre tud valaki szebb megoldást, írja nyugodtan :D
@@ -142,8 +159,20 @@ abstract class Persistent
     {
         $sql = "";
         $i = 0;
+
         foreach ($cond as $key => $val) {
-            $sql .= $key . '=' ."'" .$val."'";
+            $class = get_class($this);
+            do
+            {
+                if(array_key_exists($key, $class::getOwnParameters()))
+                {
+                    $table = $this->pm->getTableNameForClass($class);
+                    break;
+                }
+            }
+            while(($class = get_parent_class($class))!="Persistent");
+
+            $sql .= $table.'.'.$key . '=' ."'" .$val."'";
             if ($i < count($cond) - 1) $sql .= ' ' . $operator . ' ';
             $i++;
         }
@@ -157,22 +186,23 @@ abstract class Persistent
      */
     final protected function setFields(array $field_values)
     {
-
-        //megadott mezők beállítása a megfelelő táblákba
-
-        // Lekérdezzük az osztályhoz tartozó táblát
-        $table = $this->getTableName();
-
+        $result = true;
         foreach ($field_values as $key => $value) {
-            $updates[] = $key . "='" . $value . "'";
+            $class = get_class($this);
+            do
+            {
+                if(array_key_exists($key, $class::getOwnParameters()))
+                {
+                    $table = $this->pm->getTableNameForClass($class);
+                    break;
+                }
+            }
+            while(($class = get_parent_class($class))!="Persistent");
+            $sql = sprintf("UPDATE %s SET %s='%s' WHERE id = %s", $table, $key, $value, $this->id);
+            echo $sql.'<br>';
+            $result = $result && $this->db->query($sql);
         }
-
-        $sql = sprintf("UPDATE %s SET %s WHERE id = %s", $table, implode(", ", $updates), $this->id);
-
-        $result = $this->db->query($sql);
-
         return $result;
-
     }
 
 	/*Lista lekérdezés
