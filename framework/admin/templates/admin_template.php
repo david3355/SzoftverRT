@@ -28,7 +28,7 @@ class Admin_Template extends Site_Template
                         <a href="?page=szamla"><span>Számlák</span></a>
                         <ul>
                             <li>
-                                <a href="?page=kifizetesek"><span>Kifizetesek</span></a>
+                                <a href="?page=kifizetes"><span>Kifizetesek</span></a>
                             </li>
                             <li>
                                 <a href="?page=szamlatomb"><span>Számlatömbök</span></a>
@@ -39,7 +39,7 @@ class Admin_Template extends Site_Template
                         <a href="?page=penztar"><span>Pénztárak</span></a>
                     </li>
                     <li>
-                        <a href="?page=igenylesek"><span>Igénylések</span></a>
+                        <a href="?page=igenyles"><span>Igénylések</span></a>
                     </li>
                 </ul>
             </div>
