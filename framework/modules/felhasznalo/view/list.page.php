@@ -28,7 +28,10 @@
 </div>
 
 <div class="clear"></div>
-<div class="pagination">
+<?php
+    $this->felhasznaloDataTable->printTable();
+?>
+<!--<div class="pagination">
     <div class="pagination_element_count">Találatok száma: 3</div>
     <select>
         <option value="50" selected="">50</option>
@@ -110,5 +113,5 @@
         <span class="pagination_active_page_number">1</span>
     </span>
     Következő
-</div>
+</div>-->
 

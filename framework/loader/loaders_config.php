@@ -1,4 +1,4 @@
-<?
+<?php
 
 return array(
     "Core_Loader" => "/router/loader.php",
@@ -20,5 +20,6 @@ return array(
     "SzamlatombLoader" => "/modules/szamlatomb/loader.php",
     "AutentikacioLoader" => "/modules/autentikacio/loader.php",
     "PersistentLoader" => "/modules/perzisztencia/loader.php",
+    "DataTableLoader" => "/modules/datatable/loader.php"
 );
 

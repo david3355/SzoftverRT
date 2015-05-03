@@ -5,17 +5,20 @@
  */
 class FelhasznaloKomponens extends Site_Component {
     
-    private $showFormPage = false;
-    
+    private $showFormPage = false;    
     private $pm;
-
+    private $felhasznaloDataTable;
+    
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
+        $this->felhasznaloDataTable = new Felhasznalo_Lazy_Data_Table();
     }
     
     function process()
-    {
+    {   
+        $this->felhasznaloDataTable->process($_POST);
+        
         if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
             $this->showFormPage = true;
         }
