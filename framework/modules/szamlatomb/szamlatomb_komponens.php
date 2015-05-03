@@ -6,14 +6,32 @@
 class SzamlatombKomponens extends Site_Component
 {
 
+    private $showFormPage = false;
+
+    private $pm;
+
+    protected function afterConstruction()
+    {
+        $this->pm = PersistenceManager::getInstance();
+    }
+
     function process()
     {
-        // TODO: Implement process() method.
+        if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
+            $this->showFormPage = true;
+        }
+
+        if(!empty($_POST['back']) || !empty($_POST['save'])){
+            $this->showFormPage = false;
+        }
     }
 
     function show()
     {
-        // TODO: Implement show() method.
-        echo "<h1>Számlatömb komponens!</h1>";
+        if ($this->showFormPage) {
+            include_once 'view/form.page.php';
+        } else {
+            include_once 'view/list.page.php';
+        }
     }
 }

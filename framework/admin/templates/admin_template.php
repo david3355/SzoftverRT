@@ -26,12 +26,17 @@ class Admin_Template extends Site_Template
                     </li>
                     <li>
                         <a href="?page=szamla"><span>Számlák</span></a>
+                        <ul>
+                            <li>
+                                <a href="?page=kifizetesek"><span>Kifizetesek</span></a>
+                            </li>
+                            <li>
+                                <a href="?page=szamlatomb"><span>Számlatömbök</span></a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="?page=penztar"><span>Pénztárak</span></a>
-                    </li>
-                    <li>
-                        <a href="?page=kifizetesek"><span>Kifizetesek</span></a>
                     </li>
                     <li>
                         <a href="?page=igenylesek"><span>Igénylések</span></a>
