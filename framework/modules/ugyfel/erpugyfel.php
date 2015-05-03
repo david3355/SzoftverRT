@@ -13,7 +13,7 @@
 		public function getAllUgyfel()
 		{
 			$uf=new Ugyfel();
-			return $uf->select();
+			return $uf->select(array(), "", "", array());
 		}
 	}
 ?>

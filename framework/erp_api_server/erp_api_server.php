@@ -11,7 +11,7 @@
 		-data: array, a kért adatok
 		-msg: hibakódok*/
 	
-	require_once($_SERVER["DOCUMENT_ROOT"]."/SzoftverRT/framework/loader/loader_main.php");
+	require_once($_SERVER["DOCUMENT_ROOT"]."/loader/loader_main.php");
 	
 	$apps=array("2e6766863522c270667cd91952db15f5" => "Ügyfélkapu API");
 	
