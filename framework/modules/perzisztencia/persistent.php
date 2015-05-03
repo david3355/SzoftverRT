@@ -315,7 +315,7 @@ abstract class Persistent
      * @param array $params
      * @return mixed array
      */
-    abstract protected function getOwnParameters(array $params = null);
+    abstract protected static function getOwnParameters(array $params = null);
 
 
 }
