@@ -97,8 +97,15 @@ class Felhasznalo extends Persistent
         return $err;
     }
 
-    protected function getOwnParameters(array $params = null) {
-        
+    protected static function getOwnParameters(array $params = null) {      
+        $own = array_fill_keys(array('id', 'nev', 'email', 'jelszo', 'salt', 'jog', 'aktiv'), '');
+        if($params == null){
+            return $own;
+        }
+        foreach($own as $key => $value) {
+            $own[$key]=$params[$key];
+        }
+        return $own;
     }
 
 }

@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS `fejleszt_erp`.`ugyfel` ;
 
 DROP TABLE IF EXISTS `fejleszt_erp`.`felhasznalo` ;
 
-DROP TABLE IF EXISTS `fejleszt_erp`.`penztar_tetel` ;
+DROP TABLE IF EXISTS `fejleszt_erp`.`penztartetel` ;
 
 DROP TABLE IF EXISTS `fejleszt_erp`.`penztar` ;
 

@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS `fejleszt_erp`.`objects` ;
 
 CREATE TABLE IF NOT EXISTS `fejleszt_erp`.`objects` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL auto_increment,
   `class` VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
   PRIMARY KEY (`id`))
 ;
@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `fejleszt_erp`.`felhasznalo` (
   `jelszo` VARCHAR(64) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
   `jog` TINYINT(1) NOT NULL DEFAULT 0,
   `aktiv` TINYINT(1) NOT NULL DEFAULT 0,
+  `salt` VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `nev_UNIQUE` (`nev` ASC),
   CONSTRAINT `felhasznalo_object`
