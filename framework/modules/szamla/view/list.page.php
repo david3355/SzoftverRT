@@ -9,7 +9,9 @@
     </div>
     <div class="clear_right"></div>
     <div class="defaultoperationsbox">
-        <a href="?page=szamla&subpage=uj-szamla" class="button">Új számla</a>
+        <form action="" method="post">
+            <button type="submit" name="new" value="new">Új számla</button>
+        </form>
     </div>
     <div class="filtersbox">
         <a href="#" title="Szűrők frissítése">
