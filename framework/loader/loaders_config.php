@@ -19,6 +19,7 @@ return array(
     "SzamlaLoader" => "/modules/szamla/loader.php",
     "SzamlatombLoader" => "/modules/szamlatomb/loader.php",
     "IgenylesLoader" => "/modules/igenyles/loader.php",
+    "KifizetesLoader" => "/modules/kifizetes/loader.php",
     "AutentikacioLoader" => "/modules/autentikacio/loader.php",
     "PersistentLoader" => "/modules/perzisztencia/loader.php",
     "DataTableLoader" => "/modules/datatable/loader.php"

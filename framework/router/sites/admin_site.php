@@ -1,7 +1,7 @@
 <?
 return array(
     'default_menu' => array('page' => 'teszt'),
-    'template_class' => "Admin_Template",
+    'template_class' => 'Admin_Template',
     'component_slots' => array(
         'menu' => '',
         'login' => 'autentikacio',
@@ -31,6 +31,11 @@ return array(
         ),
         'szamla' => array(
             'class' => 'SzamlaKomponens',
+            'params' => array(),
+            'allowed_slots' => array('page')
+        ),
+        'kifizetes' => array(
+            'class' => 'KifizetesKomponens',
             'params' => array(),
             'allowed_slots' => array('page')
         ),

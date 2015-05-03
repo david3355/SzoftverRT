@@ -3,22 +3,20 @@
 /**
  * Class SzamlaKifizetes
  */
-class SzamlaKifizetes extends Persistent
+class Kifizetes extends Persistent
 {
     /**
      * @param array $params
      */
     protected function onBeforeCreate(array &$params = null)
     {
-		//fedzetellenőrzés a kifizetésre (összeg - előjelű)
-		if($params['osszeg']<0)
-		{
-			$penztar=new Penztar($params['penztarID']);
-			if($penztar->getFields('egyenleg')<$params['osszeg'])
-			{
-				throw new Exception("NINCS_FEDEZET");
-			}
-		}
+        //fedzetellenőrzés a kifizetésre (összeg - előjelű)
+        if ($params['osszeg'] < 0) {
+            $penztar = new Penztar($params['penztarID']);
+            if ($penztar->getFields('egyenleg') < $params['osszeg']) {
+                throw new Exception("NINCS_FEDEZET");
+            }
+        }
     }
 
     /**
