@@ -19,6 +19,9 @@ class Admin_Template extends Site_Template
             <div class="menu">
                 <ul>
                     <li>
+                        <a href="?page=teszt"><span>Főoldal</span></a>
+                    </li>
+                    <li>
                         <a href="?page=felhasznalo"><span>Felhasználók</span></a>
                     </li>
                     <li>
@@ -26,15 +29,20 @@ class Admin_Template extends Site_Template
                     </li>
                     <li>
                         <a href="?page=szamla"><span>Számlák</span></a>
+                        <ul>
+                            <li>
+                                <a href="?page=kifizetes"><span>Kifizetesek</span></a>
+                            </li>
+                            <li>
+                                <a href="?page=szamlatomb"><span>Számlatömbök</span></a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="?page=penztar"><span>Pénztárak</span></a>
                     </li>
                     <li>
-                        <a href="?page=kifizetesek"><span>Kifizetesek</span></a>
-                    </li>
-                    <li>
-                        <a href="?page=igenylesek"><span>Igénylések</span></a>
+                        <a href="?page=igenyles"><span>Igénylések</span></a>
                     </li>
                 </ul>
             </div>

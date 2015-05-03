@@ -34,6 +34,16 @@ return array(
             'params' => array(),
             'allowed_slots' => array('page')
         ),
+        'szamlatomb' => array(
+            'class' => 'SzamlatombKomponens',
+            'params' => array(),
+            'allowed_slots' => array('page')
+        ),
+        'igenyles' => array(
+            'class' => 'IgenylesKomponens',
+            'params' => array(),
+            'allowed_slots' => array('page')
+        ),
         'autentikacio' => array(
             'class' => 'AutentikacioKomponens',
             'allowed_slots' => array()

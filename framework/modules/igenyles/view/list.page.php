@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>Számlák</h1>
+    <h1>Igénylések</h1>
 </div>
 
 <div class="list_upper_box">
@@ -10,7 +10,7 @@
     <div class="clear_right"></div>
     <div class="defaultoperationsbox">
         <form action="" method="post">
-            <button type="submit" name="new" value="new">Új számla</button>
+            <button type="submit" name="new" value="new">Új igénylés</button>
         </form>
     </div>
     <div class="filtersbox">
@@ -19,7 +19,7 @@
         </a>
 
         <div class="filter_item">
-            Irány: <select name="o6164761">
+            Irány: <select name="">
                 <option selected>Összes</option>
                 <option>Kimenő</option>
                 <option>Bejövő</option>
@@ -49,56 +49,24 @@
             <th>
                 <input type="checkbox"></th>
             <th>
-                Sorszám
+                Megnevezés
             </th>
             <th>
-                Irány
+                Előtag
             </th>
             <th>
-                Típus
+                Kezdőszám
             </th>
             <th>
-                Kiállítás dátuma
+                Lezárás dátuma
             </th>
-            <th>
-                Fizetési határidő
-            </th>
-            <th>
-                Teljesítés dátuma
-            </th>
-            <th>
-                Kibocsátó
-            </th>
-            <th>
-                Befogadó
-            </th>
-            <th>
-                Fizetési mód
-            </th>
-            <th>
-                Nettó összeg
-            </th>
-            <th>
-                Bruttó összeg
-            </th>
-            <th>
-                ÁFA összeg
-            </th>
-            <th colspan="3">
+            <th colspan="2">
                 Műveletek
             </th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -114,12 +82,6 @@
                 <form action="" method="post">
                     <input type="hidden" value="" name="id">
                     <button type="submit" name="delete">Törlés</button>
-                </form>
-            </td>
-            <td>
-                <form action="" method="post">
-                    <input type="hidden" value="" name="id">
-                    <button type="submit" name="storno">Sztornózás</button>
                 </form>
             </td>
         </tr>

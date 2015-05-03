@@ -18,6 +18,7 @@ return array(
     "PenztarLoader" => "/modules/penztar/loader.php",
     "SzamlaLoader" => "/modules/szamla/loader.php",
     "SzamlatombLoader" => "/modules/szamlatomb/loader.php",
+    "IgenylesLoader" => "/modules/igenyles/loader.php",
     "AutentikacioLoader" => "/modules/autentikacio/loader.php",
     "PersistentLoader" => "/modules/perzisztencia/loader.php",
     "DataTableLoader" => "/modules/datatable/loader.php"

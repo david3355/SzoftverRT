@@ -5,6 +5,7 @@
  */
 class SzamlaKomponens extends Site_Component
 {
+    private $showFormPage = false;
 
     private $pm;
 
@@ -15,12 +16,18 @@ class SzamlaKomponens extends Site_Component
 
     function process()
     {
-        // TODO: Implement process() method.
+        if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
+            $this->showFormPage = true;
+        }
+
+        if(!empty($_POST['back']) || !empty($_POST['save'])){
+            $this->showFormPage = false;
+        }
     }
 
     function show()
     {
-        if ($_GET['subpage'] === 'uj-szamla') {
+        if ($this->showFormPage) {
             include_once 'view/form.page.php';
         } else {
             include_once 'view/list.page.php';

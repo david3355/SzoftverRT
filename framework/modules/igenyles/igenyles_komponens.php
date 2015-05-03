@@ -1,10 +1,6 @@
 <?php
 
-/**
- * Class UgyfelKomponens
- */
-class UgyfelKomponens extends Site_Component
-{
+class IgenylesKomponens extends Site_Component{
 
     private $showFormPage = false;
 
