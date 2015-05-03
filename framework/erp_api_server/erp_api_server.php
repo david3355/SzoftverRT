@@ -12,11 +12,21 @@
 		-msg: hibakódok*/
 	
 	require_once($_SERVER["DOCUMENT_ROOT"]."/SzoftverRT/framework/loader/loader_main.php");
+	
+	$apps=array("2e6766863522c270667cd91952db15f5" => "Ügyfélkapu API");
+	
 	try
 	{
 		$params=$_REQUEST;
 		$class=$params['class'];
 		$method=$params['method'];
+		$auth_code=$params['auth_code'];
+		
+		//Hozzáférési kód ellenőrzése
+		if(!isset($apps[$auth_code]))
+		{
+			throw new Exception("NO_ACCESS");
+		}
 		
 		//ellenőrzi, h létezik-e az adott osztály, autoload=true -> ha még nem betöltött, de létezik is true
 		if(class_exists($class, $autoload=true)===false)

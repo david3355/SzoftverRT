@@ -1,6 +1,6 @@
 <?
 	//Az Ügyfélkapu részére továbbítja az ERP összes ügyfél minden attributumát
-	class Erpugyfel extends Persistent
+	class Erpugyfel
 	{
 		//array
 		private $params;

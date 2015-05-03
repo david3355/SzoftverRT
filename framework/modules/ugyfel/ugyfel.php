@@ -28,7 +28,12 @@ class Ugyfel extends Persistent
     {
 
     }
-
+	
+	public function getOwnParameters(array $params = NULL)
+	{
+		return true;
+	}
+	
     /**
      * @param array $params
      * @return array

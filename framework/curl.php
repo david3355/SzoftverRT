@@ -3,6 +3,7 @@
 	//$params=array();
 	$params['class']="Erpugyfel";
 	$params['method']="getAllUgyfel";
+	$params['auth_code']="2e6766863522c270667cd91952db15f5";
 	
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, "http://localhost:801/SzoftverRT/framework/erp_api_server/erp_api_server.php");
