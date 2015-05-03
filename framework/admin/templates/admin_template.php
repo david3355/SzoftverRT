@@ -19,6 +19,9 @@ class Admin_Template extends Site_Template
             <div class="menu">
                 <ul>
                     <li>
+                        <a href="?page=teszt"><span>Főoldal</span></a>
+                    </li>
+                    <li>
                         <a href="?page=felhasznalo"><span>Felhasználók</span></a>
                     </li>
                     <li>
