@@ -51,7 +51,7 @@ class Felhasznalo extends Persistent
         if (empty($params['nev'])) $errors[] = "USERNEV_NINCS_MEGADVA";
         if (strlen($params['nev']) < 3) $errors[] = "ROVID_USER_NEV";
         //nem egyedi, mert már van ilyen user_nev
-        $users = $this->getFields(['nev'], ['nev' => $params['nev']]);
+        $users = $this->select(['nev'], array(['nev', $params['nev'], false]));
 
         if ($users && $users[0]['nev'] != true) $errors[] = "HASZNALT_USER_NEV";
 
