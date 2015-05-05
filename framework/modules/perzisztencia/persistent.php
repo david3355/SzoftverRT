@@ -6,8 +6,8 @@
 abstract class Persistent
 {
     private $table_name;
-	
-	/**
+
+    /**
      * @var null
      */
     private $id;
@@ -36,7 +36,7 @@ abstract class Persistent
         $this->pm = PersistenceManager::getInstance();
         $this->db = Database::getInstance();
         $this->mainObjectTable = $this->pm->getMainObjectTableName();
-		$this->table_name = $this->pm->getTableNameForClass(get_class($this));
+        $this->table_name = $this->pm->getTableNameForClass(get_class($this));
     }
 
     /**
@@ -78,8 +78,7 @@ abstract class Persistent
             do
             {
                 $table = $this->pm->getTableNameForClass($class);
-                $paramsForActual = $class::getOwnParameters($params);      // Mindegyik paraméterlista ugyanazt az id-t tartalmazza, de az adott osztályhoz tartozó paraméterekkel
-
+                $paramsForActual = self::getOwnParameters($class, $params);      // Mindegyik paraméterlista ugyanazt az id-t tartalmazza, de az adott osztályhoz tartozó paraméterekkel                
 
                 foreach ($paramsForActual as $key => $value) {
                     if (is_array($value)) {
@@ -110,74 +109,47 @@ abstract class Persistent
      * return array(mezőnév=>érték, mezőnév=>érték, ...)
      * Ha $field_names üres, akkor adjon vissza minden mezőt.
      */
-    final protected function getFields(array $select = null, array $where = null, array $order = null, $limit = "")
+    final protected function getFields(array $field_names = null)
     {
         //megadott mezők lekérdezése a megfelelő táblákból
-        $class = get_class($this);
 
-        // Ha id-t akarunk lekérdezni, akkor azt minősíteni kell az egyik táblával, a többi attribútumnak különböznie kell a táblákban
-        $idx = array_search('id', $select);
-        if($idx !== false) $select[$idx] = $class.'.'.$select[$idx];
-
-        if($order != null)
+        // Csak azokat a táblákat joinoljuk, amilyen attribútumokra szükség van!
+        if(is_null($field_names))
         {
-            $idx = array_search('id', $order);
-            if($idx !== false) $order[$idx] = $class.'.'.$order[$idx];
-            $order = 'ORDER BY '.implode(',', $order);
+            $select = "*";
+            $tables = array();
+            $class = get_class($this);
+            do
+            {
+                $table = $this->pm->getTableNameForClass($class);
+                if(!in_array($table, $tables)) $tables[] = $table;
+            }while(($class = get_parent_class($class))!="Persistent");
         }
-        else $order = "";
-
-        // Feltételek meghatározása
-        if ($where == null) $where = sprintf('%s.id = %s', $this->pm->getTableNameForClass($class), $this->getID());
-        else $where = 'WHERE '.$this->catConditions($where, 'AND');
-
-        $from = $last = $table = $this->pm->getTableNameForClass($class);
-
-        while(($class = get_parent_class($class))!="Persistent")
+        else
         {
-            $table = $this->pm->getTableNameForClass($class);
+            $tables = $this->getTableNamesForAttributes($field_names);
+            // Ha id-t akarunk lekérdezni, akkor azt minősíteni kell az egyik táblával, a többi attribútumnak különböznie kell a táblákban
+            $idx = array_search('id', $field_names);
+            if($idx !== false) $field_names[$idx] = $tables[0].'.'.$field_names[$idx];
+            $select = implode(',', $field_names);
+        }
+
+        $from = $last = $tables[0];
+        unset($tables[0]);
+        foreach($tables as $table)
+        {
             $from .= ' INNER JOIN '.$table. ' ON '.$last.'.id='.$table.'.id';
             $last = $table;
         }
 
-        if(!empty($limit)) $limit = "LIMIT ".$limit;
-
-        if (isset($select)) $select = implode(',', $select);
-        else $select = "*";
-
         // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
-        $sql = sprintf("SELECT %s FROM %s %s %s %s", $select, $from, $where, $order, $limit);
-
+        $sql = sprintf("SELECT %s FROM %s WHERE %s.id=%s", $select, $from, $last, $this->id);
 
         $result = $this->db->query($sql);
 
         return $result;
     }
 
-    // Ha erre tud valaki szebb megoldást, írja nyugodtan :D
-    private function catConditions(array $cond, $operator)
-    {
-        $sql = "";
-        $i = 0;
-
-        foreach ($cond as $key => $val) {
-            $class = get_class($this);
-            do
-            {
-                if(array_key_exists($key, $class::getOwnParameters()))
-                {
-                    $table = $this->pm->getTableNameForClass($class);
-                    break;
-                }
-            }
-            while(($class = get_parent_class($class))!="Persistent");
-
-            $sql .= $table.'.'.$key . '=' ."'" .$val."'";
-            if ($i < count($cond) - 1) $sql .= ' ' . $operator . ' ';
-            $i++;
-        }
-        return $sql;
-    }
 
     /**
      * Attribútumok beállítása
@@ -188,85 +160,44 @@ abstract class Persistent
     {
         $result = true;
         foreach ($field_values as $key => $value) {
-            $class = get_class($this);
-            do
-            {
-                if(array_key_exists($key, $class::getOwnParameters()))
-                {
-                    $table = $this->pm->getTableNameForClass($class);
-                    break;
-                }
-            }
-            while(($class = get_parent_class($class))!="Persistent");
+            $table = $this->getTableNameForAttribute($key);
             $sql = sprintf("UPDATE %s SET %s='%s' WHERE id = %s", $table, $key, $value, $this->id);
-            echo $sql.'<br>';
             $result = $result && $this->db->query($sql);
         }
         return $result;
     }
 
-	/*Lista lekérdezés
-		-attr: tömbben megadva a lekérendő attributumok, ha üres, akkor *
-		-where: natívan megadva a where feltétele
-		-order_by: natívan megadva mi szerint hogyan legyen rendezve
-		-limit: tömbben a kezdőérték és darab megadva*/
-	final function select(array $attr, $where, $order_by, array $limit)
-	{
-		if(!empty($attr))
-		{
-			foreach($attr as $k)
-			{
-				$attr.=$k.", ";
-			}
-			$attr=rtrim($attr, ',');
-		}
-		else
-		{
-			$attr="*";
-		}
-		
-		if(!empty($where))
-		{
-			$where="WHERE ".$where;
-		}
-		
-		if(!empty($order_by))
-		{
-			$order_by="ORDER BY ".$order_by;
-		}
-		
-		if(!empty($limit))
-		{
-			$limit="LIMIT {$limit[0]}, {$limit[1]}";
-		}
-		
-		return $this->db->query("SELECT {$attr} FROM {$this->table_name} {$where} {$order_by} {$limit}");
-	}
-	
+
     final function delete()
     {
         //objektum törlése a megfelelő táblákból
 
         // Ha vannak kompozícióval hozzá kapcsolódó objektumok, itt töröljük
-        $result3 = $this->onBeforeDelete();
+        $result = $this->onBeforeDelete();
 
-        // Lekérdezzük az osztályhoz tartozó táblát
-        $table = $this->getTableName();
+        // Lekérdezzük az objektumhoz tartozó összes táblát
+        $tables = array();
+        $class = get_class($this);
+        do
+        {
+            $tables[] = $this->pm->getTableNameForClass($class);
+        }while(($class = get_parent_class($class))!="Persistent");
 
-        // Töröljük az objektumot a táblából
+        // Töröljük az objektumot az összes táblából
+        print_r($tables);
 
-        $sql = sprintf("DELETE FROM %s WHERE id  = %s", $table, $this->id);
-
-        $result1 = $this->db->query($sql);
+        foreach($tables as $table)
+        {
+            $sql = sprintf("DELETE FROM %s WHERE id=%s", $table, $this->id);
+            $result += $this->db->query($sql);
+        }
 
         // Töröljük a fő objektumtáblából:
 
         $sql = sprintf("DELETE FROM %s WHERE id = %s", $this->mainObjectTable, $this->id);
-        $result2 = $this->db->query($sql);
+        $result += $this->db->query($sql);
 
-
-        return $result1 && $result2 && $result3;
-
+        return $result;
     }
 
 
@@ -277,8 +208,8 @@ abstract class Persistent
     final protected function getNextUniqueId($azon_nev)
     {
         $result = $this->db->query("UPDATE {$this->table_name} SET {$azon_nev} = LAST_INSERT_ID({$azon_nev}+1)");
-        
-		return $this->db->getLastInsertID();
+
+        return $this->db->getLastInsertID();
     }
 
     /**
@@ -309,13 +240,139 @@ abstract class Persistent
      */
     abstract protected function onBeforeDelete();
 
-
     /**
-     *  Minden osztály a saját paramétereit adja vissza az összes paraméter közül
-     * @param array $params
+     *  Minden osztály rendelkezik egy ilyen metódussal, mely a saját paramétereit adja vissza az összes paraméter közül
+     * $params nélküli hívás: olyan array-el tér vissza, aminek a kulcsai az osztályhoz (illetve a hozzátartozó táblához) tartozó attribútumok
+     * Hívás $params-t megadva: ugyanaz, csak a kulcsokhoz értékek is tartoznak, amit a $params-ból veszünk ki
+     * $params: array('attributum1'=>'ertek1','attributum2'=>'ertek2'...)
      * @return mixed array
      */
-    abstract protected static function getOwnParameters(array $params = null);
+    protected static function getOwnParameters($class, array $params = null)
+    {
+        $own = array_fill_keys($class::getOwnParameters(), '');		// A saját attribútumok lisája array kulcsként, értékek nélkül
+        if($params == null) return $own;
+        foreach($own as $key => $value)
+        {
+            $own[$key]=$params[$key];
+        }
+        return $own;		// A saját attribútumok lisája array kulcsként, minden attribútumhoz kivettük a hozzátartozó értéket a params-ból
+    }
+
+    /*
+    array $select: null esetén mindent lekérdez, array megadása: ['id', 'nev'];
+    array $where: null esetén nincs szűrés, array megadása: array(['attributum1', 'ertek1', 'true', 'AND'],['attributum2', 'ertek2', false])
+                A $where array minden eleme egy másik array, mely egy feltételt reprezentál: ['attributum', 'ertek', bool regex, 'opcionális összekötő operátor']
+    array $order: null esetén alapértelmezett rendezés, array megadása: ['id', 'nev']
+    array $limit: null megadása esetén nincs limitálás, array megadása: [2,8]: az eredmények közül 2-től 8-ig adja vissza a rekordokat, érték megadása: 5: az első 5 rekordot adja vissza
+    Example: select(['id', 'email', 'lakcim'], array(['email','vb12@gmail.com', true, 'AND'], ['nev', 'John', true]), ['id'], [3,6]);
+    */
+    final function select(array $select = null, array $where = null, array $order = null, $limit = null)
+    {
+        // Ha nincs megadva select, minden attribútumot lekérdezünk (az attribútumokra szükség van a táblák meghatározása miatt)
+        if (is_null($select)) $select = $this->getAllAttributes();
+        $tables = $this->getTableNamesForAttributes($select);
+
+        // Ha id-t akarunk lekérdezni, akkor azt minősíteni kell az egyik táblával, a többi attribútumnak különböznie kell a táblákban
+        $idx = array_search('id', $select);
+        if($idx !== false) $select[$idx] = $tables[0].'.'.$select[$idx];
+
+        $select_s = implode(',', $select);
+
+        if($order != null)
+        {
+            $idx = array_search('id', $order);
+            if($idx !== false) $order[$idx] = $tables[0].'.'.$order[$idx];
+            $order_s = 'ORDER BY '.implode(',', $order);
+        }
+        else $order_s = "";
+
+        // Feltételek meghatározása
+        if (!is_null($where)) $where_s = 'WHERE '.$this->concatenateConditions($where);
+        else $where_s = "";
+
+        // Csak azokat a táblákat joinoljuk, amilyen attribútumokra szükség van!
+        $from_s = $last = $tables[0];
+        unset($tables[0]);
+        foreach($tables as $table)
+        {
+            $from_s .= ' INNER JOIN '.$table. ' ON '.$last.'.id='.$table.'.id';
+            $last = $table;
+        }
+
+        if(is_null($limit)) $limit = "";
+        else if(is_array($limit)) $limit = "LIMIT ".$limit[0].','.$limit[1];
+        else $limit = "LIMIT ".$limit;
+
+        // Lekérdezzük a megfelelő mezőkhöz tartozó értékeket
+        $sql = sprintf("SELECT %s FROM %s %s %s %s", $select_s, $from_s, $where_s, $order_s, $limit);
+
+        $result = $this->db->query($sql);
+
+        return $result;
+    }
+
+    ///////////// Segédfüggvények ///////////////
+
+    /**
+     *	$cond: feltételek tömbje
+     *	Összefűzi a feltételeket, a megfelelő táblákkal együtt
+     */
+    private function concatenateConditions(array $cond)
+    {
+        $sql = "";
+        foreach ($cond as $carray) {
+            $table = $this->getTableNameForAttribute($carray[0]);
+            if(isset($carray[3])) $operator = $carray[3];
+            else $operator = "";
+            if($table!==false)
+            {
+                if($carray[2]===false) $sql .= $table.'.'.$carray[0] . '=' ."'" .$carray[1]."' ".$operator.' ';
+                else $sql .= $table.'.'.$carray[0] . ' LIKE ' ."'%" .$carray[1]."%' ".$operator.' ';
+            }
+        }
+        return $sql;
+    }
+
+    /**
+     *	Visszaadja azt a táblát, amenyben a paraméterként átadott attribútum szerepel
+     *	Ha nem szerepel sehol, false-t ad vissza
+     */
+    private function getTableNameForAttribute($attribute)
+    {
+        $class = get_class($this);
+        do
+        {
+            if(array_key_exists($attribute, self::getOwnParameters($class)))	// Lekérjük a paraméterként átadott osztályhoz tartozó mezőket, és ha a megadott attribútum köztük van
+            {
+                return $this->pm->getTableNameForClass($class); 				// Akkor az osztályhoz lekérdezzük a táblát, és visszaadjuk
+            }
+        }
+        while(($class = get_parent_class($class))!="Persistent");				// Végigmegyünk az osztályhierarchián, míg el nem érünk a Persistent-hez
+        return false;
+    }
+
+    private function getTableNamesForAttributes(array $attributes)
+    {
+        $tables = array();
+        foreach($attributes as $atb)
+        {
+            $table = $this->getTableNameForAttribute($atb);
+            if($table===false)continue;
+            if(!in_array($table, $tables)) $tables[] = $table;
+        }
+        return $tables;
+    }
+
+    private function getAllAttributes()
+    {
+        $attributes = array();
+        $class = get_class($this);
+        do
+        {
+            $attributes = $attributes + $class::getOwnParameters();
+        }while(($class = get_parent_class($class))!="Persistent");
+        return $attributes;
+    }
 
 
 }
