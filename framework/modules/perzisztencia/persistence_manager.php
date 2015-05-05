@@ -92,7 +92,7 @@ class PersistenceManager
             $object->create($params);
             return $object;
         } else {
-            return null;
+            return  $errors;
         }
 
     }
