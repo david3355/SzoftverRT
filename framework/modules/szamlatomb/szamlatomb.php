@@ -58,5 +58,9 @@ class Szamlatomb extends Persistent
 
 		return $errors;
     }
+
+    protected static function getOwnParameters() {
+        return array('id', 'megnevezes', 'szamla_elotag', 'szamla_aktual_szam', 'lezaras_datum');
+    }
 }
 

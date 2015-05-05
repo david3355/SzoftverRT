@@ -47,8 +47,7 @@ class Igenyles extends Persistent{
      * @param array $params
      * @return mixed array
      */
-    protected static function getOwnParameters(array $params = null)
-    {
-        // TODO: Implement getOwnParameters() method.
+    protected static function getOwnParameters() {
+        return array();
     }
 }

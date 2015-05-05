@@ -54,5 +54,9 @@ class Penztar extends Persistent
         }
         return $err;
     }
+
+    protected static function getOwnParameters() {
+        return array('id', 'megnevezes', 'egyenleg');
+    }
 }
 

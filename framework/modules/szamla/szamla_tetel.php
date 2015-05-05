@@ -63,5 +63,9 @@ class SzamlaTetel extends Persistent
 
         return $err;
     }
+
+    protected static function getOwnParameters() {
+        return array('id', 'szamla_fk', 'vamtarifaszam', 'megnevezes', 'mennyiseg_egyseg', 'mennyiseg', 'afa', 'netto_ar', 'brutto_ar');
+    }
 }
 

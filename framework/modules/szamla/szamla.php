@@ -83,5 +83,9 @@ class Szamla extends Persistent
 
         return $err;
     }
+
+    protected static function getOwnParameters() {
+        return array('id', 'szlatomb_obj_id', 'szla_sorszam', 'kiallito_neve', 'kiallito_cim', 'kiallito_adoszam', 'kiallito_bszla', 'befogado_nev', 'befogado_cim', 'befogado_adoszam', 'befogado_bszla', 'fizetesi_mod', 'kiallitas_datum', 'teljesites_datum', 'fizetes_datum', 'megjegyzes');
+    }
 }
 
