@@ -178,7 +178,7 @@ class PersistenceManager
     public function get($iWantObject = false){
         $sql = sprintf('SELECT %s FROM %s ',$this->sql['select'],$this->sql['from']);
 
-        if(size($this->sql['where'])){
+        if(sizeof($this->sql['where'])){
             $where = implode(',',$this->sql['where']);
             $where = rtrim($where,',');
 

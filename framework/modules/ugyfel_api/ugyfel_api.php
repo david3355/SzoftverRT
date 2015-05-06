@@ -44,15 +44,10 @@ class Ugyfel_API extends API_Module
 
         switch ($function) {
             case 'allUgyfel':
-                $data = ['azon' => '0123QWERTY',
-                    'nev' => 'Nev nev',
-                    'cim' => '1111 Varos Cim 1.',
-                    'telefon' => '21321313',
-                    'email' => 'email@email.com'];
 
                 header('Content-Type: text/json', false, 200);
 
-                echo json_encode($data);
+                echo json_encode($pm->select('Felhasznalo')->get());
                 break;
             case 'getUgyfel':
                 $data = ['azon' => '0123QWERTY',
