@@ -200,4 +200,18 @@ class PersistenceManager
         }
     }
 
+    /**
+     * @param $class
+     */
+    public function delete($class){
+        // TODO csináld meg DÁVID!
+    }
+
+    /**
+     * @param $class
+     */
+    public function update($class){
+        // TODO csináld meg DÁVID!
+    }
+
 }

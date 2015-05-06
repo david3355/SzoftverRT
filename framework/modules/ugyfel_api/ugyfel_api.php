@@ -33,7 +33,7 @@ class Ugyfel_API extends API_Module
     function handleRequest($function, array $params, array $data = null)
     {
 
-        if(!$this->checkAuth($params['key'])){
+        if (!$this->checkAuth($params['key'])) {
             header('Content-Type: text/json', false, 403);
 
             echo json_encode(['msg' => 'Nincs jogosultsága használni ezt a funkciót!']);
@@ -47,18 +47,15 @@ class Ugyfel_API extends API_Module
 
                 header('Content-Type: text/json', false, 200);
 
-                echo json_encode($pm->select('Felhasznalo')->get());
+                echo json_encode($pm->select('Ugyfel')->get());
                 break;
             case 'getUgyfel':
-                $data = ['azon' => '0123QWERTY',
-                    'nev' => 'Nev nev',
-                    'cim' => '1111 Varos Cim 1.',
-                    'telefon' => '21321313',
-                    'email' => 'email@email.com'];
 
                 header('Content-Type: text/json', false, 200);
 
-                echo json_encode($data);
+                echo json_encode($pm->select('Ugyfel')
+                    ->where('azon', '=', $params['azon'])
+                    ->get());
 
                 break;
             case 'postUgyfel':
