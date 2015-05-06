@@ -12,8 +12,8 @@
 		
 		public function getAllUgyfel()
 		{
-			$uf=new Ugyfel();
-			return $uf->select(array(), "", "", array());
+			$pm = PersistenceManager::getInstance();
+			return $pm->select('Ugyfel')->get();
 		}
 	}
 ?>

@@ -14,7 +14,11 @@ class Ugyfel_API extends API_Module
     function getSupportedFunctions()
     {
         return [
-            'allUgyfel'
+            'allUgyfel',
+            'getUgyfel',
+            'postUgyfel',
+            'putUgyfel',
+            'deleteUgyfel'
         ];
     }
 
@@ -44,13 +48,42 @@ class Ugyfel_API extends API_Module
                 header('Content-Type: text/json', false, 200);
 
                 echo json_encode($pm->select('Ugyfel')->get());
-            break;
-            
-			default:
+                break;
+            case 'getUgyfel':
+
+                header('Content-Type: text/json', false, 200);
+
+                echo json_encode($pm->select('Ugyfel')
+                    ->where('azon', '=', $params['azon'])
+                    ->get());
+
+                break;
+            case 'postUgyfel':
+
+                header('Content-Type: text/json', false, 200);
+
+                echo json_encode(['msg' => 'Sikeres ügyfél felvétel!']);
+
+                break;
+            case 'putUgyfel':
+
+                header('Content-Type: text/json', false, 200);
+
+                echo json_encode(['msg' => 'Sikeres ügyfél módosítás!']);
+
+                break;
+            case 'deleteUgyfel':
+
+                header('Content-Type: text/json', false, 200);
+
+                echo json_encode(['msg' => 'Sikeres ügyfél törlés!']);
+
+                break;
+            default:
                 header('Content-Type: text/json', false, 404);
 
                 echo json_encode(['msg' => 'A keresett funkció nem található!']);
-            break;
+                break;
         }
 
     }
