@@ -26,6 +26,11 @@ class PersistenceManager
     private $config;
 
     /**
+     * @var
+     */
+    private $sql;
+
+    /**
      * @return PersistenceManager
      */
     static function getInstance()
@@ -42,6 +47,7 @@ class PersistenceManager
         $this->db = $connection;
         $this->config = new Config();
         $this->mainObjectTableName = "objects";
+        $this->sql = '';
     }
 
     /**
@@ -92,7 +98,7 @@ class PersistenceManager
             $object->create($params);
             return $object;
         } else {
-            return  $errors;
+            return $errors;
         }
 
     }
@@ -112,6 +118,86 @@ class PersistenceManager
     public final function getMainObjectTableName()
     {
         return $this->mainObjectTableName;
+    }
+
+
+    /**
+     * @param $class
+     * @param array $select
+     */
+    public function select($class, array $select = ['*'])
+    {
+        $this->sql['select'] = implode(',', $select);
+        $this->sql['from'] = $this->getTableNameForClass($class);
+
+        return $this;
+    }
+
+    /**
+     * @param $attrib
+     * @param $operator
+     * @param $value
+     */
+    public function where($attrib, $operator, $value)
+    {
+        $this->sql['where'][] = $attrib . ' ' . $operator . ' ' . $value;
+
+        return $this;
+    }
+
+    /**
+     * @param $limit
+     * @param null $offset
+     * @return $this
+     */
+    public function limit($limit, $offset = null)
+    {
+        if (is_null($offset)) {
+            $this->sql['limit'] = $limit;
+        } else {
+            $this->sql['limit'] = $limit . ',' . $offset;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $attrib
+     * @param string $order
+     */
+    public function orderBy($attrib, $order = 'DESC')
+    {
+        $this->sql['orderBy'] = $attrib . ' ' . $order;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $iWantObject
+     */
+    public function get($iWantObject = false){
+        $sql = sprintf('SELECT %s FROM %s ',$this->sql['select'],$this->sql['from']);
+
+        if(size($this->sql['where'])){
+            $where = implode(',',$this->sql['where']);
+            $where = rtrim($where,',');
+
+            $sql .= sprintf('WHERE %s ',$where);
+        }
+
+        if($this->sql['orderBy']){
+            $sql .= sprintf('ORDERBY %s ',$this->sql['orderBy']);
+        }
+
+        if($this->sql['limit']){
+            $sql .= sprintf('LIMIT %s',$this->sql['limit']);
+        }
+
+        $result = $this->db->query($sql);
+
+        if(!$iWantObject){
+            return $result;
+        }
     }
 
 }
