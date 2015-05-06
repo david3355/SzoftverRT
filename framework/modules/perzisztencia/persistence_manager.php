@@ -140,7 +140,7 @@ class PersistenceManager
      */
     public function where($attrib, $operator, $value)
     {
-        $this->sql['where'][] = $attrib . ' ' . $operator . ' ' . $value;
+        $this->sql['where'][] = $attrib . ' ' . $operator . " '" . $value. "' ";
 
         return $this;
     }
@@ -180,7 +180,6 @@ class PersistenceManager
 
         if(sizeof($this->sql['where'])){
             $where = implode(',',$this->sql['where']);
-            $where = rtrim($where,',');
 
             $sql .= sprintf('WHERE %s ',$where);
         }

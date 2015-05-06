@@ -14,7 +14,7 @@ class AutentikacioKomponens extends Site_Component
     {
 
         if (isset($_POST['login']) && !empty($_POST['login'])) {
-            $this->auth->login($_POST['username'], $_POST['password']);
+            $_SESSION['msg'] = $this->auth->login($_POST['username'], $_POST['password']);
         }
 
         if (isset($_POST['logout']) && !empty($_POST['logout'])) {

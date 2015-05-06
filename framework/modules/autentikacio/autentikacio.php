@@ -17,10 +17,26 @@ class Autentikacio extends Site_Authenticator
 
     public function login($username, $password)
     {
-        //$pm = PersistenceManager::getInstance();
+        $msg = array();
+        $pm = PersistenceManager::getInstance();
 
+        $user = $pm->select('Felhasznalo', ['id', 'nev', 'jelszo', 'salt'])
+            ->where('nev', '=', $username)->get();
 
-        $_SESSION[self::USER_SESSION_KEY] = true;
+        if (empty($user)) {
+            $msg[] = 'NINCS_ILYEN_FELHASZNALO';
+        }
+
+        $hash = hash('sha256', $password . $user[0]['salt']);
+
+        if ($hash === $user[0]['jelszo']) {
+            $_SESSION[self::USER_SESSION_KEY] = $user[0]['id'];
+            $msg[] = 'SIKERES_BEJELENTKEZES';
+        } else {
+            $msg[] = 'HIBAS_FELHASZNALONEV_VAGY_JELSZO';
+        }
+
+        return $msg;
     }
 
     public function logout()

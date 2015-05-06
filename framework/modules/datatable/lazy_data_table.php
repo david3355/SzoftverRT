@@ -12,7 +12,7 @@ abstract class Abstract_Lazy_Data_Table
     protected $operationCoulombs;
     protected $rows;
 
-    public function __construct()
+    final public function __construct()
     {
         $this->init();
     }
@@ -48,10 +48,6 @@ abstract class Abstract_Lazy_Data_Table
             <table cellspacing="0" cellpadding="0" class="listtable">
                 <thead>
                 <tr>
-                    <th>
-                        <input type="checkbox">
-                    </th>
-
                     <?php
                     foreach ($this->dataCoulombs as $dataCoulombs) {
                         echo '<th>' . $dataCoulombs['name'] . '</th>';
@@ -67,7 +63,6 @@ abstract class Abstract_Lazy_Data_Table
                 <?php
                 foreach ($this->rows as $row) {
                     echo '<tr>';
-                    echo '<td></td>';
                     foreach ($this->dataCoulombs as $key => $dataCoulombs) {
                         echo '<td>' . $row[$key] . '</td>';
                     }
