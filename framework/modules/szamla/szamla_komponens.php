@@ -54,12 +54,6 @@ class SzamlaKomponens extends Site_Component
                     <table class="formtable" cellpadding="0" cellspacing="0">
                         <tbody>
                         <tr>
-                            <td><span class="mandatory">Sorszám<span style="color:red">*</span></span></td>
-                            <td>
-                                <input size="32" type="text" name="" value="">
-                            </td>
-                        </tr>
-                        <tr>
                             <td><span class="mandatory">Fizetési mód<span style="color:red">*</span></span></td>
                             <td><select class="fizetesi_mod_dropdown" name="">
                                     <option value="">Válasszon</option>
