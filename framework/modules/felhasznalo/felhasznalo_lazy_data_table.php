@@ -1,16 +1,21 @@
 <?php
 
-class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
+class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
+{
 
-    protected function getData(array $post) {
-        
-        //ez most csak így poénból
-        $sql = "SELECT * FROM felhasznalo";
-        return Database::getInstance()->query($sql);
+    private $pm;
+
+    protected function getData(array $post)
+    {
+        return $this->pm->select('Felhasznalo')->get();
     }
 
-    protected function init() {
+    protected function init()
+    {
+        $this->pm = PersistenceManager::getInstance();
+
         $this->tableName = 'falhasznalo-datatable';
+
         $this->dataCoulombs = array(
             "id" => array(
                 'name' => 'Azonosító',
@@ -47,7 +52,7 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
                 'text' => 'Inaktiválás'
             )
         );
-        $this->steps = array(50,100,500);
+        $this->steps = array(50, 100, 500);
     }
 
 }
