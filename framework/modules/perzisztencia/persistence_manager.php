@@ -140,7 +140,35 @@ class PersistenceManager
      */
     public function where($attrib, $operator, $value)
     {
-        $this->sql['where'][] = $attrib . ' ' . $operator . " '" . $value. "' ";
+        $this->sql['where'][] = $attrib . ' ' . $operator . " '" . $value . "' ";
+
+        return $this;
+    }
+
+    /**
+     * @param $attrib
+     * @param $operator
+     * @param $value
+     * @return $this
+     */
+    public function orWhere($attrib, $operator, $value)
+    {
+
+        $this->sql['where'][] = ' OR ' . $attrib . ' ' . $operator . " '" . $value . "' ";
+
+        return $this;
+    }
+
+    /**
+     * @param $attrib
+     * @param $operator
+     * @param $value
+     * @return $this
+     */
+    public function andWhere($attrib, $operator, $value)
+    {
+
+        $this->sql['where'][] = ' AND ' . $attrib . ' ' . $operator . " '" . $value . "' ";
 
         return $this;
     }
@@ -175,26 +203,27 @@ class PersistenceManager
     /**
      * @param bool $iWantObject
      */
-    public function get($iWantObject = false){
-        $sql = sprintf('SELECT %s FROM %s ',$this->sql['select'],$this->sql['from']);
+    public function get($iWantObject = false)
+    {
+        $sql = sprintf('SELECT %s FROM %s ', $this->sql['select'], $this->sql['from']);
 
-        if(sizeof($this->sql['where'])){
-            $where = implode(',',$this->sql['where']);
+        if (sizeof($this->sql['where'])) {
+            $where = implode(' ', $this->sql['where']);
 
-            $sql .= sprintf('WHERE %s ',$where);
+            $sql .= sprintf('WHERE %s ', $where);
         }
 
-        if($this->sql['orderBy']){
-            $sql .= sprintf('ORDERBY %s ',$this->sql['orderBy']);
+        if ($this->sql['orderBy']) {
+            $sql .= sprintf('ORDERBY %s ', $this->sql['orderBy']);
         }
 
-        if($this->sql['limit']){
-            $sql .= sprintf('LIMIT %s',$this->sql['limit']);
+        if ($this->sql['limit']) {
+            $sql .= sprintf('LIMIT %s', $this->sql['limit']);
         }
 
         $result = $this->db->query($sql);
 
-        if(!$iWantObject){
+        if (!$iWantObject) {
             return $result;
         }
     }
@@ -202,14 +231,16 @@ class PersistenceManager
     /**
      * @param $class
      */
-    public function delete($class){
+    public function delete($class)
+    {
         // TODO csináld meg DÁVID!
     }
 
     /**
      * @param $class
      */
-    public function update($class){
+    public function update($class)
+    {
         // TODO csináld meg DÁVID!
     }
 

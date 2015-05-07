@@ -5,8 +5,9 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
 
     private $pm;
 
-    protected function getData(array $post)
+    protected function getData(array $post = null)
     {
+
         return $this->pm->select('Felhasznalo')->get();
     }
 
