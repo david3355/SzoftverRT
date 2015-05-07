@@ -29,8 +29,8 @@ class Admin_Login_Site_Template extends Site_Template
             ?>
 
             <div class="actions">
-                <p>Felhasználónév: teszt</p>
-                <p>Jelszó: Teszt12345</p>
+                <p>Felhasználónév: teszt4</p>
+                <p>Jelszó: Teszt4</p>
             </div>
 
         </div>
