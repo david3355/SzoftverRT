@@ -38,6 +38,12 @@ class FelhasznaloKomponens extends Site_Component {
             
             $felhasznalo = $this->pm->createObject('Felhasznalo', $felhasznalo_adatok);
         }
+        
+        if(!empty($_POST['edit'])){
+            $id = $_POST['id'];
+            
+            $this->pm->getObject($id);
+        }
     }
 
     function show()
