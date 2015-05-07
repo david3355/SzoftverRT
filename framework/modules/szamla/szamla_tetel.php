@@ -8,9 +8,9 @@ class SzamlaTetel extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
-
+            return $params;
     }
 
     /**

@@ -27,7 +27,7 @@ class Igenyles extends Persistent{
     /**
      * Az objektum létrehozása előtt lehetőség van a paraméterek módosítására, ellenőrzésére
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params = null)
     {
         // TODO: Implement onBeforeCreate() method.
     }

@@ -8,12 +8,14 @@ class Szamla extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
 		/*számlatömb előtag alapján példányosít egy objektumot, erre meghívja a getNextUniqueId("szamla_aktual_szam")
 			a visszakapott sorszámot beállítja az új számlának*/
 			$szT=new Szamlatomb($params['szlatomb_obj_id']);
 			$params['szla_sorszam']=$szT->getFields("szamla_elotag")."/".$szT->getNextUniqueId("szamla_aktual_szam");
+
+        return $params;
     }
 
     /**

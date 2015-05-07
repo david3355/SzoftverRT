@@ -16,17 +16,13 @@ class Felhasznalo extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
-        /*Beraktam sha-256 hash-be, hogy pontosan 64 karakter legyen a jelszó a DB-hez!*/
-
+        // sha-256 hash: pontosan 64 karakter
         // Salted hash:
-
         $params['salt'] = $this->generateSalt();
-
-        //$params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
         $params['jelszo'] = hash('sha256', $params['jelszo'] . $params['salt']);
-
+        return $params;
     }
 
     /**
@@ -81,17 +77,9 @@ class Felhasznalo extends Persistent
     /**
      * @return string
      */
-    private function generateSalt($number = 8)
+    private function generateSalt()
     {
-        //return mcrypt_create_iv($number, MCRYPT_DEV_URANDOM);
-        $randomString="";
-        $charUniverse="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        for($i=0; $i<$number; $i++){
-            $randInt=rand(0,61);
-            $randChar=$charUniverse[$randInt];
-            $randomString.=$randChar;
-        }
-        return $randomString;
+        return mcrypt_create_iv(8, MCRYPT_DEV_URANDOM);
     }
 
     /**
@@ -106,6 +94,11 @@ class Felhasznalo extends Persistent
         }
 
         return $err;
+    }
+
+    function getFelhasznaloAdatok()
+    {
+        return $this->getFields(array('id', 'nev', 'email', 'jog', 'aktiv'));
     }
 
     protected static function getOwnParameters() {
