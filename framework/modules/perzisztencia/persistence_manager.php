@@ -205,6 +205,7 @@ class PersistenceManager
      */
     public function delete($class){
         $this->sql['table'] = $this->getTableNameForClass($class);
+        $this->sql['class'] = $class;
         return $this;
     }
 
@@ -257,6 +258,12 @@ class PersistenceManager
         if(isset($this->sql['where'])){
             $where = implode(' ',$this->sql['where']);
             $sql .= sprintf(' WHERE %s ',$where);
+        }
+
+        $todelete = $this->select($this->sql['class'], ['id'])->exeSelect();     // A where-be benne vannak az aktuális feltételek
+        foreach($todelete as $object)
+        {
+            $this->db->query(sprintf('DELETE FROM %s WHERE id=%s', $this->mainObjectTableName, $object['id']));
         }
 
         unset($this->sql);
