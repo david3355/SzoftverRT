@@ -8,12 +8,14 @@ abstract class Abstract_Lazy_Data_Table
     protected $steps;
     protected $selectedStep;
     protected $numberOfAllRows;
-    protected $dataCoulombs;
-    protected $operationCoulombs;
+    protected $dataColumns;
+    protected $operationColumns;
     protected $rows;
 
     final public function __construct()
     {
+        $this->steps = array(50, 100, 500);
+
         $this->init();
     }
 
@@ -49,12 +51,12 @@ abstract class Abstract_Lazy_Data_Table
                 <thead>
                 <tr>
                     <?php
-                    foreach ($this->dataCoulombs as $dataCoulombs) {
-                        echo '<th>' . $dataCoulombs['name'] . '</th>';
+                    foreach ($this->dataColumns as $dataColumns) {
+                        echo '<th>' . $dataColumns['name'] . '</th>';
                     }
 
-                    if (count($this->operationCoulombs) > 0) {
-                        echo '<th colspan="' . count($this->operationCoulombs) . '">Műveletek</th>';
+                    if (count($this->operationColumns) > 0) {
+                        echo '<th colspan="' . count($this->operationColumns) . '">Műveletek</th>';
                     }
                     ?>
                 </tr>
@@ -63,11 +65,11 @@ abstract class Abstract_Lazy_Data_Table
                 <?php
                 foreach ($this->rows as $row) {
                     echo '<tr>';
-                    foreach ($this->dataCoulombs as $key => $dataCoulombs) {
+                    foreach ($this->dataColumns as $key => $dataColumns) {
                         echo '<td>' . $row[$key] . '</td>';
                     }
 
-                    foreach ($this->operationCoulombs as $operationCoulomb) {
+                    foreach ($this->operationColumns as $operationCoulomb) {
                         echo '<td>';
                         echo '<form action="" method="post">';
                         echo '<input type="hidden" value="' . $row['id'] . '" name="id">';

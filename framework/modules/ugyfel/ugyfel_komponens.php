@@ -7,12 +7,14 @@ class UgyfelKomponens extends Site_Component
 {
 
     private $showFormPage = false;
+    private $ugyfelDataTable;
 
     private $pm;
 
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
+        $this->ugyfelDataTable = new Ugyfel_Lazy_Data_Table();
     }
 
     function process()
@@ -24,6 +26,8 @@ class UgyfelKomponens extends Site_Component
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
         }
+
+        $this->ugyfelDataTable->process($_POST);
     }
 
     function show()
@@ -126,83 +130,8 @@ class UgyfelKomponens extends Site_Component
         </div>
 
         <div class="clear"></div>
-        <div class="pagination">
-            <div class="pagination_element_count">Találatok száma: 3</div>
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
-        <div class="clear"></div>
-        <div class="itemlist">
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox"></th>
-                    <th>
-                        Név
-                    </th>
-                    <th>
-                        Azonosító
-                    </th>
-                    <th>
-                        Cím
-                    </th>
-                    <th>
-                        Telefon
-                    </th>
-                    <th>
-                        Email
-                    </th>
-                    <th colspan="2">
-                        Műveletek
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="edit">Szerkesztés</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="delete">Törlés</button>
-                        </form>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="clear"></div>
-        <div class="pagination">
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select> Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
     <?php
+        $this->ugyfelDataTable->printTable();
+
     }
 }

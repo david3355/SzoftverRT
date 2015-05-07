@@ -17,7 +17,7 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
 
         $this->tableName = 'falhasznalo-datatable';
 
-        $this->dataCoulombs = array(
+        $this->dataColumns = array(
             "id" => array(
                 'name' => 'Azonosító',
                 'sortable' => false
@@ -39,7 +39,7 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
                 'sortable' => false
             )
         );
-        $this->operationCoulombs = array(
+        $this->operationColumns = array(
             array(
                 'name' => 'edit',
                 'text' => 'Szerkesztés'
@@ -53,7 +53,7 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
                 'text' => 'Inaktiválás'
             )
         );
-        $this->steps = array(50, 100, 500);
+
     }
 
 }
