@@ -230,6 +230,7 @@ class PersistenceManager
 
     /**
      * @param $class
+     * @return $this
      */
     public function delete($class)
     {
@@ -239,7 +240,7 @@ class PersistenceManager
     }
 
     /**
-     *
+     * @return array|bool
      */
     public function destroy()
     {
@@ -277,7 +278,7 @@ class PersistenceManager
     }
 
     /**
-     *
+     * @return array|bool
      */
     public function edit()
     {
