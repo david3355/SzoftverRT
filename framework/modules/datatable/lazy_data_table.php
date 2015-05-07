@@ -114,7 +114,7 @@ abstract class Abstract_Lazy_Data_Table
     }
 
 
-    abstract protected function getData(array $post);
+    abstract protected function getData(array $post = null);
 
     abstract protected function init();
 
