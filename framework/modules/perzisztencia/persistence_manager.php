@@ -233,7 +233,27 @@ class PersistenceManager
      */
     public function delete($class)
     {
-        // TODO csináld meg DÁVID!
+        $this->sql['delete'] = $this->getTableNameForClass($class);
+
+        return $this;
+    }
+
+    /**
+     *
+     */
+    public function destroy()
+    {
+        $sql = sprintf('DELETE FROM %s ', $this->sql['delete']);
+
+        if (sizeof($this->sql['where'])) {
+            $where = implode(' ', $this->sql['where']);
+
+            $sql .= sprintf('WHERE %s ', $where);
+        }
+
+        $result = $this->db->query($sql);
+
+        return $result;
     }
 
     /**
@@ -241,7 +261,41 @@ class PersistenceManager
      */
     public function update($class)
     {
-        // TODO csináld meg DÁVID!
+        $this->sql['update'] = $this->getTableNameForClass($class);
+    }
+
+    /**
+     * @param $attrib
+     * @param $value
+     * @return $this
+     */
+    public function set($attrib, $value)
+    {
+        $this->sql['set'][] = $attrib . " = '" . $value . "' ";
+
+        return $this;
+    }
+
+    /**
+     *
+     */
+    public function edit()
+    {
+        $sql = sprintf('UPDATE %s ', $this->sql['update']);
+
+        $set = implode(',', $this->sql['set']);
+
+        $sql .= sprintf('SET %s ', $set);
+
+        if (sizeof($this->sql['where'])) {
+            $where = implode(' ', $this->sql['where']);
+
+            $sql .= sprintf('WHERE %s ', $where);
+        }
+
+        $result = $this->db->query($sql);
+
+        return $result;
     }
 
 }
