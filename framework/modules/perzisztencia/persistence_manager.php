@@ -146,6 +146,34 @@ class PersistenceManager
     }
 
     /**
+     * @param $attrib
+     * @param $operator
+     * @param $value
+     * @return $this
+     */
+    public function orWhere($attrib, $operator, $value)
+    {
+
+        $this->sql['where'][] = ' OR ' . $attrib . ' ' . $operator . " '" . $value . "' ";
+
+        return $this;
+    }
+
+    /**
+     * @param $attrib
+     * @param $operator
+     * @param $value
+     * @return $this
+     */
+    public function andWhere($attrib, $operator, $value)
+    {
+
+        $this->sql['where'][] = ' AND ' . $attrib . ' ' . $operator . " '" . $value . "' ";
+
+        return $this;
+    }
+
+    /**
      * @param $limit
      * @param null $offset
      * @return $this
@@ -173,14 +201,37 @@ class PersistenceManager
     }
 
     /**
+     * @param $class
+     */
+    public function delete($class){
+        $this->sql['table'] = $this->getTableNameForClass($class);
+        $this->sql['class'] = $class;
+        return $this;
+    }
+
+    /**
+     * @param $class
+     */
+    public function update($class){
+        $this->sql['table'] = $this->getTableNameForClass($class);
+        return $this;
+    }
+
+    public function set($attribute, $value)
+    {
+        $this->sql['set'][] = $attribute."='".$value."' ";
+        return $this;
+    }
+
+    /**
      * @param bool $iWantObject
      */
-    public function getSelect($iWantObject = false){
+    public function exeSelect(){
         $sql = sprintf('SELECT %s FROM %s ',$this->sql['select'],$this->sql['from']);
 
         if(isset($this->sql['where'])){
-            $where = implode(' AND ',$this->sql['where']);
-            $sql .= sprintf('WHERE %s ',$where);
+            $where = implode(' ',$this->sql['where']);
+            $sql .= sprintf(' WHERE %s ',$where);
         }
 
         if(isset($this->sql['orderBy'])){
@@ -195,86 +246,47 @@ class PersistenceManager
 
         unset($this->sql);
 
-        if(!$iWantObject){
-            return $result;
-        }
+        return $result;
     }
 
-<<<<<<< HEAD
-    /**
-     * @param $class
-     * @return $this
-     */
-    public function delete($class)
-=======
-    public function getDelete($iWantObject = false)
->>>>>>> origin/master
+
+
+    public function exeDelete()
     {
-        $result = sprintf("DELETE FROM %s", $this->sql['table']);
+        $sql = sprintf("DELETE FROM %s", $this->sql['table']);
 
-        if(sizeof($this->sql['where'])){
-            $where = implode(',',$this->sql['where']);
+        if(isset($this->sql['where'])){
+            $where = implode(' ',$this->sql['where']);
+            $sql .= sprintf(' WHERE %s ',$where);
+        }
 
-            $this->sql .= sprintf('WHERE %s ',$where);
+        $todelete = $this->select($this->sql['class'], ['id'])->exeSelect();     // A where-be benne vannak az aktuális feltételek
+        foreach($todelete as $object)
+        {
+            $this->db->query(sprintf('DELETE FROM %s WHERE id=%s', $this->mainObjectTableName, $object['id']));
         }
 
         unset($this->sql);
 
-        if(!$iWantObject){
-            return $result;
-        }
+        $result = $this->db->query($sql);
+       return $result;
     }
 
-<<<<<<< HEAD
-    /**
-     * @return array|bool
-     */
-    public function destroy()
-=======
-    public function getUpdate($iWantObject = false)
->>>>>>> origin/master
+
+    public function exeUpdate()
     {
-        $sql = "UPDATE table SET attrib=13 WHERE attrib=34";
-        $result = sprintf("UPDATE %s SET %s", $this->sql['table'], $this->sql['table']);
+        $sql = sprintf("UPDATE %s SET %s", $this->sql['table'], implode(',', $this->sql['set']));
 
-        if(sizeof($this->sql['where'])){
-            $where = implode(',',$this->sql['where']);
-
-            $this->sql .= sprintf('WHERE %s ',$where);
+        if(isset($this->sql['where'])){
+            $where = implode(' ',$this->sql['where']);
+            $sql .= sprintf(' WHERE %s ',$where);
         }
 
         unset($this->sql);
 
-        if(!$iWantObject){
-            return $result;
-        }
+        $result = $this->db->query($sql);
+        return $result;
     }
 
-    /**
-     * @param $class
-     */
-    public function delete($class){
-        $sql['table'] = $this->getTableNameForClass($class);
-    }
-
-    /**
-     * @param $class
-     */
-    public function update($class){
-        $sql['table'] = $this->getTableNameForClass($class);
-
-    }
-
-<<<<<<< HEAD
-    /**
-     * @return array|bool
-     */
-    public function edit()
-=======
-    public function set($attribute, $value)
->>>>>>> origin/master
-    {
-        $sql['set'][] = $attribute.'='.$value;;
-    }
 
 }
