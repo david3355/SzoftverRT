@@ -21,9 +21,12 @@ class Felhasznalo extends Persistent
         /*Beraktam sha-256 hash-be, hogy pontosan 64 karakter legyen a jelszó a DB-hez!*/
 
         // Salted hash:
+
         $params['salt'] = $this->generateSalt();
+
         //$params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
         $params['jelszo'] = hash('sha256', $params['jelszo'] . $params['salt']);
+
     }
 
     /**
@@ -78,9 +81,17 @@ class Felhasznalo extends Persistent
     /**
      * @return string
      */
-    private function generateSalt()
+    private function generateSalt($number = 8)
     {
-        return mcrypt_create_iv(8, MCRYPT_DEV_URANDOM);
+        //return mcrypt_create_iv($number, MCRYPT_DEV_URANDOM);
+        $randomString="";
+        $charUniverse="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        for($i=0; $i<$number; $i++){
+            $randInt=rand(0,61);
+            $randChar=$charUniverse[$randInt];
+            $randomString.=$randChar;
+        }
+        return $randomString;
     }
 
     /**

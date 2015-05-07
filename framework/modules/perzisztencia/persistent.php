@@ -69,10 +69,12 @@ abstract class Persistent
         // Minden paramétert át kell adni az onAfterCreate-nek, nem csak a tömbértékűekre lehet szükség
 
 
+
         if (!is_null($params)) {
 
             // Ha a gyerekosztályok nem írják felül az onBeforeCreate-et, akkor az ősé fog lefutni, ha pedig implementálja a gyerekosztály, meg kell hívni az ős onBeforeCreate-jét
             $this->onBeforeCreate($params);                    // Az még kérdéses, hogy ezt hol hívjuk és hogyan.
+
 
             $params['id'] = $this->id;
             do {
