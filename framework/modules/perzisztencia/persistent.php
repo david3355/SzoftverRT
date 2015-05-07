@@ -72,7 +72,7 @@ abstract class Persistent
         if (!is_null($params)) {
 
             // Ha a gyerekosztályok nem írják felül az onBeforeCreate-et, akkor az ősé fog lefutni, ha pedig implementálja a gyerekosztály, meg kell hívni az ős onBeforeCreate-jét
-            $this->onBeforeCreate($params);                    // Az még kérdéses, hogy ezt hol hívjuk és hogyan.
+            $params = $this->onBeforeCreate($params);                    // Az még kérdéses, hogy ezt hol hívjuk és hogyan.
 
             $params['id'] = $this->id;
             do {
@@ -222,8 +222,9 @@ abstract class Persistent
 
     /**
      * Az objektum létrehozása előtt lehetőség van a paraméterek módosítására, ellenőrzésére
+     * A(z opcionálisan) módosított paraméterekkel tér vissza
      */
-    abstract protected function onBeforeCreate(array &$params = null);
+    abstract protected function onBeforeCreate(array $params);
 
     /**
      *  Mielőtt az objektumot kitöröljük az adatbázisból, a kompozícióval hozzákapcsolt gyerekobjektumokat is törölni kell

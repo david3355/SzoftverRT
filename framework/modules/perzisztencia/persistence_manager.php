@@ -175,24 +175,60 @@ class PersistenceManager
     /**
      * @param bool $iWantObject
      */
-    public function get($iWantObject = false){
+    public function getSelect($iWantObject = false){
         $sql = sprintf('SELECT %s FROM %s ',$this->sql['select'],$this->sql['from']);
 
-        if(sizeof($this->sql['where'])){
-            $where = implode(',',$this->sql['where']);
-
+        if(isset($this->sql['where'])){
+            $where = implode(' AND ',$this->sql['where']);
             $sql .= sprintf('WHERE %s ',$where);
         }
 
-        if($this->sql['orderBy']){
-            $sql .= sprintf('ORDERBY %s ',$this->sql['orderBy']);
+        if(isset($this->sql['orderBy'])){
+            $sql .= sprintf('ORDER BY %s ',$this->sql['orderBy']);
         }
 
-        if($this->sql['limit']){
+        if(isset($this->sql['limit'])){
             $sql .= sprintf('LIMIT %s',$this->sql['limit']);
         }
 
         $result = $this->db->query($sql);
+
+        unset($this->sql);
+
+        if(!$iWantObject){
+            return $result;
+        }
+    }
+
+    public function getDelete($iWantObject = false)
+    {
+        $result = sprintf("DELETE FROM %s", $this->sql['table']);
+
+        if(sizeof($this->sql['where'])){
+            $where = implode(',',$this->sql['where']);
+
+            $this->sql .= sprintf('WHERE %s ',$where);
+        }
+
+        unset($this->sql);
+
+        if(!$iWantObject){
+            return $result;
+        }
+    }
+
+    public function getUpdate($iWantObject = false)
+    {
+        $sql = "UPDATE table SET attrib=13 WHERE attrib=34";
+        $result = sprintf("UPDATE %s SET %s", $this->sql['table'], $this->sql['table']);
+
+        if(sizeof($this->sql['where'])){
+            $where = implode(',',$this->sql['where']);
+
+            $this->sql .= sprintf('WHERE %s ',$where);
+        }
+
+        unset($this->sql);
 
         if(!$iWantObject){
             return $result;
@@ -203,14 +239,20 @@ class PersistenceManager
      * @param $class
      */
     public function delete($class){
-        // TODO csináld meg DÁVID!
+        $sql['table'] = $this->getTableNameForClass($class);
     }
 
     /**
      * @param $class
      */
     public function update($class){
-        // TODO csináld meg DÁVID!
+        $sql['table'] = $this->getTableNameForClass($class);
+
+    }
+
+    public function set($attribute, $value)
+    {
+        $sql['set'][] = $attribute.'='.$value;;
     }
 
 }
