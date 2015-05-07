@@ -18,7 +18,6 @@ class FelhasznaloKomponens extends Site_Component
 
     function process()
     {
-        $this->felhasznaloDataTable->process($_POST);
 
         if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
             $this->showFormPage = true;
@@ -39,6 +38,8 @@ class FelhasznaloKomponens extends Site_Component
 
             $felhasznalo = $this->pm->createObject('Felhasznalo', $felhasznalo_adatok);
         }
+
+        $this->felhasznaloDataTable->process($_POST);
     }
 
     function show()
