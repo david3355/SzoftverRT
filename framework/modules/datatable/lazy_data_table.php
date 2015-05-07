@@ -21,7 +21,6 @@ abstract class Abstract_Lazy_Data_Table
 
     public function process(array $post)
     {
-
         if (!empty($post[$this->tableName . '-selectedStep'])) {
             $this->selectedStep = $post[$this->tableName . '-selectedStep'];
         }
@@ -30,11 +29,11 @@ abstract class Abstract_Lazy_Data_Table
         }
 
         if (empty($this->selectedStep)) {
-            $this->selectedStep = 1;
+            $this->selectedStep = $this->steps[0];
         }
 
         if (empty($this->selectedPageNumber)) {
-            $this->selectedPageNumber = $this->steps[0];
+            $this->selectedPageNumber = 1;
         }
 
         $this->rows = $this->getData($post);
@@ -46,6 +45,7 @@ abstract class Abstract_Lazy_Data_Table
         $this->printPaginator();
         ?>
         <div class="clear"></div>
+        <form id="<?php echo $this->tableName ?>-form" method="post">
         <div class="itemlist">
             <table cellspacing="0" cellpadding="0" class="listtable">
                 <thead>
@@ -82,9 +82,12 @@ abstract class Abstract_Lazy_Data_Table
                 ?>
                 </tbody>
             </table>
+            <input id="selectedPageNumber-input" type="hidden" name="<?php echo $this->tableName ?>-selectedPageNumber"
+                value="<?php echo $this->selectedPageNumber ?>"/>
         </div>
+        <?php $this->printPaginator(); ?>
+        </form>
         <?php
-        $this->printPaginator();
     }
 
     private function printPaginator()
@@ -93,7 +96,7 @@ abstract class Abstract_Lazy_Data_Table
         <div class="clear"></div>
         <div class="pagination">
             <div class="pagination_element_count">Találatok száma: <?php echo $this->numberOfAllRows ?></div>
-            <select name="<?php echo $this->tableName ?>-selectedStep">
+            <select onchange="submitForm();" name="<?php echo $this->tableName ?>-selectedStep">
                 <?php
                 foreach ($this->steps as $step) {
                     if ($step == $this->selectedStep) {
@@ -104,17 +107,43 @@ abstract class Abstract_Lazy_Data_Table
                 }
                 ?>
             </select>
-            Előző
+            <a onclick="setSelectedPageInputAndSubmit(<?php echo $this->selectedPageNumber-1 ?>)">Előző</a>
                 <span class="pagination_page_number">
-                    <input type="hidden" name="<?php echo $this->tableName ?>-selectedPageNumber"
-                           value="<?php echo $this->selectedPageNumber ?>"/>
+                    <?php
+                        for ($x = 1; $x < $this->selectedPageNumber; $x++) {
+                            echo "<a onclick='setSelectedPageInputAndSubmit($x)'>$x </a>";
+                        } 
+                    ?>
                     <span class="pagination_active_page_number"><?php echo $this->selectedPageNumber ?></span>
+                    <?php
+                        for ($x = $this->selectedPageNumber+1; $x <= $this->getLastPage(); $x++) {
+                            echo "<a onclick='setSelectedPageInputAndSubmit($x)'>$x </a>";
+                        } 
+                    ?>
                 </span>
-            Következő
+            <a onclick="setSelectedPageInputAndSubmit(<?php echo $this->selectedPageNumber+1 ?>)">Következő</a>
         </div>
+        <script>
+            function setSelectedPageInputAndSubmit(targetPage){
+                console.log(targetPage);
+                $('#selectedPageNumber-input').val(targetPage);
+                submitForm();
+            }
+            function submitForm(){
+                $('form#<?php echo $this->tableName ?>-form').submit();
+            }
+            
+        </script>
     <?php
     }
 
+    private function getLastPage()
+    {
+        if(!empty($this->numberOfAllRows)){
+            return round(($this->numberOfAllRows/$this->selectedStep)+0.4);
+        }
+        return 0;
+    }
 
     abstract protected function getData(array $post = null);
 

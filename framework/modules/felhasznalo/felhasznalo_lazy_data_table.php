@@ -7,8 +7,8 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
 
     protected function getData(array $post = null)
     {
-
-        return $this->pm->select('Felhasznalo')->get();
+        $this->numberOfAllRows = $this->pm->select('Felhasznalo',['count(*) as rn'])->exeSelect()[0]['rn'];
+        return $this->pm->select('Felhasznalo')->limit($this->selectedPageNumber-1,$this->selectedStep)->exeSelect();
     }
 
     protected function init()
@@ -53,7 +53,7 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
                 'text' => 'Inaktiválás'
             )
         );
-
+        $this->steps = array(1, 2, 5);
     }
 
 }
