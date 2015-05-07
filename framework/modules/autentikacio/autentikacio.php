@@ -21,7 +21,7 @@ class Autentikacio extends Site_Authenticator
         $pm = PersistenceManager::getInstance();
 
         $user = $pm->select('Felhasznalo', ['id', 'nev', 'jelszo', 'salt'])
-            ->where('nev', '=', $username)->get();
+            ->where('nev', '=', $username)->exeSelect();
 
         if (empty($user)) {
             $msg[] = 'NINCS_ILYEN_FELHASZNALO';
