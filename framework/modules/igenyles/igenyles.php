@@ -27,7 +27,7 @@ class Igenyles extends Persistent{
     /**
      * Az objektum létrehozása előtt lehetőség van a paraméterek módosítására, ellenőrzésére
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params = null)
     {
         // TODO: Implement onBeforeCreate() method.
     }
@@ -47,8 +47,7 @@ class Igenyles extends Persistent{
      * @param array $params
      * @return mixed array
      */
-    protected static function getOwnParameters(array $params = null)
-    {
-        // TODO: Implement getOwnParameters() method.
+    protected static function getOwnParameters() {
+        return array();
     }
 }

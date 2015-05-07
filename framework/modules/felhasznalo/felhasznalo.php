@@ -16,14 +16,13 @@ class Felhasznalo extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
-        /*Beraktam sha-256 hash-be, hogy pontosan 64 karakter legyen a jelszó a DB-hez!*/
-
+        // sha-256 hash: pontosan 64 karakter
         // Salted hash:
         $params['salt'] = $this->generateSalt();
-        //$params['jelszo'] = password_hash($params['jelszo'].$params['salt'], PASSWORD_BCRYPT);
         $params['jelszo'] = hash('sha256', $params['jelszo'] . $params['salt']);
+        return $params;
     }
 
     /**
@@ -51,7 +50,7 @@ class Felhasznalo extends Persistent
         if (empty($params['nev'])) $errors[] = "USERNEV_NINCS_MEGADVA";
         if (strlen($params['nev']) < 3) $errors[] = "ROVID_USER_NEV";
         //nem egyedi, mert már van ilyen user_nev
-        $users = $this->getFields(['nev'], ['nev' => $params['nev']]);
+        $users = $this->select(['nev'], array(['nev', $params['nev'], false]));
 
         if ($users && $users[0]['nev'] != true) $errors[] = "HASZNALT_USER_NEV";
 
@@ -97,15 +96,13 @@ class Felhasznalo extends Persistent
         return $err;
     }
 
-    protected static function getOwnParameters(array $params = null) {      
-        $own = array_fill_keys(array('id', 'nev', 'email', 'jelszo', 'salt', 'jog', 'aktiv'), '');
-        if($params == null){
-            return $own;
-        }
-        foreach($own as $key => $value) {
-            $own[$key]=$params[$key];
-        }
-        return $own;
+    function getFelhasznaloAdatok()
+    {
+        return $this->getFields(array('id', 'nev', 'email', 'jog', 'aktiv'));
+    }
+
+    protected static function getOwnParameters() {
+        return array('id', 'nev', 'email', 'jelszo', 'salt', 'jog', 'aktiv');
     }
 
 }

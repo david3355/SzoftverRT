@@ -8,9 +8,9 @@ class Szamlatomb extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
-
+        return $params;
     }
 
     /**
@@ -57,6 +57,10 @@ class Szamlatomb extends Persistent
 		if (empty($params['szamla_elotag'])) $errors[] = 'SZAMLA_ELOTAG_NINCS_MEGADVA';
 
 		return $errors;
+    }
+
+    protected static function getOwnParameters() {
+        return array('id', 'megnevezes', 'szamla_elotag', 'szamla_aktual_szam', 'lezaras_datum');
     }
 }
 

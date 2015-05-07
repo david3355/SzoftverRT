@@ -8,7 +8,7 @@ class Kifizetes extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
         //fedzetellenőrzés a kifizetésre (összeg - előjelű)
         if ($params['osszeg'] < 0) {
@@ -17,6 +17,8 @@ class Kifizetes extends Persistent
                 throw new Exception("NINCS_FEDEZET");
             }
         }
+
+        return $params;
     }
 
     /**
@@ -68,9 +70,8 @@ class Kifizetes extends Persistent
      * @param array $params
      * @return mixed array
      */
-    protected function getOwnParameters(array $params = null)
-    {
-        // TODO: Implement getOwnParameters() method.
+    protected static function getOwnParameters() {
+        return array('id', 'kifizetes_datum', 'osszeg');
     }
 }
 

@@ -28,7 +28,14 @@ class Admin_Login_Site_Template extends Site_Template
             $this->show_slot('login');
             ?>
 
+            <div class="actions">
+                <p>Felhasználónév: teszt4</p>
+                <p>Jelszó: Teszt4</p>
+            </div>
+
         </div>
+
+
         </body>
         </html>
     <?

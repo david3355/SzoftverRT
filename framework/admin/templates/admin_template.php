@@ -9,9 +9,9 @@ class Admin_Template extends Site_Template
         <html>
         <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8">
-            <script src="/modules/moopage/moopage4.js"></script>
-            <link rel="stylesheet" href="/admin/templates/perpetuum_template.css" type="text/css">
-            <link rel="stylesheet" href="/admin/templates/menu.css" type="text/css">
+            <script src="/SzoftverRT/SzoftverRT/framework/modules/moopage/moopage4.js"></script>
++            <link rel="stylesheet" href="/SzoftverRT/SzoftverRT/framework/admin/templates/perpetuum_template.css" type="text/css">
++            <link rel="stylesheet" href="/SzoftverRT/SzoftverRT/framework/admin/templates/menu.css" type="text/css">
             <title>Admin</title>
         </head>
         <body>

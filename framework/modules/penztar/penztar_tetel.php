@@ -67,5 +67,9 @@ class PenztarTetel extends Persistent
 
         return $err;
     }
+
+    protected static function getOwnParameters() {
+        return array('id', 'penztar_fk', 'sorszam', 'megnevezes', 'osszeg', 'datum', 'storno');
+    }
 }
 

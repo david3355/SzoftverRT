@@ -26,6 +26,11 @@ class PersistenceManager
     private $config;
 
     /**
+     * @var
+     */
+    private $sql;
+
+    /**
      * @return PersistenceManager
      */
     static function getInstance()
@@ -42,6 +47,7 @@ class PersistenceManager
         $this->db = $connection;
         $this->config = new Config();
         $this->mainObjectTableName = "objects";
+        $this->sql = '';
     }
 
     /**
@@ -92,7 +98,7 @@ class PersistenceManager
             $object->create($params);
             return $object;
         } else {
-            return null;
+            return $errors;
         }
 
     }
@@ -112,6 +118,163 @@ class PersistenceManager
     public final function getMainObjectTableName()
     {
         return $this->mainObjectTableName;
+    }
+
+
+    /**
+     * @param $class
+     * @param array $select
+     */
+    public function select($class, array $select = ['*'])
+    {
+        $this->sql['select'] = implode(',', $select);
+        $this->sql['from'] = $this->getTableNameForClass($class);
+
+        return $this;
+    }
+
+    /**
+     * @param $attrib
+     * @param $operator
+     * @param $value
+     */
+    public function where($attrib, $operator, $value)
+    {
+        $this->sql['where'][] = $attrib . ' ' . $operator . " '" . $value. "' ";
+
+        return $this;
+    }
+
+    /**
+     * @param $limit
+     * @param null $offset
+     * @return $this
+     */
+    public function limit($limit, $offset = null)
+    {
+        if (is_null($offset)) {
+            $this->sql['limit'] = $limit;
+        } else {
+            $this->sql['limit'] = $limit . ',' . $offset;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $attrib
+     * @param string $order
+     */
+    public function orderBy($attrib, $order = 'DESC')
+    {
+        $this->sql['orderBy'] = $attrib . ' ' . $order;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $iWantObject
+     */
+    public function getSelect($iWantObject = false){
+        $sql = sprintf('SELECT %s FROM %s ',$this->sql['select'],$this->sql['from']);
+
+        if(isset($this->sql['where'])){
+            $where = implode(' AND ',$this->sql['where']);
+            $sql .= sprintf('WHERE %s ',$where);
+        }
+
+        if(isset($this->sql['orderBy'])){
+            $sql .= sprintf('ORDER BY %s ',$this->sql['orderBy']);
+        }
+
+        if(isset($this->sql['limit'])){
+            $sql .= sprintf('LIMIT %s',$this->sql['limit']);
+        }
+
+        $result = $this->db->query($sql);
+
+        unset($this->sql);
+
+        if(!$iWantObject){
+            return $result;
+        }
+    }
+
+<<<<<<< HEAD
+    /**
+     * @param $class
+     * @return $this
+     */
+    public function delete($class)
+=======
+    public function getDelete($iWantObject = false)
+>>>>>>> origin/master
+    {
+        $result = sprintf("DELETE FROM %s", $this->sql['table']);
+
+        if(sizeof($this->sql['where'])){
+            $where = implode(',',$this->sql['where']);
+
+            $this->sql .= sprintf('WHERE %s ',$where);
+        }
+
+        unset($this->sql);
+
+        if(!$iWantObject){
+            return $result;
+        }
+    }
+
+<<<<<<< HEAD
+    /**
+     * @return array|bool
+     */
+    public function destroy()
+=======
+    public function getUpdate($iWantObject = false)
+>>>>>>> origin/master
+    {
+        $sql = "UPDATE table SET attrib=13 WHERE attrib=34";
+        $result = sprintf("UPDATE %s SET %s", $this->sql['table'], $this->sql['table']);
+
+        if(sizeof($this->sql['where'])){
+            $where = implode(',',$this->sql['where']);
+
+            $this->sql .= sprintf('WHERE %s ',$where);
+        }
+
+        unset($this->sql);
+
+        if(!$iWantObject){
+            return $result;
+        }
+    }
+
+    /**
+     * @param $class
+     */
+    public function delete($class){
+        $sql['table'] = $this->getTableNameForClass($class);
+    }
+
+    /**
+     * @param $class
+     */
+    public function update($class){
+        $sql['table'] = $this->getTableNameForClass($class);
+
+    }
+
+<<<<<<< HEAD
+    /**
+     * @return array|bool
+     */
+    public function edit()
+=======
+    public function set($attribute, $value)
+>>>>>>> origin/master
+    {
+        $sql['set'][] = $attribute.'='.$value;;
     }
 
 }

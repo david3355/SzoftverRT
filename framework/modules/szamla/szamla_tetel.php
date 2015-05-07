@@ -8,9 +8,9 @@ class SzamlaTetel extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
-
+            return $params;
     }
 
     /**
@@ -62,6 +62,10 @@ class SzamlaTetel extends Persistent
         }
 
         return $err;
+    }
+
+    protected static function getOwnParameters() {
+        return array('id', 'szamla_fk', 'vamtarifaszam', 'megnevezes', 'mennyiseg_egyseg', 'mennyiseg', 'afa', 'netto_ar', 'brutto_ar');
     }
 }
 

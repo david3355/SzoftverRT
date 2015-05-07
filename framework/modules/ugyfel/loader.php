@@ -15,8 +15,8 @@ class UgyfelLoader extends AbstractLoader
                 return $this->myfolder."/ugyfel.php";
             case "UgyfelKomponens":
                 return $this->myfolder."/ugyfel_komponens.php";
-            case "Erpugyfel":
-                return $this->myfolder."/erpugyfel.php";
+            case "Ugyfel_Lazy_Data_Table":
+                return $this->myfolder."/ugyfel_lazy_data_table.php";
 			default:
                 return null;
         }

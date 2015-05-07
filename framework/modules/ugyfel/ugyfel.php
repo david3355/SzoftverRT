@@ -8,9 +8,9 @@ class Ugyfel extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
-
+        return $params;
     }
 
     /**
@@ -28,11 +28,7 @@ class Ugyfel extends Persistent
     {
 
     }
-	
-	public function getOwnParameters(array $params = NULL)
-	{
-		return true;
-	}
+
 	
     /**
      * @param array $params
@@ -88,6 +84,10 @@ class Ugyfel extends Persistent
             return $this->setFields($adatok);
         }
         return $err;
+    }
+
+    protected static function getOwnParameters() {
+        return array('id', 'azonosito', 'nev', 'cim_irszam', 'cim_varos', 'cim_utca_hsz', 'telefon', 'email');
     }
 }
 

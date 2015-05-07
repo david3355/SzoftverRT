@@ -8,9 +8,9 @@ class Penztar extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params)
     {
-
+        return $params;
     }
 
     /**
@@ -53,6 +53,10 @@ class Penztar extends Persistent
             return $this->setFields($adatok);
         }
         return $err;
+    }
+
+    protected static function getOwnParameters() {
+        return array('id', 'megnevezes', 'egyenleg');
     }
 }
 

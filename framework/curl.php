@@ -14,13 +14,13 @@
 	//execute the request
 	$result = curl_exec($ch);
 	
-	/*SEGíTSÉG AZ ÜGYFÉLKAPUNAK:
+	/*SEGÃ­TSÃ‰G AZ ÃœGYFÃ‰LKAPUNAK:
 		-json_decode(array, true)
-		-ezután lehet hivatkozni a tömbre
-			-eredmény: 'data'
-			-hányadik
-			-melyik attributum
+		-ezutÃ¡n lehet hivatkozni a tÃ¶mbre
+			-eredmÃ©ny: 'data'
+			-hÃ¡nyadik
+			-melyik attributum*/
 		
-		$res=json_decode($result, true);
-		echo $res['data'][0]['nev'];*/
+	$res=json_decode($result, true);
+	echo $res['data'][0]['nev'];
 ?>

@@ -14,7 +14,7 @@ class AutentikacioKomponens extends Site_Component
     {
 
         if (isset($_POST['login']) && !empty($_POST['login'])) {
-            $this->auth->login($_POST['username'], $_POST['password']);
+            $_SESSION['msg'] = $this->auth->login($_POST['username'], $_POST['password']);
         }
 
         if (isset($_POST['logout']) && !empty($_POST['logout'])) {
@@ -25,9 +25,51 @@ class AutentikacioKomponens extends Site_Component
     function show()
     {
         if (!$this->auth->isUserAuthorized()) {
-            include_once 'view/login.box.php';
+            $this->showLogin();
         } else {
-            include_once 'view/logout.box.php';
+            $this->showLogout();
         }
+    }
+
+    private function showLogin()
+    {
+        ?>
+        <form class="form_box" action="" method="POST">
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        Felhasználónév
+                    </td>
+                    <td>
+                        <input name="username" type="text"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Jelszó
+                    </td>
+                    <td>
+                        <input name="password" type="password"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="actions">
+                <div class="float_right">
+                    <input type="submit" name="login" value="Belépés"/>
+                </div>
+            </div>
+        </form>
+    <?php
+    }
+
+    private function showLogout()
+    {
+        ?>
+        <form action="" method="POST">
+            <input type="submit" name="logout" value="Kijelentkezés"/>
+        </form>
+    <?php
     }
 }
