@@ -6,7 +6,6 @@ class Ugyfel_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
 
     protected function getData(array $post = null)
     {
-        return $this->pm->select('Ugyfel')->get();
     }
 
     protected function init()
