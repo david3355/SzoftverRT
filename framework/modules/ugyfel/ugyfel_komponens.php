@@ -27,6 +27,24 @@ class UgyfelKomponens extends Site_Component
             $this->showFormPage = false;
         }
 
+		if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
+            $uf_adatok = array(
+                'azonosito' => $_POST['azonosito'],
+				'nev' => $_POST['nev'],
+				'cim_irszam' => $_POST['cim_irszam'],
+				'cim_varos' => $_POST['cim_varos'],
+				'cim_utca_hsz' => $_POST['cim_utca_hsz'],
+				'telefon' => $_POST['telefon'],
+				'email' => $_POST['email']
+            );
+
+            $Ugyfel = $this->pm->createObject('Ugyfel', $uf_adatok);
+			foreach($Ugyfel as $p)
+			{
+				echo $p."#";
+			}
+        }
+		
         $this->ugyfelDataTable->process($_POST);
     }
 
@@ -59,27 +77,27 @@ class UgyfelKomponens extends Site_Component
                                     <tbody>
                                     <tr>
                                         <td><span>Azonosító</span></td>
-                                        <td><input size="32" readonly="readonly" type="text" name="azon" value=""></td>
+                                        <td><input size="32" type="text" name="azonosito" value=""></td>
                                     </tr>
                                     <tr>
                                         <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
                                         <td><input class="ugyfel_nev" size="32" type="text" name="nev" value=""></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Cím</span></td>
-                                        <td><input size="32" type="text" name="cim" value=""></td>
+                                        <td><span>Irányítószám</span></td>
+                                        <td><input size="32" type="text" name="cim_irszam" value=""></td>
                                     </tr>
                                     <tr>
                                         <td><span>Város</span></td>
-                                        <td><input size="32" type="text" name="varos" value=""></td>
+                                        <td><input size="32" type="text" name="cim_varos" value=""></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Irányítószám</span></td>
-                                        <td><input size="32" type="text" name="ir" value=""></td>
+                                        <td><span>Utca, házszám</span></td>
+                                        <td><input size="32" type="text" name="cim_utca_hsz" value=""></td>
                                     </tr>
                                     <tr>
                                         <td><span>Telefon</span></td>
-                                        <td><input size="32" type="text" name="tel" value=""></td>
+                                        <td><input size="32" type="text" name="telefon" value=""></td>
                                     </tr>
                                     <tr>
                                         <td><span>Email</span></td>

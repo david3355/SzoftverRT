@@ -7,12 +7,13 @@ class SzamlatombKomponens extends Site_Component
 {
 
     private $showFormPage = false;
-
     private $pm;
+	private $SzlaTDataTable;
 
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
+		$this->SzlaTDataTable = new Szamlatomb_Lazy_Data_Table();
     }
 
     function process()
@@ -24,6 +25,24 @@ class SzamlatombKomponens extends Site_Component
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
         }
+		
+		if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
+            $szt_adatok = array(
+                'megnevezes' => $_POST['megnevezes'],
+                'szamla_elotag' => $_POST['szamla_elotag'],
+                'szamla_aktual_szam' => $_POST['szamla_aktual_szam'],
+                'jog' => $_POST['jog'],
+                'aktiv' => isset($_POST['aktiv']) ? 1 : 0
+            );
+
+            $Szamlatomb = $this->pm->createObject('Szamlatomb', $szt_adatok);
+			foreach($Szamlatomb as $st)
+			{
+				echo $st."#";
+			}
+        }
+
+        $this->SzlaTDataTable->process($_POST);
     }
 
     function show()
@@ -59,11 +78,11 @@ class SzamlatombKomponens extends Site_Component
                                     </tr>
                                     <tr>
                                         <td><span>Előtag</span></td>
-                                        <td><input size="32" type="text" name="elotag" value=""></td>
+                                        <td><input size="32" type="text" name="szamla_elotag" value=""></td>
                                     </tr>
                                     <tr>
                                         <td><span>Kezdőszám</span></td>
-                                        <td><input size="32" type="text" name="kezdoszam" value=""></td>
+                                        <td><input size="32" type="text" name="szamla_aktual_szam" value=""></td>
                                     </tr>
                                     </tbody>
                                 </table>

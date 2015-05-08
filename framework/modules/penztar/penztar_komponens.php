@@ -7,12 +7,13 @@ class PenztarKomponens extends Site_Component
 {
 
     private $showFormPage = false;
-
     private $pm;
+	private $penztarDataTable;
 
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
+		$this->penztarDataTable = new Felhasznalo_Lazy_Data_Table();
     }
 
     function process()
@@ -24,6 +25,20 @@ class PenztarKomponens extends Site_Component
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
         }
+		
+		if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
+            $p_adatok = array(
+                'megnevezes' => $_POST['megnevezes']
+            );
+
+            $Penztar = $this->pm->createObject('Penztar', $p_adatok);
+			foreach($Penztar as $p)
+			{
+				echo $p."#";
+			}
+        }
+
+        $this->penztarDataTable->process($_POST);
     }
 
     function show()

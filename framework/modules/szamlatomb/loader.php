@@ -15,6 +15,8 @@ class SzamlatombLoader extends AbstractLoader
                 return $this->myfolder."/szamlatomb.php";
             case "SzamlatombKomponens":
                 return $this->myfolder."/szamlatomb_komponens.php";
+			case "Szamlatomb_Lazy_Data_Table":
+                return $this->myfolder."/szamlatomb_lazy_data_table.php";
             default:
                 return null;
         }

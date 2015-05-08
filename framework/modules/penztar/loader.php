@@ -17,7 +17,7 @@ class PenztarLoader extends AbstractLoader
                 return $this->myfolder."/penztar_komponens.php";
             case "PenztarTetel":
                 return $this->myfolder."/penztar_tetel.php";
-			case "PenztarLazyDataTable":
+			case "Penztar_Lazy_Data_Table":
                 return $this->myfolder."/penztar_lazy_data_table.php";
             default:
                 return null;
