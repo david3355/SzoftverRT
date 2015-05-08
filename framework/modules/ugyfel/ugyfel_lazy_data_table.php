@@ -6,6 +6,16 @@ class Ugyfel_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
 
     protected function getData(array $post = null)
     {
+        $data = $this->pm->select('Ugyfel')->exeSelect();
+        $ugyfelek = array();
+        foreach($data as $ugyfel)
+        {
+            $uj = array();
+            foreach($ugyfel as $k=>$v) $uj[$k]=$v;
+            $uj['cim'] = $ugyfel['cim_irszam'] . ' ' . $ugyfel['cim_varos'] . ', ' . $ugyfel['cim_utca_hsz'];
+            $ugyfelek[] = $uj;
+        }
+        return $ugyfelek;
     }
 
     protected function init()
@@ -17,6 +27,10 @@ class Ugyfel_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
         $this->dataColumns = array(
             "id" => array(
                 'name' => 'Azonosító',
+                'sortable' => false
+            ),
+            "azonosito" => array(
+                'name' => 'Ügyfél azonosító',
                 'sortable' => false
             ),
             "nev" => array(
