@@ -32,10 +32,12 @@ class PenztarKomponens extends Site_Component
             );
 
             $Penztar = $this->pm->createObject('Penztar', $p_adatok);
+			$msg;
 			foreach($Penztar as $p)
 			{
-				echo $p."#";
+				$msg.= $p."#";
 			}
+			echo"<script>alert('".$msg."')</script>";
         }
 
         $this->penztarDataTable->process($_POST);
