@@ -140,13 +140,6 @@ class UgyfelKomponens extends Site_Component
                 <a href="#" title="Szűrők frissítése">
                     <div class="filtersbox_refresh_icon"></div>
                 </a>
-
-                <div class="filter_item">
-                    Irány: <select name="">
-                        <option selected>Összes</option>
-                        <option>Kimenő</option>
-                        <option>Bejövő</option>
-                    </select></div>
             </div>
         </div>
 
