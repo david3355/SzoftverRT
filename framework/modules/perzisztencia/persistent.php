@@ -143,7 +143,7 @@ abstract class Persistent
 
         $result = $this->db->query($sql);
 
-        return $result;
+        return $result[0];
     }
 
 

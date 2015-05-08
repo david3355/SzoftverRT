@@ -47,12 +47,16 @@ class Ugyfel extends Persistent
 			-nem üres
 			-csak szám
 			-10karakter
+            -egyedi
 			-nincs 4 azonos karakter egymás után*/
+
         if (empty($params['azonosito'])) $errors[] = "AZONOSITO_NINCS_MEGADVA";
 
         if (!preg_match('/^[0-9]*$/', $params['azonosito'])) $errors[] = "CSAK_SZAM_AZONOSITO";
 
         if (strlen($params['azonosito']) != 10) $errors[] = "AZONOSITO_HOSSZ_HIBAS";
+
+        if($this->idExists($params['azonosito'])) $errors[] = "AZONOSITO_MAR_LETEZIK";
 
         if($this->hasRepeat($params['azonosito'])) $errors[] = "AZONOSITO_TUL_SOK_ISMETLODES";
 
@@ -62,6 +66,12 @@ class Ugyfel extends Persistent
     function hasRepeat($maxEnabledRepeat = 3)
     {
         return false;
+    }
+
+    function idExists($id)
+    {
+        $result = PersistenceManager::getInstance()->select('Ugyfel')->where('azonosito', '=', $id)->exeSelect();
+        return !empty($result);
     }
 
     /**
@@ -79,10 +89,15 @@ class Ugyfel extends Persistent
     function setUgyfelAdatok(array $adatok)
     {
         $err = $this->validate($adatok);
-        if (empty($err)) {
+        if (sizeof($err) == 1 && $err[0]='AZONOSITO_MAR_LETEZIK') {
             return $this->setFields($adatok);
         }
         return $err;
+    }
+
+    function getUgyfelAdatok()
+    {
+        return $this->getFields(array('id', 'azonosito', 'nev', 'cim_irszam', 'cim_varos', 'cim_utca_hsz', 'telefon', 'email'));
     }
 
     protected static function getOwnParameters() {
