@@ -260,6 +260,8 @@ class PersistenceManager
             $sql .= sprintf(' WHERE %s ',$where);
         }
 
+        $result = $this->db->query($sql);
+
         $todelete = $this->select($this->sql['class'], ['id'])->exeSelect();     // A where-be benne vannak az aktuális feltételek
         foreach($todelete as $object)
         {
@@ -268,7 +270,6 @@ class PersistenceManager
 
         unset($this->sql);
 
-        $result = $this->db->query($sql);
        return $result;
     }
 
