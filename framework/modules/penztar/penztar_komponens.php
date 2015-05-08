@@ -22,6 +22,12 @@ class PenztarKomponens extends Site_Component
             $this->showFormPage = true;
         }
 
+		//törlés
+		if(isset($_POST['delete']))
+		{
+            $this->pm->delete('Penztar')->where('id','=',$_POST['id'])->exeDelete();
+        }
+		
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
         }

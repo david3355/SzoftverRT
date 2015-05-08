@@ -21,6 +21,12 @@ class SzamlatombKomponens extends Site_Component
         if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
             $this->showFormPage = true;
         }
+		
+		//törlés
+		if(isset($_POST['delete']))
+		{
+            $this->pm->delete('Szamlatomb')->where('id','=',$_POST['id'])->exeDelete();
+        }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
