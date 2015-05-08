@@ -13,7 +13,7 @@ class PenztarKomponens extends Site_Component
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
-		$this->penztarDataTable = new Felhasznalo_Lazy_Data_Table();
+		$this->penztarDataTable = new Penztar_Lazy_Data_Table();
     }
 
     function process()
