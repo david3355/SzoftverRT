@@ -17,6 +17,14 @@ class KifizetesKomponens extends Site_Component
         if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
             $this->showFormPage = true;
         }
+		
+		//törlés
+		if(isset($_POST['delete']))
+		{
+            $kifizetes=new Kifizetes($_POST['id']);
+			$msg=$kifizetes->delete();
+			echo"<script>alert('".$msg."')</script>";
+        }
 
         if (!empty($_POST['back']) || !empty($_POST['save'])) {
             $this->showFormPage = false;

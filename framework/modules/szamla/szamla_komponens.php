@@ -19,6 +19,14 @@ class SzamlaKomponens extends Site_Component
         if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
             $this->showFormPage = true;
         }
+		
+		//törlés
+		if(isset($_POST['delete']))
+		{
+            $Szamla=new Szamla($_POST['id']);
+			$msg=$Szamla->delete();
+			echo"<script>alert('".$msg."')</script>";
+        }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
