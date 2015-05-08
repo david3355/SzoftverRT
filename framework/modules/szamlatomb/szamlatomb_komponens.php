@@ -25,7 +25,9 @@ class SzamlatombKomponens extends Site_Component
 		//törlés
 		if(isset($_POST['delete']))
 		{
-            $this->pm->delete('Szamlatomb')->where('id','=',$_POST['id'])->exeDelete();
+            $st=new Szamlatomb($_POST['id']);
+			$msg=$st->delete();
+			echo"<script>alert('".$msg."')</script>";
         }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){

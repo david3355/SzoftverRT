@@ -25,7 +25,9 @@ class PenztarKomponens extends Site_Component
 		//törlés
 		if(isset($_POST['delete']))
 		{
-            $this->pm->delete('Penztar')->where('id','=',$_POST['id'])->exeDelete();
+            $p=new Penztar($_POST['id']);
+			$msg=$p->delete();
+			echo"<script>alert('".$msg."')</script>";
         }
 		
         if(!empty($_POST['back']) || !empty($_POST['save'])){

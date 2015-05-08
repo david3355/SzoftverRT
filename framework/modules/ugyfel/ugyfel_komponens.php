@@ -26,7 +26,9 @@ class UgyfelKomponens extends Site_Component
 		//törlés
 		if(isset($_POST['delete']))
 		{
-            $this->pm->delete('Ugyfel')->where('id','=',$_POST['id'])->exeDelete();
+            $uf=new Ugyfel($_POST['id']);
+			$msg=$uf->delete();
+			echo"<script>alert('".$msg."')</script>";
         }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){
