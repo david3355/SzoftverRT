@@ -21,6 +21,7 @@ return array(
     "IgenylesLoader" => "/modules/igenyles/loader.php",
     "KifizetesLoader" => "/modules/kifizetes/loader.php",
     "AutentikacioLoader" => "/modules/autentikacio/loader.php",
+    "PDF_API_Loader" => "/modules/pdf_api/loader.php",
     "PersistentLoader" => "/modules/perzisztencia/loader.php",
     "DataTableLoader" => "/modules/datatable/loader.php"
 );
