@@ -10,5 +10,6 @@
  */
 return array(
     'teszt' => 'Teszt_API_Modul',
-    'ugyfel_api' => 'Ugyfel_API'
+    'ugyfel_api' => 'Ugyfel_API',
+    'pdf_api' => 'PDF_API'
 );
