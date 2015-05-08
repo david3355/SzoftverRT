@@ -39,10 +39,7 @@ class UgyfelKomponens extends Site_Component
             );
 
             $Ugyfel = $this->pm->createObject('Ugyfel', $uf_adatok);
-			foreach($Ugyfel as $p)
-			{
-				echo $p."#";
-			}
+			// Hibakód visszaadása a felületre, ha az $Ugyfel egy array
         }
 		
         $this->ugyfelDataTable->process($_POST);

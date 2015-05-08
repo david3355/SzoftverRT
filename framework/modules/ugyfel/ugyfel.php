@@ -48,21 +48,20 @@ class Ugyfel extends Persistent
 			-csak szám
 			-10karakter
 			-nincs 4 azonos karakter egymás után*/
-        if (!empty($params['azonosito'])) {
-            if (preg_match('/^[0-9]*$/', $params['azonosito'])) {
-                if (strlen($params['azonosito']) != 10) {
-                    //IDE KELL MÉG
-                } else {
-                    $errors[] = "AZONOSITO_HOSSZ_HIBAS";
-                }
-            } else {
-                $errors[] = "CSAK_SZAM_AZONOSITO";
-            }
-        } else {
-            $errors[] = "AZONOSITO_NINCS_MEGADVA";
-        }
+        if (empty($params['azonosito'])) $errors[] = "AZONOSITO_NINCS_MEGADVA";
+
+        if (!preg_match('/^[0-9]*$/', $params['azonosito'])) $errors[] = "CSAK_SZAM_AZONOSITO";
+
+        if (strlen($params['azonosito']) != 10) $errors[] = "AZONOSITO_HOSSZ_HIBAS";
+
+        if($this->hasRepeat($params['azonosito'])) $errors[] = "AZONOSITO_TUL_SOK_ISMETLODES";
 
         return $errors;
+    }
+
+    function hasRepeat($maxEnabledRepeat = 3)
+    {
+        return false;
     }
 
     /**
