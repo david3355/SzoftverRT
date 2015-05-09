@@ -7,8 +7,12 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
 
     protected function getData(array $post = null)
     {
+        $find = '%'.$post['search_field']. '%';
+
+        if(!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('email', 'LIKE', $find)->orWhere('nev', 'LIKE', $find);
         $this->numberOfAllRows = $this->pm->select('Felhasznalo',['count(*) as rn'])->exeSelect()[0]['rn'];
-        
+
+        if(!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('email', 'LIKE', $find)->orWhere('nev', 'LIKE', $find);
         $this->pm->select('Felhasznalo');
         if(!empty($this->selectedSortColumn['column']) && !empty($this->selectedSortColumn['dest'])){
             $this->pm->orderBy($this->selectedSortColumn['column'],$this->selectedSortColumn['dest']);
@@ -64,7 +68,7 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
                 'text' => 'Inaktiválás'
             )
         );
-        $this->steps = array(1, 2, 5);
+        $this->steps = array(50, 100, 500);
     }
 
 }

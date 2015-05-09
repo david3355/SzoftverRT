@@ -50,15 +50,17 @@ class Ugyfel extends Persistent
             -egyedi
 			-nincs 4 azonos karakter egymás után*/
 
-        if (empty($params['azonosito'])) $errors[] = "AZONOSITO_NINCS_MEGADVA";
+        if(isset($params['azonosito'])) {
+            if (empty($params['azonosito'])) $errors[] = "AZONOSITO_NINCS_MEGADVA";
 
-        if (!preg_match('/^[0-9]*$/', $params['azonosito'])) $errors[] = "CSAK_SZAM_AZONOSITO";
+            if (!preg_match('/^[0-9]*$/', $params['azonosito'])) $errors[] = "CSAK_SZAM_AZONOSITO";
 
-        if (strlen($params['azonosito']) != 10) $errors[] = "AZONOSITO_HOSSZ_HIBAS";
+            if (strlen($params['azonosito']) != 10) $errors[] = "AZONOSITO_HOSSZ_HIBAS";
 
-        if($this->idExists($params['azonosito'])) $errors[] = "AZONOSITO_MAR_LETEZIK";
+            if ($this->idExists($params['azonosito'])) $errors[] = "AZONOSITO_MAR_LETEZIK";
 
-        if($this->hasRepeat($params['azonosito'])) $errors[] = "AZONOSITO_TUL_SOK_ISMETLODES";
+            if ($this->hasRepeat($params['azonosito'])) $errors[] = "AZONOSITO_TUL_SOK_ISMETLODES";
+        }
 
         return $errors;
     }
@@ -89,7 +91,7 @@ class Ugyfel extends Persistent
     function setUgyfelAdatok(array $adatok)
     {
         $err = $this->validate($adatok);
-        if (sizeof($err) == 1 && $err[0]='AZONOSITO_MAR_LETEZIK') {
+        if (empty($err)) {
             return $this->setFields($adatok);
         }
         return $err;

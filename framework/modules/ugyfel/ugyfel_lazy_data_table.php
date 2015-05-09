@@ -7,8 +7,13 @@ class Ugyfel_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
     protected function getData(array $post = null)
     {
         $find = '%'.$post['search_field']. '%';
-        if(!empty($post['search_button']) && !empty($post['search_field'])) $data = $data = $this->pm->select('Ugyfel')->where('azonosito', 'LIKE', $find)->orWhere('nev', 'LIKE', $find)->exeSelect();
-        else $data = $this->pm->select('Ugyfel')->exeSelect();
+
+        if(!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('azonosito', 'LIKE', $find)->orWhere('nev', 'LIKE', $find);
+        $this->numberOfAllRows = $this->pm->select('Ugyfel',['count(*) as rn'])->exeSelect()[0]['rn'];
+
+        if(!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('azonosito', 'LIKE', $find)->orWhere('nev', 'LIKE', $find);
+
+        $data = $this->pm->select('Ugyfel')->exeSelect();
         $ugyfelek = array();
         foreach($data as $ugyfel)
         {

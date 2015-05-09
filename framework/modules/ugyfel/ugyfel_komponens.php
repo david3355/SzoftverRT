@@ -59,6 +59,7 @@ class UgyfelKomponens extends Site_Component
             if(isset($_SESSION['ugyfel_edit_id']))
             {
                 $uf=$this->pm->getObject($_SESSION['ugyfel_edit_id']);
+                unset($uf_adatok['azonosito']);
                 $result = $uf->setUgyfelAdatok($uf_adatok);
                 if(is_array($result)) {
                     $msg = implode(', ', $result);

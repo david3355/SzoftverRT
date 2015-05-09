@@ -47,20 +47,24 @@ class Felhasznalo extends Persistent
             -nem üres
             -egyedi
             -min. 3 hosszú*/
-        if (empty($params['nev'])) $errors[] = "USERNEV_NINCS_MEGADVA";
-        if (strlen($params['nev']) < 3) $errors[] = "ROVID_USER_NEV";
-        //nem egyedi, mert már van ilyen user_nev
-        $users = $this->select(['nev'], array(['nev', $params['nev'], false]));
-
-        if ($users && $users[0]['nev'] != true) $errors[] = "HASZNALT_USER_NEV";
+        if (isset($params['nev'])) {
+            if (empty($params['nev'])) $errors[] = "USERNEV_NINCS_MEGADVA";
+            if (strlen($params['nev']) < 3) $errors[] = "ROVID_USER_NEV";
+            //nem egyedi, mert már van ilyen user_nev
+            $users = PersistenceManager::getInstance()->select('Felhasznalo')->where('nev', '=', $params['nev'])->exeSelect();
+            if (!empty($users)) $errors[] = "HASZNALT_USER_NEV";
+        }
 
         /*jelszo:
             -nem üres
             -min. 6 hosszú
             -kis-nagy betű, szám*/
-        if (empty($params['jelszo'])) $errors[] = "JELSZO_NINCS_MEGADVA";
-        if (strlen($params['jelszo']) < 6) $errors[] = "ROVID_JELSZO";
-        if (!$this->isPasswordSecure($params['jelszo'])) $errors[] = "KIS_BETU_NAGY_BETU_SZAM_SZUKSEGES";
+
+        if (isset($params['jelszo'])) {
+             if (empty($params['jelszo'])) $errors[] = "JELSZO_NINCS_MEGADVA";
+            if (strlen($params['jelszo']) < 6) $errors[] = "ROVID_JELSZO";
+            if (!$this->isPasswordSecure($params['jelszo'])) $errors[] = "KIS_BETU_NAGY_BETU_SZAM_SZUKSEGES";
+        }
 
         return $errors;
     }
