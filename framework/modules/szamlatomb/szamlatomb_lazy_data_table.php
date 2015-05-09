@@ -29,24 +29,30 @@ class Szamlatomb_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
 
         $this->dataColumns = array(
             "megnevezes" => array(
+                'name' => 'Megnevezés',
                 'sortable' => false
             ),
             "szamla_elotag" => array(
+                'name' => 'Előtag',
                 'sortable' => true
             ),
             "szamla_aktual_szam" => array(
+                'name' => 'Aktuális sorszám',
                 'sortable' => true
             ),
             "lezaras_datum" => array(
+                'name' => 'Lezárva',
                 'sortable' => false
             )
         );
         $this->operationColumns = array(
             array(
                 'name' => 'edit',
+                'text' => 'Szerkesztés'
             ),
             array(
                 'name' => 'delete',
+                'text' => 'Törlés'
             )
         );
         $this->steps = array(1, 2, 5);
