@@ -59,6 +59,16 @@ class Szamlatomb extends Persistent
         return $errors;
     }
 
+    /*function setLezarasDatuma($active)
+    {
+        return $this->setFields(array('aktiv'=>$active));
+    }*/
+
+    function getSzamlatombAdatok()
+    {
+        return $this->getFields(array('id', 'megnevezes', 'szamla_elotag', 'szamla_aktual_szam', 'lezaras_datum'));
+    }
+    
     protected static function getOwnParameters() {
         return array('id', 'megnevezes', 'szamla_elotag', 'szamla_aktual_szam', 'lezaras_datum');
     }

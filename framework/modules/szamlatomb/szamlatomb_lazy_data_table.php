@@ -38,8 +38,8 @@ class Szamlatomb_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
                 'name' => 'Előtag',
                 'sortable' => true
             ),
-            "szamla_kezdoszam" => array(
-                'name' => 'Kezdőszám',
+            "szamla_aktual_szam" => array(
+                'name' => 'Aktuális sorszám',
                 'sortable' => false
             ),
             "lezaras_datum" => array(

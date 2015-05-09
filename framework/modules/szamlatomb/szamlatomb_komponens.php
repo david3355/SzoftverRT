@@ -9,6 +9,7 @@ class SzamlatombKomponens extends Site_Component
     private $showFormPage = false;
     private $pm;
     private $szamlatombDataTable;
+    private $actualSzamlatomb = array();
 
     protected function afterConstruction()
     {
@@ -18,15 +19,10 @@ class SzamlatombKomponens extends Site_Component
 
     function process()
     {
+        $actualId = $_POST['id'];
+        
         if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
             $this->showFormPage = true;
-        }
-		
-        //törlés
-        if(isset($_POST['delete'])){
-            $st=new Szamlatomb($_POST['id']);
-            $msg=$st->delete();
-            echo"<script>alert('".$msg."')</script>";
         }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){
@@ -40,7 +36,20 @@ class SzamlatombKomponens extends Site_Component
                 'szamla_aktual_szam' => $_POST['szamla_aktual_szam']
             );
 
-            $szamlatomb = $this->pm->createObject('Szamlatomb', $szamlatomb_adatok);
+            $result = $this->pm->createObject('Szamlatomb', $szamlatomb_adatok);
+            if(is_array($result)) {
+                $msg = implode(', ', $result);
+                echo "<script>alert('Edit error: " . $msg . "')</script>";
+                $this->showFormPage = true;
+            }
+        }
+        
+        if(!empty($_POST['delete'])){
+            $this->pm->getObject($actualId)->delete();
+        }
+        
+        if(!empty($_POST['edit'])){
+            $this->actualSzamlatomb = $this->pm->getObject($actualId)->getSzamlatombAdatok();
         }
 
         $this->szamlatombDataTable->process($_POST);
@@ -75,15 +84,15 @@ class SzamlatombKomponens extends Site_Component
                                     <tbody>
                                     <tr>
                                         <td><span class="mandatory">Megnevezés<span style="color:red">*</span></span></td>
-                                        <td><input size="32" type="text" name="megnevezes" value=""></td>
+                                        <td><input size="32" type="text" name="megnevezes" value="<?php echo $this->actualSzamlatomb['megnevezes'] ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Előtag</span></td>
-                                        <td><input size="32" type="text" name="szamla_elotag" value=""></td>
+                                        <td><input size="32" type="text" name="szamla_elotag" value="<?php echo $this->actualSzamlatomb['szamla_elotag'] ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Kezdőszám</span></td>
-                                        <td><input size="32" type="text" name="szamla_aktual_szam" value=""></td>
+                                        <td><input size="32" type="number" name="szamla_aktual_szam" value="<?php echo $this->actualSzamlatomb['szamla_aktual_szam'] ?>"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -119,13 +128,6 @@ class SzamlatombKomponens extends Site_Component
                 <a href="#" title="Szűrők frissítése">
                     <div class="filtersbox_refresh_icon"></div>
                 </a>
-
-                <div class="filter_item">
-                    Irány: <select name="">
-                        <option selected>Összes</option>
-                        <option>Kimenő</option>
-                        <option>Bejövő</option>
-                    </select></div>
             </div>
         </div>
 

@@ -194,7 +194,11 @@ abstract class Abstract_Lazy_Data_Table
     private function getLastPage()
     {
         if(!empty($this->numberOfAllRows)){
-            return round(($this->numberOfAllRows/$this->selectedStep)+0.4);
+            $ret = round(($this->numberOfAllRows/$this->selectedStep)+0.4);
+            if($ret == 0){
+                $ret = 1;
+            }
+            return $ret;
         }
         return 0;
     }
