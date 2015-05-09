@@ -16,19 +16,18 @@ class SzamlaKomponens extends Site_Component
 
     function process()
     {
-        if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
+        if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
             $this->showFormPage = true;
         }
-		
-		//törlés
-		if(isset($_POST['delete']))
-		{
-            $Szamla=new Szamla($_POST['id']);
-			$msg=$Szamla->delete();
-			echo"<script>alert('".$msg."')</script>";
+
+        //törlés
+        if (isset($_POST['delete'])) {
+            $Szamla = new Szamla($_POST['id']);
+            $msg = $Szamla->delete();
+            echo "<script>alert('" . $msg . "')</script>";
         }
 
-        if(!empty($_POST['back']) || !empty($_POST['save'])){
+        if (!empty($_POST['back']) || !empty($_POST['save'])) {
             $this->showFormPage = false;
         }
     }
@@ -48,7 +47,6 @@ class SzamlaKomponens extends Site_Component
         <div class="form_box">
             <h1>Bejövő számla szerkesztése (Számla)</h1>
             <input type="submit" name="" value="Mentés" class="save_button">
-            <input type="submit" name="" value="Alkalmaz" class="apply_button">
             <input type="submit" name="" value="Mentés és új" class="save_and_new_button">
             <input type="submit" name="" value="Vissza" class="back_button">
             <br><br>
@@ -63,31 +61,35 @@ class SzamlaKomponens extends Site_Component
                         <tbody>
                         <tr>
                             <td><span class="mandatory">Fizetési mód<span style="color:red">*</span></span></td>
-                            <td><select class="fizetesi_mod_dropdown" name="">
-                                    <option value="">Válasszon</option>
-                                    <option value="">Csekk</option>
-                                    <option value="">Készpénzes</option>
-                                    <option value="" selected="">Utalásos</option>
-                                    <option value="">Utánvétes</option>
+                            <td><select class="fizetesi_mod_dropdown" name="fizetesi_mod">
+                                    <option value="0">Válasszon</option>
+                                    <option value="1">Csekk</option>
+                                    <option value="2">Készpénzes</option>
+                                    <option value="3">Utalásos</option>
+                                    <option value="4">Utánvétes</option>
                                 </select></td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Kiállítás dátuma<span style="color:red">*</span></span></td>
                             <td>
-                                <input class="kiallitas_datuma hasDatepicker" size="15" id="" type="text" name="" value="2015-05-03">
-                                <a href="#" title="Másolás a teljesítési dátumba és fizetési határidőbe" style="color:black;">▼</a>
+                                <input class="kiallitas_datum datepicker" size="15" id="" type="text"
+                                       name="kiallitas_datum" value="<?php echo date('Y-m-d'); ?>">
+                                <a class="datum_masolas" href="#"
+                                   title="Másolás a teljesítési dátumba és fizetési határidőbe"
+                                   style="color:black;">▼</a>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Teljesítés dátuma<span style="color:red">*</span></span></td>
-                            <td><input class="teljesites_datuma hasDatepicker" size="15" id="id_date_119ab2ddb" type="text"
-                                       name="o1744912" value="2015-05-03">
+                            <td><input class="teljesites_datum datepicker" size="15" type="text" name="teljesites_datum"
+                                       value="<?php echo date('Y-m-d'); ?>">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Fizetési határidő<span style="color:red">*</span></span></td>
                             <td>
-                                <input class="fizetesi_hatarido hasDatepicker" size="15" id="id_date_219ab2ddb" type="text" name="" value="2015-05-03">
+                                <input class="fizetesi_hatarido datepicker" size="15" type="text"
+                                       name="fizetesi_hatarido" value="<?php echo date('Y-m-d'); ?>">
                             </td>
                         </tr>
                         </tbody>
@@ -103,32 +105,26 @@ class SzamlaKomponens extends Site_Component
                     <table cellspacing="0" cellpadding="0" class="formtable">
                         <tbody>
                         <tr>
-                            <td><span class="mandatory">Kibocsátó<span style="color:red">*</span></span></td>
-                            <td><input type="text" readonly="readonly" value="" title=""><input type="submit" name=""
-                                                                                                value="Kiválaszt"></td>
-                        </tr>
-                        <tr>
                             <td>
                                 <span class="mandatory">Név<span style="color:red">*</span></span>
                             </td>
                             <td>
-                                <input id="id_kibocsato_adatok_cim_ugyfel_nev" size="32" readonly="readonly" type="text"
-                                       name="" value="">
+                                <input size="32" type="text" name="kibocsato_nev">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input id="id_kibocsato_adatok_cim" size="32" readonly="readonly" type="text" name="" value="">
+                                <input size="32" type="text" name="kibocsato_szekhely">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Adószám<span style="color:red">*</span></span></td>
-                            <td><input size="32" readonly="readonly" type="text" name="" value=""></td>
+                            <td><input size="32" type="text" name="kibocsato_adoszam"></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" readonly="readonly" type="text" name="" value=""></td>
+                            <td><input size="32" type="text" name="kibocsato_bankszamlaszam"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -143,31 +139,23 @@ class SzamlaKomponens extends Site_Component
                     <table cellspacing="0" cellpadding="0" class="formtable">
                         <tbody>
                         <tr>
-                            <td><span class="mandatory">Befogadó<span style="color:red">*</span></span></td>
-                            <td>
-                                <input type="text" readonly="readonly" value="" title="">
-                                <input type="submit" name="" value="Kiválaszt">
-                            </td>
-                        </tr>
-                        <tr>
                             <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
                             <td>
-                                <input id="id_befogado_adatok_cim_ugyfel_nev" size="32" readonly="readonly" type="text"
-                                       name="" value=""></td>
+                                <input size="32" type="text" name="befogado_nev"></td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input id="id_befogado_adatok_cim" size="32" readonly="readonly" type="text" name="" value="">
+                                <input size="32" type="text" name="befogado_szekhely">
                             </td>
                         </tr>
                         <tr>
                             <td><span>Adószám</span></td>
-                            <td><input size="32" readonly="readonly" type="text" name="" value=""></td>
+                            <td><input size="32" type="text" name="befogado_adoszam"></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" readonly="readonly" type="text" name="" value=""></td>
+                            <td><input size="32" type="text" name="befogado_bankszamlaszam"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -176,21 +164,50 @@ class SzamlaKomponens extends Site_Component
             </div>
 
             <h2>Számla tételek (0)</h2>
-            <input type="submit" name="" value="Új kézi számla tétel">
-            <input type="submit" name="" value="Cikkek hozzáadása">
+            <button class="uj_szamla_tetel">Új számlatétel</button>
 
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <tbody>
+            <table cellspacing="0" cellpadding="0" class="listtable szamla_tetel_tabla">
+                <thead>
                 <tr>
                     <th>Megnevezés</th>
                     <th>Nettó egység / össz ár</th>
                     <th>Bruttó egység / össz ár</th>
                     <th>Mennyiség</th>
-                    <th>Mértékegység</th>
-                    <th>Áfakulcs</th>
-                    <th>Vámtarifaszám</th>
-                    <th>Töröl</th>
+                    <th>Mennyiségi egység</th>
+                    <th>ÁFA</th>
+                    <th>VTSZ</th>
+                    <th>Művelet</th>
                 </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <input name="megnevezes[]" type="text">
+                    </td>
+                    <td>
+                        <input class="egy_netto" name="netto[]" type="text">
+                    </td>
+                    <td>
+                        <input class="egy_brutto" name="brutto[]" type="text">
+                    </td>
+                    <td>
+                        <input name="mennyiseg[]" type="text">
+                    </td>
+                    <td>
+                        <input name="mennyisegi_egyseg[]" type="text">
+                    </td>
+                    <td>
+                        <input name="afa[]" type="text">
+                    </td>
+                    <td>
+                        <input name="vtsz[]" type="text">
+                    </td>
+                    <td>
+                        <button class="torles_gomb" name="torles">Törlés</button>
+                    </td>
+                </tr>
+
+
                 <tr id="osszegzo" style="font-weight:bold;font-size:15px;">
                     <td align="right">Összesen:</td>
                     <td align="center">
@@ -204,33 +221,107 @@ class SzamlaKomponens extends Site_Component
                 </tbody>
             </table>
 
-            <h2>Kapcsolódó számlák</h2>
-
-            <input type="submit" name="" value="Kapcsolódó számla megadása">
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <tbody>
-                <tr>
-                    <th>Azonosító</th>
-                    <th>Típus</th>
-                    <th>Befogadó</th>
-                    <th>Kiállítás dátuma</th>
-                    <th>Töröl</th>
-                </tr>
-                <tr>
-                    <td colspan="5" align="center">Nincsenek kapcsolódó számlák</td>
-                </tr>
-                </tbody>
-            </table>
-
             <h2><span>Megjegyzés</span></h2>
             <textarea cols="65" rows="6" name="o1744899"></textarea>
             <input type="hidden" name="" value="" id="id_y_pos">
             <br>
             <input type="submit" name="" value="Mentés" class="save_button">
-            <input type="submit" name="" value="Alkalmaz" class="apply_button">
             <input type="submit" name="" value="Mentés és új" class="save_and_new_button">
             <input type="submit" name="" value="Vissza" class="back_button">
         </div>
+
+
+        <script>
+            $(document).ready(function () {
+
+                $(".datepicker").datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    changeMonth: true,
+                    changeYear: true,
+                    monthNames: ["Január", "Február", "Március",
+                        "Április", "Május", "Június",
+                        "Július", "Augusztus", "Szeptember",
+                        "Október", "November", "December"],
+                    monthNamesShort: ["Jan", "Feb", "Márc",
+                        "Ápr", "Máj", "Jún",
+                        "Júl", "Aug", "Szept",
+                        "Okt", "Nov", "Dec"],
+                    dayNames: ["Vasárnap", "Hétfő", "Kedd",
+                        "Szerda", "Csütörtök", "Péntek", "Szombat"],
+                    dayNamesMin: ["V", "H", "K", "Sze", "Cs", "P", "Szo"],
+                    dayNamesShort: ["V", "H", "K", "Sze", "Cs", "P", "Szo"],
+                    minDate: "-7d"
+
+                });
+
+                $('.datum_masolas').on('click', this, function (e) {
+                    e.preventDefault();
+                    var datum = $('.kiallitas_datum').val();
+                    $('.teljesites_datum').val(datum);
+                    $('.fizetesi_hatarido').val(datum);
+                });
+
+                $('.uj_szamla_tetel').on('click', this, function (e) {
+                    e.preventDefault();
+
+                    var tr = '<tr>';
+                    tr += '<td> <input name="megnevezes[]" type="text"> </td>';
+                    tr += '<td> <input class="egy_netto" name="netto[]" type="text"> </td>';
+                    tr += '<td> <input class="egy_brutto" name="brutto[]" type="text"> </td>';
+                    tr += '<td> <input name="mennyiseg[]" type="text"> </td>';
+                    tr += '<td> <input name="mennyisegi_egyseg[]" type="text"> </td>';
+                    tr += '<td> <input name="afa[]" type="text"> </td>';
+                    tr += '<td> <input name="vtsz[]" type="text"> </td>';
+                    tr += '<td> <button class="torles_gomb" name="torles"> Törlés </button> </td>';
+                    tr += '</tr>';
+
+                    $(tr).insertBefore('#osszegzo');
+                });
+
+                $('.szamla_tetel_tabla').on('click','.torles_gomb',function(e){
+                    e.preventDefault();
+
+                    $(this).closest('tr').remove();
+
+                    setNetto();
+                    setBrutto();
+                });
+
+                $('.szamla_tetel_tabla').on('keyup','.egy_netto',function(e){
+                    e.preventDefault();
+
+                    setNetto();
+
+                });
+
+                $('.szamla_tetel_tabla').on('keyup','.egy_brutto',function(e){
+                    e.preventDefault();
+
+                    setBrutto();
+
+                });
+
+
+                var setNetto = function(){
+                    var ossz = 0;
+                    $('.egy_netto').each(function(){
+                        var value = $(this).val() == '' ? 0 : $(this).val();
+                        ossz += parseFloat(value);
+                    });
+                    $('.netto').html(ossz);
+                }
+
+                var setBrutto = function(){
+                    var ossz = 0;
+                    $('.egy_brutto').each(function(){
+                        var value = $(this).val() == '' ? 0 : $(this).val();
+                        ossz += parseFloat(value);
+                    });
+                    $('.brutto').html(ossz);
+                }
+
+            });
+        </script>
 
     <?php
     }
