@@ -11,6 +11,8 @@ class UgyfelKomponens extends Site_Component
 
     private $pm;
 
+    private $ufdata;
+
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
@@ -26,9 +28,17 @@ class UgyfelKomponens extends Site_Component
 		//törlés
 		if(isset($_POST['delete']))
 		{
-            $uf=new Ugyfel($_POST['id']);
+            $uf=$this->pm->getObject($_POST['id']);
 			$msg=$uf->delete();
 			echo"<script>alert('".$msg."')</script>";
+        }
+
+        //módosítás
+        if(!empty($_POST['edit']))
+        {
+            $uf=$this->pm->getObject($_POST['id']);
+            $this->ufdata=$uf->getUgyfelAdatok();
+            $_SESSION['ugyfel_edit_id']=$_POST['id'];
         }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){
@@ -46,10 +56,30 @@ class UgyfelKomponens extends Site_Component
 				'email' => $_POST['email']
             );
 
-            $Ugyfel = $this->pm->createObject('Ugyfel', $uf_adatok);
-			// Hibakód visszaadása a felületre, ha az $Ugyfel egy array
+            if(isset($_SESSION['ugyfel_edit_id']))
+            {
+                $uf=$this->pm->getObject($_SESSION['ugyfel_edit_id']);
+                $result = $uf->setUgyfelAdatok($uf_adatok);
+                if(is_array($result)) {
+                    $msg = implode(', ', $result);
+                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                }
+                else
+                {
+                    unset($_SESSION['ugyfel_edit_id']);
+                }
+            }
+            else
+            {
+                $uf = $this->pm->createObject('Ugyfel', $uf_adatok);
+                // Hibakód visszaadása a felületre, ha az $uf egy array, majd ide kell valami elegáns:
+                if(is_array($uf)) {
+                    $msg = implode(', ', $uf);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                }
+            }
         }
-		
+
         $this->ugyfelDataTable->process($_POST);
     }
 
@@ -82,31 +112,31 @@ class UgyfelKomponens extends Site_Component
                                     <tbody>
                                     <tr>
                                         <td><span>Azonosító</span></td>
-                                        <td><input size="32" type="text" name="azonosito" value=""></td>
+                                        <td><input size="32" type="text" name="azonosito" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['azonosito'];}   ?>" <?php if(!empty($_POST['edit'])) {echo 'readonly';}   ?>></td>
                                     </tr>
                                     <tr>
                                         <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
-                                        <td><input class="ugyfel_nev" size="32" type="text" name="nev" value=""></td>
+                                        <td><input class="ugyfel_nev" size="32" type="text" name="nev" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['nev'];}   ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Irányítószám</span></td>
-                                        <td><input size="32" type="text" name="cim_irszam" value=""></td>
+                                        <td><input size="32" type="text" name="cim_irszam" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['cim_irszam'];}   ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Város</span></td>
-                                        <td><input size="32" type="text" name="cim_varos" value=""></td>
+                                        <td><input size="32" type="text" name="cim_varos" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['cim_varos'];}   ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Utca, házszám</span></td>
-                                        <td><input size="32" type="text" name="cim_utca_hsz" value=""></td>
+                                        <td><input size="32" type="text" name="cim_utca_hsz" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['cim_utca_hsz'];}   ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Telefon</span></td>
-                                        <td><input size="32" type="text" name="telefon" value=""></td>
+                                        <td><input size="32" type="text" name="telefon" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['telefon'];}   ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Email</span></td>
-                                        <td><input size="32" type="text" name="email" value=""></td>
+                                        <td><input size="32" type="text" name="email" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['email'];}   ?>"></td>
                                     </tr>
                                     </tbody>
                                 </table>
