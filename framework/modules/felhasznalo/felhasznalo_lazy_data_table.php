@@ -64,7 +64,7 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
                 'text' => 'Inaktiválás'
             )
         );
-        $this->steps = array(1, 2, 5);
+        $this->steps = array(50, 100, 500);
     }
 
 }
