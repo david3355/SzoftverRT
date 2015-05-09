@@ -35,8 +35,13 @@ class SzamlatombKomponens extends Site_Component
                 'szamla_elotag' => $_POST['szamla_elotag'],
                 'szamla_aktual_szam' => $_POST['szamla_aktual_szam']
             );
-
-            $result = $this->pm->createObject('Szamlatomb', $szamlatomb_adatok);
+            
+            if(!empty($_POST['id'])){
+                $result = $this->pm->getObject($actualId)->setSzamlatombAdatok($szamlatomb_adatok);
+            } else {
+                $result = $this->pm->createObject('Szamlatomb', $szamlatomb_adatok);
+            }
+            
             if(is_array($result)) {
                 $msg = implode(', ', $result);
                 echo "<script>alert('Edit error: " . $msg . "')</script>";
@@ -51,7 +56,11 @@ class SzamlatombKomponens extends Site_Component
         if(!empty($_POST['edit'])){
             $this->actualSzamlatomb = $this->pm->getObject($actualId)->getSzamlatombAdatok();
         }
-
+        
+        if(!empty($_POST['close'])){
+            $this->pm->getObject($actualId)->setLezaras(true);
+        }
+        
         $this->szamlatombDataTable->process($_POST);
     }
 
@@ -76,12 +85,13 @@ class SzamlatombKomponens extends Site_Component
                 <br/>
                 <br/>
                 <div class="form_szurke_doboz">
+                    <input type="hidden" name="id" value="<?php echo $this->actualSzamlatomb['id'] ?>">
                     <table class="formtable">
                         <tbody>
                         <tr>
                             <td valign="top">
                                 <table>
-                                    <tbody>
+                                    <tbody>                                   
                                     <tr>
                                         <td><span class="mandatory">Megnevezés<span style="color:red">*</span></span></td>
                                         <td><input size="32" type="text" name="megnevezes" value="<?php echo $this->actualSzamlatomb['megnevezes'] ?>"></td>
@@ -92,7 +102,7 @@ class SzamlatombKomponens extends Site_Component
                                     </tr>
                                     <tr>
                                         <td><span>Kezdőszám</span></td>
-                                        <td><input size="32" type="number" name="szamla_aktual_szam" value="<?php echo $this->actualSzamlatomb['szamla_aktual_szam'] ?>"></td>
+                                        <td><input size="32" <?php if(!empty($_POST['edit'])) {echo 'readonly';}   ?> type="number" name="szamla_aktual_szam" value="<?php echo $this->actualSzamlatomb['szamla_aktual_szam'] ?>"></td>
                                     </tr>
                                     </tbody>
                                 </table>
