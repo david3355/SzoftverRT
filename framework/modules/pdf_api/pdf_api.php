@@ -29,7 +29,6 @@ class PDF_API extends API_Module
     {
         switch($function){
             case 'getPDF':
-                header("Content-type:application/pdf");
                 $mpdf = new mPDF();
                 $mpdf->WriteHTML('<p>Hello World</p>');
                 $mpdf->Output();
