@@ -57,9 +57,8 @@ class FelhasznaloKomponens extends Site_Component
         
         if(!empty($_POST['inactive'])){
             $felhasznalo = $this->pm->getObject($actualId);
-            $active = $felhasznalo->getFelhasznaloAdatok()[0]['aktiv'] == 0 ? 1 : 0;
-            
-            $felhasznalo->setFelhasznaloAdatok(array('aktiv' => $active));
+            $active = $felhasznalo->getFelhasznaloAdatok()['aktiv'] == 0 ? 1 : 0;
+            $felhasznalo->setActive($active);
         }
         
         $this->felhasznaloDataTable->process($_POST);

@@ -99,8 +99,12 @@ class Felhasznalo extends Persistent
         if (empty($err)) {
             return $this->setFields($adatok);
         }
-
         return $err;
+    }
+
+    function setActive($active)
+    {
+        return $this->setFields(array('aktiv'=>$active));
     }
 
     function getFelhasznaloAdatok()
