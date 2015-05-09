@@ -9,7 +9,9 @@ class Admin_Template extends Site_Template
         <html>
         <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8">
-            <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.2.min.js"></script>
+            <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
             <script src="/modules/moopage/moopage4.js"></script>
 +           <link rel="stylesheet" href="/admin/templates/perpetuum_template.css" type="text/css">
 -           <link rel="stylesheet" href="/admin/templates/menu.css" type="text/css">
