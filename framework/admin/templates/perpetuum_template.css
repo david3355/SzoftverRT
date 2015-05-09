@@ -185,12 +185,12 @@ body{
 *---------------------------------------TÁBLÁZAT----------------------------------------
 */
 .tableheader_sort_asc {
-   background: url("images/tableheader_sort_asc.png") no-repeat right; 
+   background: url("./images/tableheader_sort_asc.png") no-repeat right; 
    padding-right: 15px; 
 }
 
 .tableheader_sort_desc {
-   background: url("images/tableheader_sort_desc.png") no-repeat right;
+   background: url("./images/tableheader_sort_desc.png") no-repeat right;
    padding-right: 15px;
 }
 .listtable {

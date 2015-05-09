@@ -8,7 +8,18 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
     protected function getData(array $post = null)
     {
         $this->numberOfAllRows = $this->pm->select('Felhasznalo',['count(*) as rn'])->exeSelect()[0]['rn'];
-        return $this->pm->select('Felhasznalo')->limit($this->selectedPageNumber-1,$this->selectedStep)->exeSelect();
+        
+        $this->pm->select('Felhasznalo');
+        if(!empty($this->selectedSortColumn['column']) && !empty($this->selectedSortColumn['dest'])){
+            $this->pm->orderBy($this->selectedSortColumn['column'],$this->selectedSortColumn['dest']);
+        }
+        if($this->selectedPageNumber == 1 || $this->selectedStep == 1){
+            $this->pm->limit($this->selectedPageNumber-1,$this->selectedStep);
+        } else {
+            $this->pm->limit($this->selectedPageNumber,$this->selectedStep);
+        }
+        
+        return $this->pm->exeSelect();
     }
 
     protected function init()
@@ -24,11 +35,11 @@ class Felhasznalo_Lazy_Data_Table extends Abstract_Lazy_Data_Table
             ),
             "nev" => array(
                 'name' => 'Név',
-                'sortable' => false
+                'sortable' => true
             ),
             "email" => array(
                 'name' => 'Email',
-                'sortable' => false
+                'sortable' => true
             ),
             "jog" => array(
                 'name' => 'Jog',
