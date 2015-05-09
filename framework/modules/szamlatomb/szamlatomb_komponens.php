@@ -8,12 +8,12 @@ class SzamlatombKomponens extends Site_Component
 
     private $showFormPage = false;
     private $pm;
-	private $SzlaTDataTable;
+    private $szamlatombDataTable;
 
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
-		$this->SzlaTDataTable = new Szamlatomb_Lazy_Data_Table();
+	$this->szamlatombDataTable = new Szamlatomb_Lazy_Data_Table();
     }
 
     function process()
@@ -22,35 +22,28 @@ class SzamlatombKomponens extends Site_Component
             $this->showFormPage = true;
         }
 		
-		//törlés
-		if(isset($_POST['delete']))
-		{
+        //törlés
+        if(isset($_POST['delete'])){
             $st=new Szamlatomb($_POST['id']);
-			$msg=$st->delete();
-			echo"<script>alert('".$msg."')</script>";
+            $msg=$st->delete();
+            echo"<script>alert('".$msg."')</script>";
         }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
         }
 		
-		if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
-            $szt_adatok = array(
+	if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
+            $szamlatomb_adatok = array(
                 'megnevezes' => $_POST['megnevezes'],
                 'szamla_elotag' => $_POST['szamla_elotag'],
-                'szamla_aktual_szam' => $_POST['szamla_aktual_szam'],
-                'jog' => $_POST['jog'],
-                'aktiv' => isset($_POST['aktiv']) ? 1 : 0
+                'szamla_aktual_szam' => $_POST['szamla_aktual_szam']
             );
 
-            $Szamlatomb = $this->pm->createObject('Szamlatomb', $szt_adatok);
-			foreach($Szamlatomb as $st)
-			{
-				echo $st."#";
-			}
+            $szamlatomb = $this->pm->createObject('Szamlatomb', $szamlatomb_adatok);
         }
 
-        $this->SzlaTDataTable->process($_POST);
+        $this->szamlatombDataTable->process($_POST);
     }
 
     function show()
@@ -137,79 +130,7 @@ class SzamlatombKomponens extends Site_Component
         </div>
 
         <div class="clear"></div>
-        <div class="pagination">
-            <div class="pagination_element_count">Találatok száma: 3</div>
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
-        <div class="clear"></div>
-        <div class="itemlist">
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox"></th>
-                    <th>
-                        Megnevezés
-                    </th>
-                    <th>
-                        Előtag
-                    </th>
-                    <th>
-                        Kezdőszám
-                    </th>
-                    <th>
-                        Lezárás dátuma
-                    </th>
-                    <th colspan="2">
-                        Műveletek
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="edit">Szerkesztés</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="delete">Törlés</button>
-                        </form>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="clear"></div>
-        <div class="pagination">
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select> Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
     <?php
+        $this->szamlatombDataTable->printTable();
     }
 }

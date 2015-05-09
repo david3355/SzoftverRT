@@ -10,10 +10,10 @@ class Szamla extends Persistent
      */
     protected function onBeforeCreate(array $params)
     {
-		/*számlatömb előtag alapján példányosít egy objektumot, erre meghívja a getNextUniqueId("szamla_aktual_szam")
-			a visszakapott sorszámot beállítja az új számlának*/
-			$szT=new Szamlatomb($params['szlatomb_obj_id']);
-			$params['szla_sorszam']=$szT->getFields("szamla_elotag")."/".$szT->getNextUniqueId("szamla_aktual_szam");
+        /*számlatömb előtag alapján példányosít egy objektumot, erre meghívja a getNextUniqueId("szamla_aktual_szam")
+        a visszakapott sorszámot beállítja az új számlának*/
+        $szT=new Szamlatomb($params['szlatomb_obj_id']);
+        $params['szla_sorszam']=$szT->getFields("szamla_elotag")."/".$szT->getNextUniqueId("szamla_aktual_szam");
 
         return $params;
     }
@@ -77,8 +77,8 @@ class Szamla extends Persistent
     {
         $err = $this->validate($adatok);
         if(empty($err))
-		{
-			return $this->setFields($adatok);
+	{
+            return $this->setFields($adatok);
         }
 
         echo $err;
