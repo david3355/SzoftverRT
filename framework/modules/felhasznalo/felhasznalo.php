@@ -77,9 +77,16 @@ class Felhasznalo extends Persistent
     /**
      * @return string
      */
-    private function generateSalt()
+    private function generateSalt($number = 8)
     {
-        return mcrypt_create_iv(8, MCRYPT_DEV_URANDOM);
+        $randomString="";
+        $charUniverse="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        for($i=0; $i<$number; $i++){
+            $randInt=rand(0,61);
+            $randChar=$charUniverse[$randInt];
+            $randomString.=$randChar;
+        }
+        return $randomString;
     }
 
     /**
