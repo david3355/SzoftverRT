@@ -179,7 +179,6 @@ abstract class Persistent
         } while (($class = get_parent_class($class)) != "Persistent");
 
         // Töröljük az objektumot az összes táblából
-        print_r($tables);
 
         foreach ($tables as $table) {
             $sql = sprintf("DELETE FROM %s WHERE id=%s", $table, $this->id);
