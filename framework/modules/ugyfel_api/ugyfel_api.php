@@ -43,7 +43,7 @@ class Ugyfel_API extends API_Module
 
                 header('Content-Type: text/json', false, 200);
 
-                echo json_encode($pm->select('Ugyfel')->get());
+                echo json_encode($pm->select('Ugyfel')->exeSelect());
             break;
             
 			default:
