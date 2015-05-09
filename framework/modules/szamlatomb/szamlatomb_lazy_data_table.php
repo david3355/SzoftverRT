@@ -4,8 +4,12 @@ class Szamlatomb_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
 
     protected function getData(array $post = null)
     {
+        $find = '%'.$post['search_field']. '%';
+
+        if(!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('megnevezes', 'LIKE', $find)->orWhere('szamla_elotag', 'LIKE', $find);
         $this->numberOfAllRows = $this->pm->select('Szamlatomb',['count(*) as rn'])->exeSelect()[0]['rn'];
         
+        if(!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('megnevezes', 'LIKE', $find)->orWhere('szamla_elotag', 'LIKE', $find);
         $this->pm->select('Szamlatomb');
         if(!empty($this->selectedSortColumn['column']) && !empty($this->selectedSortColumn['dest'])){
             $this->pm->orderBy($this->selectedSortColumn['column'],$this->selectedSortColumn['dest']);
@@ -15,6 +19,8 @@ class Szamlatomb_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
         } else {
             $this->pm->limit($this->selectedPageNumber,$this->selectedStep);
         }
+        
+        
         
         return $this->pm->exeSelect();
     }
