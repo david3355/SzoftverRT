@@ -30,11 +30,20 @@ class PenztarKomponens extends Site_Component
 			echo"<script>alert('".$msg."')</script>";
         }
 		
+		//módosítás
+        if(!empty($_POST['edit']))
+        {
+            $penztar=$this->pm->getObject($_POST['id']);
+            $this->penztardata=$penztar->getFields();
+            $_SESSION['penztar_edit_id']=$_POST['id'];
+        }
+		
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
         }
 		
-		if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
+		if (!empty($_POST['save_and_new']) || !empty($_POST['save']))
+		{
             $p_adatok = array(
                 'megnevezes' => $_POST['megnevezes']
             );
@@ -46,6 +55,31 @@ class PenztarKomponens extends Site_Component
 				$msg.= $p."#";
 			}
 			echo"<script>alert('".$msg."')</script>";
+			
+			//módosítás
+			if(isset($_SESSION['penztar_edit_id']))
+            {
+                $penztar=$this->pm->getObject($_SESSION['penztar_edit_id']);
+                unset($p_adatok['azonosito']);
+                $result = $penztar->setUgyfelAdatok($p_adatok);
+                if(is_array($result)) {
+                    $msg = implode(', ', $result);
+                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                }
+                else
+                {
+                    unset($_SESSION['penztar_edit_id']);
+                }
+            }
+            else
+            {
+                $penztar = $this->pm->createObject('Penztar', $p_adatok);
+                // Hibakód visszaadása a felületre, ha az $penztar egy array, majd ide kell valami elegáns:
+                if(is_array($penztar)) {
+                    $msg = implode(', ', $penztar);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                }
+            }
         }
 
         $this->penztarDataTable->process($_POST);
