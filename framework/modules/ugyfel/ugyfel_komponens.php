@@ -47,7 +47,6 @@ class UgyfelKomponens extends Site_Component
 
 		if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
             $uf_adatok = array(
-                'azonosito' => $_POST['azonosito'],
 				'nev' => $_POST['nev'],
 				'cim_irszam' => $_POST['cim_irszam'],
 				'cim_varos' => $_POST['cim_varos'],
@@ -59,7 +58,6 @@ class UgyfelKomponens extends Site_Component
             if(isset($_SESSION['ugyfel_edit_id']))
             {
                 $uf=$this->pm->getObject($_SESSION['ugyfel_edit_id']);
-                unset($uf_adatok['azonosito']);
                 $result = $uf->setUgyfelAdatok($uf_adatok);
                 if(is_array($result)) {
                     $msg = implode(', ', $result);
@@ -111,10 +109,6 @@ class UgyfelKomponens extends Site_Component
                             <td valign="top">
                                 <table>
                                     <tbody>
-                                    <tr>
-                                        <td><span>Azonosító</span></td>
-                                        <td><input size="32" type="text" name="azonosito" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['azonosito'];}   ?>" <?php if(!empty($_POST['edit'])) {echo 'readonly';}   ?>></td>
-                                    </tr>
                                     <tr>
                                         <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
                                         <td><input class="ugyfel_nev" size="32" type="text" name="nev" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['nev'];}   ?>"></td>

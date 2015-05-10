@@ -10,6 +10,7 @@ class Ugyfel extends Persistent
      */
     protected function onBeforeCreate(array $params)
     {
+        $params['azonosito'] = $this->genUgyfelAzon();
         return $params;
     }
 
@@ -44,36 +45,34 @@ class Ugyfel extends Persistent
         if (empty($params['cim_utca_hsz'])) $errors[] = 'CIM_UTCA_HSZ_NINCS_MEGADVA';
 
         /*azonosító:
-			-nem üres
+			-GENERÁLT
 			-csak szám
 			-10karakter
             -egyedi
 			-nincs 4 azonos karakter egymás után*/
 
-        if(isset($params['azonosito'])) {
-            if (empty($params['azonosito'])) $errors[] = "AZONOSITO_NINCS_MEGADVA";
-
-            if (!preg_match('/^[0-9]*$/', $params['azonosito'])) $errors[] = "CSAK_SZAM_AZONOSITO";
-
-            if (strlen($params['azonosito']) != 10) $errors[] = "AZONOSITO_HOSSZ_HIBAS";
-
-            if ($this->idExists($params['azonosito'])) $errors[] = "AZONOSITO_MAR_LETEZIK";
-
-            if ($this->hasRepeat($params['azonosito'])) $errors[] = "AZONOSITO_TUL_SOK_ISMETLODES";
-        }
-
         return $errors;
-    }
-
-    function hasRepeat($maxEnabledRepeat = 3)
-    {
-        return false;
     }
 
     function idExists($id)
     {
         $result = PersistenceManager::getInstance()->select('Ugyfel')->where('azonosito', '=', $id)->exeSelect();
         return !empty($result);
+    }
+
+    private function genUgyfelAzon()
+    {
+        do {
+            $id = "";
+            for ($i = 0; $i < 10; $i++) {
+                do {
+                    $gen = rand(0, 10);
+                } while (i > 2 && $id[i - 1] == $id[i - 2] && $id[i - 1] == $id[i - 3] && $id[i - 1] == $gen);
+                $id .= $gen;
+            }
+        }while($this->idExists($id));
+
+        return $id;
     }
 
     /**
