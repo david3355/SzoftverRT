@@ -350,11 +350,12 @@ class SzamlaKomponens extends Site_Component
                 </a>
 
                 <div class="filter_item">
+					
                     Irány: <select name="o6164761">
                         <option selected>Összes</option>
                         <option>Kimenő</option>
                         <option>Bejövő</option>
-                    </select></div>
+                    </select></div><a href="http://erp.fejlesztesgyak2015.info/api.php?module=excel_api&function=getExcelSzla">Excel export</a>
             </div>
         </div>
 

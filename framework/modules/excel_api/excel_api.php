@@ -12,7 +12,7 @@
 		function getSupportedFunctions()
 		{
 			return [
-				'getExcel'
+				'getExcelSzla'
 			];
 		}
 
@@ -27,16 +27,15 @@
 		function handleRequest($function, array $params, array $data = null)
 		{
 			switch($function){
-				case 'getExcel':
+				case 'getExcelSzla':
 					header('Content-Type: application/vnd.ms-excel');
 					header('Content-Disposition: filename="export.xls"');
 
+					$pm = PersistenceManager::getInstance();
+					
 					$exporter=new PerpetuumERP_Excel_Exporter();
-
 					$exporter->beginExport();
-
-					$exporter->addRows($params);
-
+					$exporter->addRows($pm->select('Szamla')->exeSelect());
 					$exporter->endExport();
 				break;
 				
