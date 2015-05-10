@@ -19,6 +19,8 @@ class SzamlaLoader extends AbstractLoader
                 return $this->myfolder."/szamla_kifizetes.php";
             case "SzamlaTetel":
                 return $this->myfolder."/szamla_tetel.php";
+            case "Szamla_Lazy_Data_Table":
+                return $this->myfolder."/szamla_lazy_data_table.php";
             default:
                 return null;
         }
