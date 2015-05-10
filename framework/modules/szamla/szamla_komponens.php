@@ -7,11 +7,13 @@ class SzamlaKomponens extends Site_Component
 {
     private $showFormPage = false;
 
+    private $szamlaDataTable;
     private $pm;
 
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
+        $this->szamlaDataTable = new Szamla_Lazy_Data_Table();
     }
 
     function process()
@@ -30,6 +32,8 @@ class SzamlaKomponens extends Site_Component
         if (!empty($_POST['back']) || !empty($_POST['save'])) {
             $this->showFormPage = false;
         }
+
+        $this->szamlaDataTable->process($_POST);
     }
 
     function show()
@@ -278,7 +282,7 @@ class SzamlaKomponens extends Site_Component
                     $(tr).insertBefore('#osszegzo');
                 });
 
-                $('.szamla_tetel_tabla').on('click','.torles_gomb',function(e){
+                $('.szamla_tetel_tabla').on('click', '.torles_gomb', function (e) {
                     e.preventDefault();
 
                     $(this).closest('tr').remove();
@@ -287,14 +291,14 @@ class SzamlaKomponens extends Site_Component
                     setBrutto();
                 });
 
-                $('.szamla_tetel_tabla').on('keyup','.egy_netto',function(e){
+                $('.szamla_tetel_tabla').on('keyup', '.egy_netto', function (e) {
                     e.preventDefault();
 
                     setNetto();
 
                 });
 
-                $('.szamla_tetel_tabla').on('keyup','.egy_brutto',function(e){
+                $('.szamla_tetel_tabla').on('keyup', '.egy_brutto', function (e) {
                     e.preventDefault();
 
                     setBrutto();
@@ -302,18 +306,18 @@ class SzamlaKomponens extends Site_Component
                 });
 
 
-                var setNetto = function(){
+                var setNetto = function () {
                     var ossz = 0;
-                    $('.egy_netto').each(function(){
+                    $('.egy_netto').each(function () {
                         var value = $(this).val() == '' ? 0 : $(this).val();
                         ossz += parseFloat(value);
                     });
                     $('.netto').html(ossz);
                 }
 
-                var setBrutto = function(){
+                var setBrutto = function () {
                     var ossz = 0;
-                    $('.egy_brutto').each(function(){
+                    $('.egy_brutto').each(function () {
                         var value = $(this).val() == '' ? 0 : $(this).val();
                         ossz += parseFloat(value);
                     });
@@ -343,134 +347,22 @@ class SzamlaKomponens extends Site_Component
                 <form action="" method="post">
                     <button type="submit" name="new" value="new">Új számla</button>
                 </form>
+                <a class="button" href="http://erp.fejlesztesgyak2015.info/api.php?module=excel_api&function=getExcelSzla">Excel
+                    export</a>
             </div>
             <div class="filtersbox">
                 <a href="#" title="Szűrők frissítése">
                     <div class="filtersbox_refresh_icon"></div>
                 </a>
 
-                <div class="filter_item">
-					
-                    Irány: <select name="o6164761">
-                        <option selected>Összes</option>
-                        <option>Kimenő</option>
-                        <option>Bejövő</option>
-                    </select></div><a href="http://erp.fejlesztesgyak2015.info/api.php?module=excel_api&function=getExcelSzla">Excel export</a>
+                <div class="filter_item"></div>
+
             </div>
         </div>
 
         <div class="clear"></div>
-        <div class="pagination">
-            <div class="pagination_element_count">Találatok száma: 3</div>
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
-        <div class="clear"></div>
-        <div class="itemlist">
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox"></th>
-                    <th>
-                        Sorszám
-                    </th>
-                    <th>
-                        Irány
-                    </th>
-                    <th>
-                        Típus
-                    </th>
-                    <th>
-                        Kiállítás dátuma
-                    </th>
-                    <th>
-                        Fizetési határidő
-                    </th>
-                    <th>
-                        Teljesítés dátuma
-                    </th>
-                    <th>
-                        Kibocsátó
-                    </th>
-                    <th>
-                        Befogadó
-                    </th>
-                    <th>
-                        Fizetési mód
-                    </th>
-                    <th>
-                        Nettó összeg
-                    </th>
-                    <th>
-                        Bruttó összeg
-                    </th>
-                    <th>
-                        ÁFA összeg
-                    </th>
-                    <th colspan="3">
-                        Műveletek
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="edit">Szerkesztés</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="delete">Törlés</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="storno">Sztornózás</button>
-                        </form>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="clear"></div>
-        <div class="pagination">
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select> Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
     <?php
+
+        $this->szamlaDataTable->printTable();
     }
 }
