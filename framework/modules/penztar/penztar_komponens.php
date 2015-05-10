@@ -38,6 +38,7 @@ class PenztarKomponens extends Site_Component
         if(!empty($_POST['edit']))
         {
             $this->penztarData=$this->pm->getObject($actualId)->getPenztarAdatok();
+            $_SESSION['penztar_edit_id']=$actualId;
         }
 		
         if(!empty($_POST['back']) || !empty($_POST['save'])){
@@ -51,9 +52,9 @@ class PenztarKomponens extends Site_Component
             );
 
 			// módosítás vagy létrehozás
-			if(!is_null($this->penztarData))    // Edit
+			if(isset($_SESSION['penztar_edit_id']))    // Edit
             {
-                $penztar=$this->pm->getObject($this->penztarData['id']);
+                $penztar=$this->pm->getObject($_SESSION['penztar_edit_id']);
                 $result = $penztar->setPenztarAdatok($p_adatok);
                 if(is_array($result)) {
                     $msg = implode(', ', $result);
@@ -61,7 +62,7 @@ class PenztarKomponens extends Site_Component
                 }
                 else
                 {
-                    $this->penztarData = null;
+                   unset($_SESSION['penztar_edit_id']);
                 }
             }
             else    // Create
@@ -74,9 +75,7 @@ class PenztarKomponens extends Site_Component
                 }
             }
         }
-        $msg = "";
-        foreach($this->penztarData as $data) $msg .= $data.'  ';
-        echo"<script>alert('".$msg."')</script>";
+
         $this->penztarDataTable->process($_POST);
     }
 
