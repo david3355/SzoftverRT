@@ -10,6 +10,7 @@ class Penztar extends Persistent
      */
     protected function onBeforeCreate(array $params)
     {
+        $params['egyenleg'] = 0;
         return $params;
     }
 
@@ -53,6 +54,11 @@ class Penztar extends Persistent
             return $this->setFields($adatok);
         }
         return $err;
+    }
+
+    function getPenztarAdatok()
+    {
+        return $this->getFields();
     }
 
     protected static function getOwnParameters() {

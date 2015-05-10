@@ -8,7 +8,7 @@ class PenztarTetel extends Persistent
     /**
      * @param array $params
      */
-    protected function onBeforeCreate(array &$params = null)
+    protected function onBeforeCreate(array $params = null)
     {
 		//ellenőrzi, hogy van-e fedzet a megadott összegre, ha kiadás (- előjelű)
 		if($params['osszeg']<0)
@@ -19,6 +19,8 @@ class PenztarTetel extends Persistent
 				throw new Exception("NINCS_FEDEZET");
 			}
 		}
+
+        return $params;
     }
 
     /**

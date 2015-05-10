@@ -9,6 +9,7 @@ class PenztarKomponens extends Site_Component
     private $showFormPage = false;
     private $pm;
 	private $penztarDataTable;
+    private $penztarData = null;
 
     protected function afterConstruction()
     {
@@ -18,6 +19,8 @@ class PenztarKomponens extends Site_Component
 
     function process()
     {
+        $actualId = $_POST['id'];
+
         if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
             $this->showFormPage = true;
         }
@@ -25,17 +28,16 @@ class PenztarKomponens extends Site_Component
 		//törlés
 		if(isset($_POST['delete']))
 		{
-            $p=new Penztar($_POST['id']);
-			$msg=$p->delete();
-			echo"<script>alert('".$msg."')</script>";
+           $res = $this->pm->getObject($actualId)->delete();
+            if($res > 1) $msg = "Törölve";      // Az objektumnak minimum 2 helyről kell törlődnie
+            else $msg = "Törlés sikertelen!";
+            echo"<script>alert('".$msg."')</script>";
         }
 		
-		//módosítás
+		//módosításhoz lekérdezzük az aktuális objektum adatait
         if(!empty($_POST['edit']))
         {
-            $penztar=$this->pm->getObject($_POST['id']);
-            $this->penztardata=$penztar->getFields();
-            $_SESSION['penztar_edit_id']=$_POST['id'];
+            $this->penztarData=$this->pm->getObject($actualId)->getPenztarAdatok();
         }
 		
         if(!empty($_POST['back']) || !empty($_POST['save'])){
@@ -48,40 +50,33 @@ class PenztarKomponens extends Site_Component
                 'megnevezes' => $_POST['megnevezes']
             );
 
-            $Penztar = $this->pm->createObject('Penztar', $p_adatok);
-			$msg;
-			foreach($Penztar as $p)
-			{
-				$msg.= $p."#";
-			}
-			echo"<script>alert('".$msg."')</script>";
-			
-			//módosítás
-			if(isset($_SESSION['penztar_edit_id']))
+			// módosítás vagy létrehozás
+			if(!is_null($this->penztarData))    // Edit
             {
-                $penztar=$this->pm->getObject($_SESSION['penztar_edit_id']);
-                unset($p_adatok['azonosito']);
-                $result = $penztar->setUgyfelAdatok($p_adatok);
+                $penztar=$this->pm->getObject($this->penztarData['id']);
+                $result = $penztar->setPenztarAdatok($p_adatok);
                 if(is_array($result)) {
                     $msg = implode(', ', $result);
                     echo "<script>alert('Edit error: " . $msg . "')</script>";
                 }
                 else
                 {
-                    unset($_SESSION['penztar_edit_id']);
+                    $this->penztarData = null;
                 }
             }
-            else
+            else    // Create
             {
                 $penztar = $this->pm->createObject('Penztar', $p_adatok);
-                // Hibakód visszaadása a felületre, ha az $penztar egy array, majd ide kell valami elegáns:
+                // Hibakód visszaadása a felületre, ha a $penztar egy array, majd ide kell valami elegáns:
                 if(is_array($penztar)) {
                     $msg = implode(', ', $penztar);
                     echo "<script>alert('Create error: " . $msg . "')</script>";
                 }
             }
         }
-
+        $msg = "";
+        foreach($this->penztarData as $data) $msg .= $data.'  ';
+        echo"<script>alert('".$msg."')</script>";
         $this->penztarDataTable->process($_POST);
     }
 
@@ -115,7 +110,7 @@ class PenztarKomponens extends Site_Component
                                     <tbody>
                                     <tr>
                                         <td><span class="mandatory">Megnevezés<span style="color:red">*</span></span></td>
-                                        <td><input size="32" type="text" name="megnevezes" value=""></td>
+                                        <td><input size="32" type="text" name="megnevezes" value="<?php if(!is_null($this->penztarData)) echo $this->penztarData['megnevezes'];   ?>"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -138,8 +133,10 @@ class PenztarKomponens extends Site_Component
 
         <div class="list_upper_box">
             <div class="search">
-                <input id="search_field" size="32" type="text" name="search_field" value=""/>
-                <input type="submit" name="search_button" value="Keres" class="search_button"/>
+                <form action="" method="POST">
+                    <input id="search_field" size="32" type="text" name="search_field" value=""/>
+                    <input type="submit" name="search_button" value="Keres" class="search_button"/>
+                </form>
             </div>
             <div class="clear_right"></div>
             <div class="defaultoperationsbox">
@@ -151,82 +148,15 @@ class PenztarKomponens extends Site_Component
                 <a href="#" title="Szűrők frissítése">
                     <div class="filtersbox_refresh_icon"></div>
                 </a>
-
-                <div class="filter_item">
-                    Irány: <select name="">
-                        <option selected>Összes</option>
-                        <option>Kimenő</option>
-                        <option>Bejövő</option>
-                    </select></div>
             </div>
         </div>
 
         <div class="clear"></div>
-        <div class="pagination">
-            <div class="pagination_element_count">Találatok száma: 3</div>
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
-        <div class="clear"></div>
-        <div class="itemlist">
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox"></th>
-                    <th>
-                        Megnevezés
-                    </th>
-                    <th>
-                        Egyenleg
-                    </th>
-                    <th colspan="2">
-                        Műveletek
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="edit">Szerkesztés</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="delete">Törlés</button>
-                        </form>
-                    </td>
-                </tr>
+        <?php
+        $this->penztarDataTable->printTable();
 
-                </tbody>
-            </table>
-        </div>
-        <div class="clear"></div>
-        <div class="pagination">
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select> Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
-    <?php
+
+
+
     }
 }
