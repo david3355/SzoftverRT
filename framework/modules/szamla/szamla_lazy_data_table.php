@@ -33,27 +33,27 @@ class Szamla_Lazy_Data_Table extends Abstract_Lazy_Data_Table
         $this->tableName = 'szamla-datatable';
 
         $this->dataColumns = array(
-            "sorszam" => array(
+            "szla_sorszam" => array(
                 'name' => 'Sorszám',
                 'sortable' => true
             ),
-            "kiallitas" => array(
+            "kiallitas_datum" => array(
                 'name' => 'Kiallítás dátuma',
                 'sortable' => true
             ),
-            "teljesites" => array(
+            "teljesites_datum" => array(
                 'name' => 'Teljesítés dátuma',
                 'sortable' => true
             ),
-            "fizetes" => array(
+            "fizetes_datum" => array(
                 'name' => 'Fizetési határidő',
                 'sortable' => true
             ),
-            "kibocsato" => array(
+            "kiallito_neve" => array(
                 'name' => 'Kibocsátó',
                 'sortable' => false
             ),
-            "befogado" => array(
+            "befogado_nev" => array(
                 'name' => 'Befogadó',
                 'sortable' => false
             ),

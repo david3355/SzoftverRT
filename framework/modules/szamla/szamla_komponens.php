@@ -33,6 +33,53 @@ class SzamlaKomponens extends Site_Component
             $this->showFormPage = false;
         }
 
+		//beiras
+		if (!empty($_POST['save_and_new']) || !empty($_POST['save']))
+		{
+            $szla_adatok = array(
+                'szlatomb_obj_id' => $_POST['szlatomb_obj_id'],
+				'kiallito_neve' => $_POST['kiallito_neve'],
+				'kiallito_cim' => $_POST['kiallito_cim'],
+				'kiallito_adoszam' => $_POST['kiallito_adoszam'],
+				'kiallito_bszla' => $_POST['kiallito_bszla'],
+				
+				'befogado_nev' => $_POST['befogado_nev'],
+				'befogado_cim' => $_POST['befogado_cim'],
+				'befogado_adoszam' => $_POST['befogado_adoszam'],
+				'befogado_bszla' => $_POST['befogado_bszla'],
+				
+				'fizetesi_mod' => $_POST['fizetesi_mod'],
+				'kiallitas_datum' => $_POST['kiallitas_datum'],
+				'teljesites_datum' => $_POST['teljesites_datum'],
+				'fizetes_datum' => $_POST['fizetesi_hatarido'],
+				'megjegyzes' => $_POST['megjegyzes']
+            );
+
+			// módosítás vagy létrehozás
+			if(isset($_SESSION['szla_edit_id']))    // Edit
+            {
+                /*$penztar=$this->pm->getObject($_SESSION['penztar_edit_id']);
+                $result = $penztar->setPenztarAdatok($p_adatok);
+                if(is_array($result)) {
+                    $msg = implode(', ', $result);
+                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                }
+                else
+                {
+                   unset($_SESSION['penztar_edit_id']);
+                }*/
+            }
+            else    // Create
+            {
+                $szla = $this->pm->createObject('Szamla', $szla_adatok);
+                // Hibakód visszaadása a felületre, ha a $szla egy array, majd ide kell valami elegáns:
+                if(is_array($szla)) {
+                    $msg = implode(', ', $szla);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                }
+            }
+        }
+		
         $this->szamlaDataTable->process($_POST);
     }
 
@@ -48,9 +95,10 @@ class SzamlaKomponens extends Site_Component
     private function showForm()
     {
         ?>
-        <div class="form_box">
+        <form action="" method="POST">
+		<div class="form_box">
             <h1>Bejövő számla szerkesztése (Számla)</h1>
-            <input type="submit" name="" value="Mentés" class="save_button">
+            <input type="submit" name="save" value="Mentés" class="save_button">
             <input type="submit" name="" value="Mentés és új" class="save_and_new_button">
             <input type="submit" name="" value="Vissza" class="back_button">
             <br><br>
@@ -64,6 +112,12 @@ class SzamlaKomponens extends Site_Component
                     <table class="formtable" cellpadding="0" cellspacing="0">
                         <tbody>
                         <tr>
+                            <td><span class="mandatory">Számlatömb<span style="color:red">*</span></span></td>
+                            <td><select class="fizetesi_mod_dropdown" name="szlatomb_obj_id">
+                                    <option value="28">teszt</option>
+                                </select></td>
+                        </tr>
+						<tr>
                             <td><span class="mandatory">Fizetési mód<span style="color:red">*</span></span></td>
                             <td><select class="fizetesi_mod_dropdown" name="fizetesi_mod">
                                     <option value="0">Válasszon</option>
@@ -113,22 +167,22 @@ class SzamlaKomponens extends Site_Component
                                 <span class="mandatory">Név<span style="color:red">*</span></span>
                             </td>
                             <td>
-                                <input size="32" type="text" name="kibocsato_nev">
+                                <input size="32" type="text" name="kiallito_neve">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="kibocsato_szekhely">
+                                <input size="32" type="text" name="kiallito_cim">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Adószám<span style="color:red">*</span></span></td>
-                            <td><input size="32" type="text" name="kibocsato_adoszam"></td>
+                            <td><input size="32" type="text" name="kiallito_adoszam"></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="kibocsato_bankszamlaszam"></td>
+                            <td><input size="32" type="text" name="kiallito_bszla"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -150,7 +204,7 @@ class SzamlaKomponens extends Site_Component
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="befogado_szekhely">
+                                <input size="32" type="text" name="befogado_cim">
                             </td>
                         </tr>
                         <tr>
@@ -159,7 +213,7 @@ class SzamlaKomponens extends Site_Component
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="befogado_bankszamlaszam"></td>
+                            <td><input size="32" type="text" name="befogado_bszla"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -233,6 +287,7 @@ class SzamlaKomponens extends Site_Component
             <input type="submit" name="" value="Mentés és új" class="save_and_new_button">
             <input type="submit" name="" value="Vissza" class="back_button">
         </div>
+		</form>
 
 
         <script>

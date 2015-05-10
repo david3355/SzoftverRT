@@ -198,9 +198,9 @@ abstract class Persistent
      * @return mixed
      * @throws Exception
      */
-    final protected function getNextUniqueId($azon_nev)
+    final protected function getNextUniqueId($azon_nev, $id)
     {
-        $result = $this->db->query("UPDATE {$this->table_name} SET {$azon_nev} = LAST_INSERT_ID({$azon_nev}+1)");
+        $result = $this->db->query("UPDATE {$this->table_name} SET {$azon_nev} = LAST_INSERT_ID({$azon_nev}+1) WHERE id = '{$id}'");
 
         return $this->db->getLastInsertID();
     }
