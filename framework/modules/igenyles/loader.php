@@ -13,9 +13,14 @@ class IgenylesLoader extends AbstractLoader
         switch ($classname) {
             case "Igenylestomb":
                 return $this->myfolder . "/igenyles.php";
-            case "IgenylesKomponens":
+            
+			case "IgenylesKomponens":
                 return $this->myfolder . "/igenyles_komponens.php";
-            default:
+				
+			case "Igenyles_Lazy_Data_Table":
+                return $this->myfolder . "/igenyles_lazy_data_table.php";
+            
+			default:
                 return null;
         }
     }

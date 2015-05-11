@@ -3,26 +3,35 @@
 class IgenylesKomponens extends Site_Component{
 
     private $showFormPage = false;
-
     private $pm;
+	private $igenylesDataTable;
 
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
+		$this->igenylesDataTable = new Igenyles_Lazy_Data_Table();
     }
 
     function process()
     {
-        if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
+        if(!empty($_POST['edit'])){
             $this->showFormPage = true;
-        }
+		}
 		
-		//törlés
-		if(isset($_POST['delete']))
-		{
-            $igenyles=new Igenyles($_POST['id']);
-			$msg=$igenyles->delete();
-			echo"<script>alert('".$msg."')</script>";
+		if(!empty($_POST['save'])){
+			$params=json_encode(array("id"=>$_POST['id'], "statusz"=>$_POST['statusz']));
+			
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "http://ugyfelkapu.fejlesztesgyak2015.info/api.php?module=erp_api&function=updateIgenyles");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, count($params));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+			
+			//execute the request
+			$res=curl_exec($ch);
+			
+			
+			echo "<script>alert('msg: ".$res."');</script>";
         }
 
         if(!empty($_POST['back']) || !empty($_POST['save'])){
@@ -42,7 +51,40 @@ class IgenylesKomponens extends Site_Component{
     private function showForm()
     {
         ?>
-        <h1>Igénylés szerkesztése</h1>
+        <form action="" method="POST">
+            <div class="form_box">
+                <h1>Igénylés szerkesztése</h1>
+                <input type="submit" name="save" value="Mentés" class="save_button">
+                <input type="submit" name="back" value="Vissza" class="back_button">
+                <br/>
+                <br/>
+                <div class="form_szurke_doboz">
+                    <input type="hidden" name="id" value="<?php echo $_POST['id'] ?>">
+                    <table class="formtable">
+                        <tbody>
+                        <tr>
+                            <td valign="top">
+                                <table>
+                                    <tbody>                                   
+                                    <tr>
+                                        <td><span class="mandatory">Státusz<span style="color:red">*</span></span></td>
+                                        <td><select name="statusz">
+                                    <option value="0">Válasszon</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
     <?php
     }
 
@@ -53,7 +95,7 @@ class IgenylesKomponens extends Site_Component{
             <h1>Igénylések</h1>
         </div>
 
-        <div class="list_upper_box">
+        <!--<div class="list_upper_box">
             <div class="search">
                 <input id="search_field" size="32" type="text" name="search_field" value=""/>
                 <input type="submit" name="search_button" value="Keres" class="search_button"/>
@@ -76,82 +118,13 @@ class IgenylesKomponens extends Site_Component{
                         <option>Bejövő</option>
                     </select></div>
             </div>
-        </div>
+        </div>-->
+<form action="" method="POST">
+           <input type="submit" name="edit" value="Mentés" class="save_button">
+                <input type="text" name="id" value="">
+        </form>
 
-        <div class="clear"></div>
-        <div class="pagination">
-            <div class="pagination_element_count">Találatok száma: 3</div>
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
-        <div class="clear"></div>
-        <div class="itemlist">
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox"></th>
-                    <th>
-                        Megnevezés
-                    </th>
-                    <th>
-                        Előtag
-                    </th>
-                    <th>
-                        Kezdőszám
-                    </th>
-                    <th>
-                        Lezárás dátuma
-                    </th>
-                    <th colspan="2">
-                        Műveletek
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="edit">Szerkesztés</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="delete">Törlés</button>
-                        </form>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="clear"></div>
-        <div class="pagination">
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select> Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
     <?php
+	$this->igenylesDataTable->printTable();
     }
 }
