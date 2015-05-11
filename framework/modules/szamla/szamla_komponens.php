@@ -81,7 +81,6 @@ class SzamlaKomponens extends Site_Component
             $szla_adatok['tetelek'] = $tetelek;
 
 
-            unset($_SESSION['szamla_edit_id']); ///////////////DEBUG/////////////////
 			// módosítás vagy létrehozás
             if(isset($_SESSION['szamla_edit_id']))    // Edit
             {
@@ -126,8 +125,8 @@ class SzamlaKomponens extends Site_Component
 		<div class="form_box">
             <h1>Bejövő számla szerkesztése (Számla)</h1>
             <input type="submit" name="save" value="Mentés" class="save_button">
-            <input type="submit" name="" value="Mentés és új" class="save_and_new_button">
-            <input type="submit" name="" value="Vissza" class="back_button">
+            <input type="submit" name="save_and_new" value="Mentés és új" class="save_and_new_button">
+            <input type="submit" name="back" value="Vissza" class="back_button">
             <br><br>
 
             <div class="form_szurke_doboz">
@@ -141,17 +140,29 @@ class SzamlaKomponens extends Site_Component
                         <tr>
                             <td><span class="mandatory">Számlatömb<span style="color:red">*</span></span></td>
                             <td><select class="fizetesi_mod_dropdown" name="szlatomb_obj_id" >
-                                    <option  value="28" selected>teszt</option>
+                                    <?php
+                                        $sztombok = $this->pm->select('Szamlatomb', array('id', 'megnevezes'))->exeSelect();
+                                    foreach($sztombok as $szt)
+                                    {
+                                        if(!is_null($this->szamlaData) && $this->szamlaData['szlatomb_obj_id'] == $szt['id'])   $selected = "selected";
+                                        else  $selected = "";
+                                        echo sprintf('<option  value="%s" %s>%s</option>', $szt['id'], $selected, $szt['megnevezes']);
+                                    }
+                                    ?>
                                 </select></td>
                         </tr>
 						<tr>
                             <td><span class="mandatory">Fizetési mód<span style="color:red">*</span></span></td>
                             <td><select class="fizetesi_mod_dropdown" name="fizetesi_mod">
-                                    <option value="0">Válasszon</option>
-                                    <option value="1">Csekk</option>
-                                    <option value="2" selected>Készpénzes</option>
-                                    <option value="3">Utalásos</option>
-                                    <option value="4">Utánvétes</option>
+                                    <?php
+                                    $fm = array('0'=>'Válasszon', '1'=>'Csekk', '2'=>'Készpénzes', '3'=>'Utalásos', '4'=>'Utánvétes');
+                                    foreach($fm as $key=>$val)
+                                    {
+                                        if(!is_null($this->szamlaData) && $this->szamlaData['fizetesi_mod'] == $key)   $selected = "selected";
+                                        else  $selected = "";
+                                        echo sprintf('<option value="%s" %s>%s</option>', $key, $selected, $val);
+                                    }
+                                    ?>
                                 </select></td>
                         </tr>
                         <tr>
@@ -194,22 +205,22 @@ class SzamlaKomponens extends Site_Component
                                 <span class="mandatory">Név<span style="color:red">*</span></span>
                             </td>
                             <td>
-                                <input size="32" type="text" name="kiallito_neve" value="Valami">
+                                <input size="32" type="text" name="kiallito_neve" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_neve'];   ?>">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="kiallito_cim" value="Valami">
+                                <input size="32" type="text" name="kiallito_cim" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_cim'];   ?>">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Adószám<span style="color:red">*</span></span></td>
-                            <td><input size="32" type="text" name="kiallito_adoszam" value="0000000000"></td>
+                            <td><input size="32" type="text" name="kiallito_adoszam" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_adoszam'];   ?>"></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="kiallito_bszla" value="000000000000000000000000"></td>
+                            <td><input size="32" type="text" name="kiallito_bszla" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_bszla'];   ?>"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -226,21 +237,21 @@ class SzamlaKomponens extends Site_Component
                         <tr>
                             <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
                             <td>
-                                        <input size="32" type="text" name="befogado_nev" value="Valami"></td>
+                                        <input size="32" type="text" name="befogado_nev" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_nev'];   ?>"></td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="befogado_cim" value="Valami">
+                                <input size="32" type="text" name="befogado_cim" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_cim'];   ?>">
                             </td>
                         </tr>
                         <tr>
                             <td><span>Adószám</span></td>
-                            <td><input size="32" type="text" name="befogado_adoszam" value="0000000000"></td>
+                            <td><input size="32" type="text" name="befogado_adoszam" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_adoszam'];   ?>"></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="befogado_bszla" value="0000000000000000000000000"></td>
+                            <td><input size="32" type="text" name="befogado_bszla" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_bszla'];   ?>"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -310,9 +321,9 @@ class SzamlaKomponens extends Site_Component
             <textarea cols="65" rows="6" name="o1744899"></textarea>
             <input type="hidden" name="" value="" id="id_y_pos">
             <br>
-            <input type="submit" name="" value="Mentés" class="save_button">
-            <input type="submit" name="" value="Mentés és új" class="save_and_new_button">
-            <input type="submit" name="" value="Vissza" class="back_button">
+            <input type="submit" name="save" value="Mentés" class="save_button">
+            <input type="submit" name="save_and_new" value="Mentés és új" class="save_and_new_button">
+            <input type="submit" name="back" value="Vissza" class="back_button">
         </div>
 		</form>
 
