@@ -51,7 +51,7 @@ class Felhasznalo extends Persistent
             if (empty($params['nev'])) $errors[] = "USERNEV_NINCS_MEGADVA";
             if (strlen($params['nev']) < 3) $errors[] = "ROVID_USER_NEV";
             //nem egyedi, mert már van ilyen user_nev
-            $users = PersistenceManager::getInstance()->select('Felhasznalo')->where('nev', '=', $params['nev'])->exeSelect();
+            $users = $this->pm->select('Felhasznalo')->where('nev', '=', $params['nev'])->exeSelect();
             if (!empty($users)) $errors[] = "HASZNALT_USER_NEV";
         }
 

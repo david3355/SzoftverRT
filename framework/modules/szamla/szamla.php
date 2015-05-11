@@ -5,6 +5,7 @@
  */
 class Szamla extends Persistent
 {
+
     /**
      * @param array $params
      */
@@ -12,7 +13,7 @@ class Szamla extends Persistent
     {
         /*számlatömb előtag alapján példányosít egy objektumot, erre meghívja a getNextUniqueId("szamla_aktual_szam")
         a visszakapott sorszámot beállítja az új számlának*/
-        $szT=new Szamlatomb($params['szlatomb_obj_id']);
+        $szT=$this->pm->getObject($params['szlatomb_obj_id']);
         $params['szla_sorszam']=$szT->getFields()['szamla_elotag']."/".$szT->getNextUniqueId('szamla_aktual_szam', $params['szlatomb_obj_id']);
 		//throw new Exception($params['szla_sorszam']."i");
         return $params;
@@ -23,11 +24,10 @@ class Szamla extends Persistent
      */
     protected function onAfterCreate(array $params = null)
     {
+        $szamla_fk = array('szamla_fk' => $this->getID());
         // Számlatételek létrehozása
-
         foreach ($params['tetelek'] as $tetel_adatok) {
-            $szamla_id = array('szamla_sorszam_elotag' => $params['sorszam_elotag'], 'szamla_sorszam_szam' => $params['sorszam_szam']);
-            $this->pm->createObject('SzamlaTetel', array_merge($tetel_adatok, $szamla_id));
+            $this->pm->createObject('SzamlaTetel', array_merge($tetel_adatok, $szamla_fk));
         }
     }
 
@@ -37,12 +37,11 @@ class Szamla extends Persistent
     protected function onBeforeDelete()
     {
         // Számlatételek törlése
-        $szt = new SzamlaTetel();
-        $sztetelek = $szt->getFields(['id'], ['szamla_fk' => $this->getID()]);    // a getFields-t úgy kéne megírni, hogy lehessen where feltételt megadni, ha a feltételek egy null array, akkor a where feltételbe az id kerül
+        $sztetelek = $this->pm->select('SzamlaTetel', ['id'])->where('szamla_fk', '=', $this->getID)->exeSelect();
         $deleted = 0;
-        foreach ($sztetelek as $szt_rekord) {
-            $szt_objektum = new SzamlaTetel($szt_rekord['id']);
-            $deleted += $szt_objektum->delete();
+        foreach($sztetelek as $sztetel)
+        {
+            $deleted += $this->pm->getObject($sztetel['id'])->delete();
         }
         return $deleted;
     }
@@ -82,6 +81,14 @@ class Szamla extends Persistent
         }
 
         echo $err;
+    }
+
+    function getSzamlaAdatok()
+    {
+        $szamla = $this->getFields();
+        $sztetelek = $this->pm->select('SzamlaTetel')->where('szamla_fk', '=', $this->getID())->exeSelect();
+        $szamla['tetelek']= $sztetelek;
+        return $szamla;
     }
 
     protected static function getOwnParameters() {

@@ -56,7 +56,7 @@ class Ugyfel extends Persistent
 
     function idExists($id)
     {
-        $result = PersistenceManager::getInstance()->select('Ugyfel')->where('azonosito', '=', $id)->exeSelect();
+        $result = $this->pm->select('Ugyfel')->where('azonosito', '=', $id)->exeSelect();
         return !empty($result);
     }
 

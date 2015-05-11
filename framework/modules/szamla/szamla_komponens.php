@@ -38,6 +38,7 @@ class SzamlaKomponens extends Site_Component
 		{
             $szla_adatok = array(
                 'szlatomb_obj_id' => $_POST['szlatomb_obj_id'],
+
 				'kiallito_neve' => $_POST['kiallito_neve'],
 				'kiallito_cim' => $_POST['kiallito_cim'],
 				'kiallito_adoszam' => $_POST['kiallito_adoszam'],
