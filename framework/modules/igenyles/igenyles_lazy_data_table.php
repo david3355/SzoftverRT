@@ -13,7 +13,7 @@ class Igenyles_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
 		//execute the request
 		$result = curl_exec($ch);
 		$adatsor=json_decode($result, true);
-		$adatsor=array(array("ugyfel_azon"=>"gh", "azon"=>"fgh", "statusz"=>"", "letrehozas_datuma"=>"", "sablon_azon"=>""), array("ugyfel_azon"=>"", "azon"=>"", "statusz"=>"", "letrehozas_datuma"=>"", "sablon_azon"=>"fh"), array("ugyfel_azon"=>"fh", "azon"=>"", "statusz"=>"", "letrehozas_datuma"=>"", "sablon_azon"=>""), );
+		
 		return $adatsor;
     }
 
