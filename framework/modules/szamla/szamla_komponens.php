@@ -6,9 +6,9 @@
 class SzamlaKomponens extends Site_Component
 {
     private $showFormPage = false;
-
     private $szamlaDataTable;
     private $pm;
+    private $szamlaData = null;
 
     protected function afterConstruction()
     {
@@ -18,15 +18,23 @@ class SzamlaKomponens extends Site_Component
 
     function process()
     {
+        $aktID = $_POST['id'];
+
         if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
             $this->showFormPage = true;
         }
 
         //törlés
         if (isset($_POST['delete'])) {
-            $Szamla = new Szamla($_POST['id']);
-            $msg = $Szamla->delete();
+            $szamla =$this->pm->getObject($aktID);
+            $msg = $szamla->delete();
             echo "<script>alert('" . $msg . "')</script>";
+        }
+
+        if(!empty($_POST['edit']))
+        {
+            $this->szamlaData=$this->pm->getObject($aktID)->getSzamlaAdatok();
+            $_SESSION['szamla_edit_id']=$aktID;
         }
 
         if (!empty($_POST['back']) || !empty($_POST['save'])) {
@@ -56,19 +64,37 @@ class SzamlaKomponens extends Site_Component
 				'megjegyzes' => $_POST['megjegyzes']
             );
 
-			// módosítás vagy létrehozás
-			if(isset($_SESSION['szla_edit_id']))    // Edit
+            $megnevezes = $_POST['megnevezes'];
+            $netto = $_POST['netto'];
+            $brutto = $_POST['brutto'];
+            $mennyiseg = $_POST['mennyiseg'];
+            $mennyisegi_egyseg = $_POST['mennyisegi_egyseg'];
+            $afa = $_POST['afa'];
+            $vtsz = $_POST['vtsz'];
+
+            $tetelek = array();
+            for($i = 0; $i < sizeof($megnevezes); $i++)
             {
-                /*$penztar=$this->pm->getObject($_SESSION['penztar_edit_id']);
-                $result = $penztar->setPenztarAdatok($p_adatok);
+                $tetelek[] = array('megnevezes'=>$megnevezes[$i], 'netto_ar'=>$netto[$i], 'brutto_ar'=>$brutto[$i], 'mennyiseg'=>$mennyiseg[$i], 'mennyiseg_egyseg'=>$mennyisegi_egyseg[$i],'afa'=> $afa[$i], 'vamtarifaszam'=>$vtsz[$i]);
+            }
+
+            $szla_adatok['tetelek'] = $tetelek;
+
+
+            unset($_SESSION['szamla_edit_id']); ///////////////DEBUG/////////////////
+			// módosítás vagy létrehozás
+            if(isset($_SESSION['szamla_edit_id']))    // Edit
+            {
+                $szamla=$this->pm->getObject($_SESSION['szamla_edit_id']);
+                $result = $szamla->setSzamlaAdatok($szla_adatok);
                 if(is_array($result)) {
                     $msg = implode(', ', $result);
                     echo "<script>alert('Edit error: " . $msg . "')</script>";
                 }
                 else
                 {
-                   unset($_SESSION['penztar_edit_id']);
-                }*/
+                    unset($_SESSION['szamla_edit_id']);
+                }
             }
             else    // Create
             {
@@ -114,8 +140,8 @@ class SzamlaKomponens extends Site_Component
                         <tbody>
                         <tr>
                             <td><span class="mandatory">Számlatömb<span style="color:red">*</span></span></td>
-                            <td><select class="fizetesi_mod_dropdown" name="szlatomb_obj_id">
-                                    <option value="28">teszt</option>
+                            <td><select class="fizetesi_mod_dropdown" name="szlatomb_obj_id" >
+                                    <option  value="28" selected>teszt</option>
                                 </select></td>
                         </tr>
 						<tr>
@@ -123,7 +149,7 @@ class SzamlaKomponens extends Site_Component
                             <td><select class="fizetesi_mod_dropdown" name="fizetesi_mod">
                                     <option value="0">Válasszon</option>
                                     <option value="1">Csekk</option>
-                                    <option value="2">Készpénzes</option>
+                                    <option value="2" selected>Készpénzes</option>
                                     <option value="3">Utalásos</option>
                                     <option value="4">Utánvétes</option>
                                 </select></td>
@@ -168,22 +194,22 @@ class SzamlaKomponens extends Site_Component
                                 <span class="mandatory">Név<span style="color:red">*</span></span>
                             </td>
                             <td>
-                                <input size="32" type="text" name="kiallito_neve">
+                                <input size="32" type="text" name="kiallito_neve" value="Valami">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="kiallito_cim">
+                                <input size="32" type="text" name="kiallito_cim" value="Valami">
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Adószám<span style="color:red">*</span></span></td>
-                            <td><input size="32" type="text" name="kiallito_adoszam"></td>
+                            <td><input size="32" type="text" name="kiallito_adoszam" value="0000000000"></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="kiallito_bszla"></td>
+                            <td><input size="32" type="text" name="kiallito_bszla" value="000000000000000000000000"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -200,21 +226,21 @@ class SzamlaKomponens extends Site_Component
                         <tr>
                             <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="befogado_nev"></td>
+                                        <input size="32" type="text" name="befogado_nev" value="Valami"></td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="befogado_cim">
+                                <input size="32" type="text" name="befogado_cim" value="Valami">
                             </td>
                         </tr>
                         <tr>
                             <td><span>Adószám</span></td>
-                            <td><input size="32" type="text" name="befogado_adoszam"></td>
+                            <td><input size="32" type="text" name="befogado_adoszam" value="0000000000"></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="befogado_bszla"></td>
+                            <td><input size="32" type="text" name="befogado_bszla" value="0000000000000000000000000"></td>
                         </tr>
                         </tbody>
                     </table>

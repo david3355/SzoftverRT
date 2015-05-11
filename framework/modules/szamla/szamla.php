@@ -14,7 +14,7 @@ class Szamla extends Persistent
         /*számlatömb előtag alapján példányosít egy objektumot, erre meghívja a getNextUniqueId("szamla_aktual_szam")
         a visszakapott sorszámot beállítja az új számlának*/
         $szT=$this->pm->getObject($params['szlatomb_obj_id']);
-        $params['szla_sorszam']=$szT->getFields()['szamla_elotag']."/".$szT->getNextUniqueId('szamla_aktual_szam', $params['szlatomb_obj_id']);
+        $params['szla_sorszam']=$szT->getSzamlatombAdatok()['szamla_elotag']."/".$szT->getNextUniqueId('szamla_aktual_szam', $params['szlatomb_obj_id']);
 		//throw new Exception($params['szla_sorszam']."i");
         return $params;
     }
@@ -27,7 +27,7 @@ class Szamla extends Persistent
         $szamla_fk = array('szamla_fk' => $this->getID());
         // Számlatételek létrehozása
         foreach ($params['tetelek'] as $tetel_adatok) {
-            $this->pm->createObject('SzamlaTetel', array_merge($tetel_adatok, $szamla_fk));
+            $err = $this->pm->createObject('SzamlaTetel', array_merge($tetel_adatok, $szamla_fk));
         }
     }
 
@@ -64,6 +64,7 @@ class Szamla extends Persistent
         //if (empty($params['befogado_adoszam'])) $errors[] = 'BEFOGADO_ADOSZAM_NINCS_MEGADVA';
         //if (empty($params['befogado_bszla'])) $errors[] = 'BEFOGADO_BSZLA_NINCS_MEGADVA';
         if (empty($params['fizetesi_mod'])) $errors[] = 'FIZETESI_MOD_NINCS_MEGADVA';
+        if (empty($params['tetelek'])) $errors[] = 'EGY_TETEL_SINCS_NINCS_MEGADVA';
 
         return $errors;
     }
@@ -86,8 +87,13 @@ class Szamla extends Persistent
     function getSzamlaAdatok()
     {
         $szamla = $this->getFields();
-        $sztetelek = $this->pm->select('SzamlaTetel')->where('szamla_fk', '=', $this->getID())->exeSelect();
-        $szamla['tetelek']= $sztetelek;
+        $sztdata = $this->pm->select('SzamlaTetel', ['id'])->where('szamla_fk', '=', $this->getID())->exeSelect();
+        $szamlatetelek = array();
+        foreach($sztdata as $szt)
+        {
+            $szamlatetelek[] = $this->pm->getObject($szt['id'])->getSzamlaTetelAdatok();
+        }
+        $szamla['tetelek']= $szamlatetelek;;
         return $szamla;
     }
 

@@ -73,8 +73,7 @@ abstract class Persistent
         if (!is_null($params)) {
 
             // Ha a gyerekosztályok nem írják felül az onBeforeCreate-et, akkor az ősé fog lefutni, ha pedig implementálja a gyerekosztály, meg kell hívni az ős onBeforeCreate-jét
-            $params = $this->onBeforeCreate($params);                    // Az még kérdéses, hogy ezt hol hívjuk és hogyan.
-
+            $params = $this->onBeforeCreate($params);
 
             $params['id'] = $this->id;
             do {
@@ -95,7 +94,7 @@ abstract class Persistent
 
             } while (($class = get_parent_class($class)) != "Persistent");
 
-            $this->onAfterCreate($paramsForActual);                    // Az még kérdéses, hogy ezt hol hívjuk és hogyan
+            $this->onAfterCreate($params);
 
         }
         //4. alosztályok létrehozási tevékenységének futtatása

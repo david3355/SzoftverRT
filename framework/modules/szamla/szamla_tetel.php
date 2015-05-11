@@ -37,12 +37,10 @@ class SzamlaTetel extends Persistent
     {
         $errors = array();
 
-        if (empty($params['szamla_sorszam_elotag'])) $errors[] = 'SZAMLA_FK_NINCS_MEGADVA';
-        if (empty($params['szamla_sorszam_szam'])) $errors[] = 'SZAMLA_FK_NINCS_MEGADVA';
         if (empty($params['vamtarifaszam'])) $errors[] = 'VAMTARIFASZAM_NINCS_MEGADVA';
         if (empty($params['megnevezes'])) $errors[] = 'MEGNEVEZES_NINCS_MEGADVA';
         if (empty($params['mennyiseg_egyseg'])) $errors[] = 'MENNYISEG_EGYSEG_NINCS_MEGADVA';
-        if (empty($params['menniyseg'])) $errors[] = 'MENNYISEG_NINCS_MEGADVA';
+        if (empty($params['mennyiseg'])) $errors[] = 'MENNYISEG_NINCS_MEGADVA';
         if (empty($params['afa'])) $errors[] = 'AFA_NINCS_MEGADVA';
         if (empty($params['netto_ar'])) $errors[] = 'NETTO_AR_NINCS_MEGADVA';
         if (empty($params['brutto_ar'])) $errors[] = 'BRUTTO_AR_NINCS_MEGADVA';
@@ -62,6 +60,11 @@ class SzamlaTetel extends Persistent
         }
 
         return $err;
+    }
+
+    function getSzamlaTetelAdatok()
+    {
+        return $this->getFields();
     }
 
     protected static function getOwnParameters() {
