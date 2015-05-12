@@ -83,7 +83,13 @@ class Szamla extends Persistent
             $updated = 0;
             foreach($tetelek as $tetel)
             {
-                $updated += $this->pm->getObject($tetel['id'])->setSzamlaTetelAdatok($tetel);
+                if(empty($tetel['id']))
+                {
+                    $szamla_fk = array('szamla_fk' => $this->getID());
+                    $this->pm->createObject('SzamlaTetel', array_merge($tetel, $szamla_fk));
+                    $updated++;
+                }
+                else $updated += $this->pm->getObject($tetel['id'])->setSzamlaTetelAdatok($tetel);
             }
             unset($adatok['tetelek']);
             $updated += $this->setFields($adatok);
