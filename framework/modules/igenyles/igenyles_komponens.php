@@ -37,6 +37,8 @@ class IgenylesKomponens extends Site_Component{
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showFormPage = false;
         }
+        
+        $this->igenylesDataTable->process($_POST);
     }
 
     function show()
@@ -94,36 +96,7 @@ class IgenylesKomponens extends Site_Component{
         <div class="header">
             <h1>Igénylések</h1>
         </div>
-
-        <!--<div class="list_upper_box">
-            <div class="search">
-                <input id="search_field" size="32" type="text" name="search_field" value=""/>
-                <input type="submit" name="search_button" value="Keres" class="search_button"/>
-            </div>
-            <div class="clear_right"></div>
-            <div class="defaultoperationsbox">
-                <form action="" method="post">
-                    <button type="submit" name="new" value="new">Új igénylés</button>
-                </form>
-            </div>
-            <div class="filtersbox">
-                <a href="#" title="Szűrők frissítése">
-                    <div class="filtersbox_refresh_icon"></div>
-                </a>
-
-                <div class="filter_item">
-                    Irány: <select name="">
-                        <option selected>Összes</option>
-                        <option>Kimenő</option>
-                        <option>Bejövő</option>
-                    </select></div>
-            </div>
-        </div>-->
-<form action="" method="POST">
-           <input type="submit" name="edit" value="Mentés" class="save_button">
-                <input type="text" name="id" value="">
-        </form>
-
+        
     <?php
 	$this->igenylesDataTable->printTable();
     }

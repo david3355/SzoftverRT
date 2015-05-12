@@ -5,16 +5,14 @@ class Igenyles_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
     protected function getData(array $post = NULL)
     {
         $ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "http://ugyfelkapu.fejlesztesgyak2015.info/api.php?module=erp_api&function=getIgenyles");
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_POST, count($params));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($ch, CURLOPT_URL, "http://ugyfelkapu.fejlesztesgyak2015.info/api.php?module=erp_api&function=getIgenyles");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-		//execute the request
-		$result = curl_exec($ch);
-		$adatsor=json_decode($result, true);
-		
-		return $adatsor;
+        //execute the request
+        $result = curl_exec($ch);
+        $adatsor=json_decode($result, true);
+
+        return $adatsor;
     }
 
     protected function init()
