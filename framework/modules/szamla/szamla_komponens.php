@@ -69,13 +69,12 @@ class SzamlaKomponens extends Site_Component
 
         if(!empty($_POST['edit']))
         {
-            $this->szamlaData=$this->pm->getObject($aktID)->getSzamlaAdatok();
             $_SESSION['szamla_edit_id']=$aktID;
-            $tetelek = $this->szamlaData['tetelek'];
-            foreach($tetelek as $tetel)
-            {
-                echo '<script type="text/javascript">  newRow(); </script>';
-            }
+        }
+
+        if(!empty($_SESSION['szamla_edit_id']))
+        {
+            $this->szamlaData=$this->pm->getObject($_SESSION['szamla_edit_id'])->getSzamlaAdatok();
         }
 
 		//beiras
@@ -124,15 +123,18 @@ class SzamlaKomponens extends Site_Component
                 $szamla=$this->pm->getObject($_SESSION['szamla_edit_id']);
                 $result = $szamla->setSzamlaAdatok($szla_adatok, $errors);
                 if(!empty($errors))   $msg = "Edit errors: ".implode(', ', $errors);
-                else $msg = sprintf("Successfully edited %s instances", $result);
+                else
+                {
+                    $msg = sprintf("Successfully edited %s instances", $result);
+                    unset($_SESSION['szamla_edit_id']);
+                }
                 echo"<script>alert('".$msg."')</script>";
-                unset($_SESSION['szamla_edit_id']);
             }
             else    // Create
             {
-                $szla = $this->pm->createObject('Szamla', $szla_adatok);
+                $szla = $this->pm->createObject('Szamla', $szla_adatok, $errors);
                 // Hibakód visszaadása a felületre, ha a $szla egy array, majd ide kell valami elegáns:
-                if(is_array($szla)) {
+                if(!empty($errors)) {
                     $msg = implode(', ', $szla);
                     echo "<script>alert('Create error: " . $msg . "')</script>";
                 }
@@ -144,8 +146,8 @@ class SzamlaKomponens extends Site_Component
 
             if(!empty($_POST['save']))
             {
-              if(empty($errors))  $this->showFormPage = true;
-                else $this->showFormPage = false;
+              if(!empty($errors))  $this->showFormPage = true;
+              else $this->showFormPage = false;
             }
         }
 		
@@ -336,8 +338,6 @@ class SzamlaKomponens extends Site_Component
 
                 ?>
 
-
-
                 <tr id="osszegzo" style="font-weight:bold;font-size:15px;">
                     <td align="right">Összesen:</td>
                     <td align="center">
@@ -398,7 +398,7 @@ class SzamlaKomponens extends Site_Component
                 {
                     e.preventDefault();
                     var tr = '<tr>';
-                    tr += '<td> <input name="sztetel_id[]" type="text"> </td>';
+                    tr += '<td> <input name="sztetel_id[]" type="text" readonly> </td>';
                     tr += '<td> <input name="megnevezes[]" type="text"> </td>';
                     tr += '<td> <input class="egy_netto" name="netto[]" type="text"> </td>';
                     tr += '<td> <input class="egy_brutto" name="brutto[]" type="text"> </td>';
