@@ -4,33 +4,83 @@ class KifizetesKomponens extends Site_Component
 {
 
     private $showFormPage = false;
-
     private $pm;
-
+    private $kifizetesDataTable;
+    private $szamlaszams = array();
+    private $penztars = array();
+    private $actualKifizetes = array();
+    
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
+        $this->kifizetesDataTable = new Kifizetes_Lazy_Data_Table();
     }
 
     function process()
     {
+        $actualId = $_POST['id'];
+        
         if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
             $this->showFormPage = true;
         }
-		
-		//törlés
-		if(isset($_POST['delete']))
-		{
-            $kifizetes=new Kifizetes($_POST['id']);
-			$msg=$kifizetes->delete();
-			echo"<script>alert('".$msg."')</script>";
-        }
-
+	
         if (!empty($_POST['back']) || !empty($_POST['save'])) {
             $this->showFormPage = false;
         }
+        
+        //módosítás
+        if(!empty($_POST['edit']))
+        {
+            $kifizetes=$this->pm->getObject($_POST['id']);
+            $this->actualKifizetes=$kifizetes->getSzamlaKifizetesAdatok();
+        }
+        
+        if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
+            $kifizetes_adatok = array(
+                'kifizetes_datum' => $_POST['kifizetes_datum'],
+                'osszeg' => $_POST['osszeg'],
+                'szamla_fk' => $this->getSzamlaFkFromSzamlas($this->szamlaszams,$_POST['szamla_sorszam'])
+            );
+
+            if(isset($actualId)) {
+                $kifizetes = $this->pm->getObject($actualId);
+                $result = $kifizetes->setSzamlaKifizetesAdatok($kifizetes_adatok);
+                if(is_array($result)) {
+                    $msg = implode(', ', $result);
+                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                }
+            } else {
+                $kifizetes = $this->pm->createObject('Kifizetes', $kifizetes_adatok);
+                if(is_array($kifizetes)) {
+                    $msg = implode(', ', $felh);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                }
+            }
+        }
+        
+        //törlés
+        if(isset($_POST['delete'])){
+            $kifizetes=new Kifizetes($_POST['id']);
+            $msg=$kifizetes->delete();
+            echo"<script>alert('".$msg."')</script>";
+        }
+        
+        if(!empty($_POST['new']) || !empty($_POST['edit'])){
+            $this->szamlaszams = $this->pm->select('Szamla',['id','sorszam_elotag','sorszam_szam'])->exeSelect();
+            $this->penztars = $this->pm->select('Penztar',['id','megnevezes'])->exeSelect();
+        }
+        
+        $this->kifizetesDataTable->process($_POST);
     }
 
+    private function getSzamlaFkFromSzamlas($array, $value){
+        foreach($array as $a){
+            if($a['sorszam_elotag'].$a['sorszam_szam'] == $value){
+                return $a['id'];
+            }
+        }
+    }
+    
     function show()
     {
         if ($this->showFormPage) {
@@ -44,7 +94,6 @@ class KifizetesKomponens extends Site_Component
     private function showForm()
     {
         ?>
-
         <form action="" method="POST">
             <div class="form_box">
                 <h1>Számlatömb szerkesztése</h1>
@@ -64,11 +113,28 @@ class KifizetesKomponens extends Site_Component
                                     <tr>
                                         <td><span class="mandatory">Kifizetés dátum<span
                                                     style="color:red">*</span></span></td>
-                                        <td><input size="32" type="text" name="kifizetes" value=""></td>
+                                        <td><input id="kifizetes_datuma" size="32" type="text" name="kifizetes_datum" value=""></td>
                                     </tr>
                                     <tr>
                                         <td><span>Összeg</span></td>
-                                        <td><input size="32" type="text" name="osszeg" value=""></td>
+                                        <td><input type="number" name="osszeg" value=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Számla sorszám</span></td>
+                                        <td><input id="szamla_sorszam" size="32" type="text" name="szamla_sorszam" value="<?php if(isset($this->actualKifizetes)) echo $this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_elotag'].$this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_szam']; ?>"></td>
+                                    </tr>
+                                    <tr <?php if(isset($this->actualKifizetes)) echo 'style="display:none;"'; ?>>
+                                        <td><span>Pénztár</span></td>
+                                        <td>
+                                            <select name="penztar">
+                                                <?php 
+                                                        var_dump($this->penztars);
+                                                    foreach($this->penztars as $pentar){
+                                                        echo '<option value="'.$pentar['id'].'">'.$pentar['megnevezes'].'</option>';
+                                                    }
+                                                ?>
+                                            </select>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -79,7 +145,25 @@ class KifizetesKomponens extends Site_Component
                 </div>
             </div>
         </form>
-
+        <script>
+            $(function() {
+                var availableTags = [
+                    <?php 
+                        foreach($this->szamlaszams as $szamlaszam){
+                            echo '"'.$szamlaszam['sorszam_elotag'].$szamlaszam['sorszam_szam'].'", ';
+                        }
+                    ?>
+                  ];
+                  $( "#szamla_sorszam" ).autocomplete({
+                    source: availableTags
+                  });
+                
+                
+                $( "#kifizetes_datuma" ).datepicker({
+                    dateFormat: "yy-mm-dd"
+                });
+            });
+        </script>
     <?php
     }
 
@@ -105,83 +189,12 @@ class KifizetesKomponens extends Site_Component
                 <a href="#" title="Szűrők frissítése">
                     <div class="filtersbox_refresh_icon"></div>
                 </a>
-
-                <div class="filter_item">
-                    Irány: <select name="">
-                        <option selected>Összes</option>
-                        <option>Kimenő</option>
-                        <option>Bejövő</option>
-                    </select></div>
             </div>
         </div>
 
         <div class="clear"></div>
-        <div class="pagination">
-            <div class="pagination_element_count">Találatok száma: 3</div>
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select>
-            Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
-        <div class="clear"></div>
-        <div class="itemlist">
-            <table cellspacing="0" cellpadding="0" class="listtable">
-                <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox"></th>
-                    <th>
-                        Kifizetes dátum
-                    </th>
-                    <th>
-                        Összeg
-                    </th>
-                    <th colspan="2">
-                        Műveletek
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="edit">Szerkesztés</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            <input type="hidden" value="" name="id">
-                            <button type="submit" name="delete">Törlés</button>
-                        </form>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="clear"></div>
-        <div class="pagination">
-            <select>
-                <option value="50" selected="">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select> Előző
-    <span class="pagination_page_number">
-        <span class="pagination_active_page_number">1</span>
-    </span>
-            Következő
-        </div>
     <?php
+        $this->kifizetesDataTable->printTable();
     }
 
 }

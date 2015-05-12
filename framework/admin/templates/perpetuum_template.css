@@ -132,7 +132,7 @@ body{
   padding: 2px;
 }
 .filtersbox .filter_item button , .filtersbox .filter_item input[type=submit] , .filtersbox .filter_item input[type=button] {
-  margin:0px 1px; !important;
+  margin:0px 1px !important;
 }
 .pagination{
   /*margin-top: 20px;*/

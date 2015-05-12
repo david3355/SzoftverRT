@@ -65,6 +65,11 @@ class Kifizetes extends Persistent
         return $err;
     }
 
+    function getSzamlaKifizetesAdatok()
+    {
+        return $this->getFields(array('id', 'kifizetes_datum', 'osszeg', 'szamla_fk'));
+    }
+    
     /**
      *  Minden osztály a saját paramétereit adja vissza az összes paraméter közül
      * @param array $params

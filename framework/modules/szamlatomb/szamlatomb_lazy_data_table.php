@@ -20,8 +20,6 @@ class Szamlatomb_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
             $this->pm->limit($this->selectedPageNumber,$this->selectedStep);
         }
         
-        
-        
         return $this->pm->exeSelect();
     }
 
