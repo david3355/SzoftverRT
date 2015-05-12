@@ -73,15 +73,22 @@ class Szamla extends Persistent
      * @param array $adatok
      * @return array|bool
      */
-    function setSzamlaAdatok(array $adatok)
+    function setSzamlaAdatok(array $adatok, array &$errors = null)
     {
-        $err = $this->validate($adatok);
-        if(empty($err))
-		{
-            return $this->setFields($adatok);
-        }
+        $errors = $this->validate($adatok);
 
-        echo $err;
+        if(empty($errors))
+		{
+            $tetelek = $adatok['tetelek'];
+            $updated = 0;
+            foreach($tetelek as $tetel)
+            {
+                $updated += $this->pm->getObject($tetel['id'])->setSzamlaTetelAdatok($tetel);
+            }
+            unset($adatok['tetelek']);
+            $updated += $this->setFields($adatok);
+        }
+        return $updated;
     }
 
     function getSzamlaAdatok()

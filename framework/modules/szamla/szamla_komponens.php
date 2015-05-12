@@ -16,6 +16,42 @@ class SzamlaKomponens extends Site_Component
         $this->szamlaDataTable = new Szamla_Lazy_Data_Table();
     }
 
+    function printTetel(array $tetel = null)
+    {
+        if($tetel==null) $tetel = array('id'=>"", 'megnevezes'=>"", 'netto_ar'=>"", 'brutto_ar'=>"", 'mennyiseg'=>"", 'mennyiseg_egyseg'=>"",'afa'=> "", 'vamtarifaszam'=>"");
+
+        echo  sprintf(
+            '<tr>
+                    <td>
+                        <input name="sztetel_id[]" type="text" value="%s" readonly>
+                    </td>
+                    <td>
+                        <input name="megnevezes[]" type="text" value="%s">
+                    </td>
+                    <td>
+                        <input class="egy_netto" name="netto[]" type="text" value="%s">
+                    </td>
+                    <td>
+                        <input class="egy_brutto" name="brutto[]" type="text" value="%s">
+                    </td>
+                    <td>
+                        <input name="mennyiseg[]" type="text" value="%s">
+                    </td>
+                    <td>
+                        <input name="mennyisegi_egyseg[]" type="text" value="%s">
+                    </td>
+                    <td>
+                        <input name="afa[]" type="text" value="%s">
+                    </td>
+                    <td>
+                        <input name="vtsz[]" type="text" value="%s">
+                    </td>
+                    <td>
+                        <button class="torles_gomb" name="torles">Törlés</button>
+                    </td>
+                </tr>', $tetel['id'],  $tetel['megnevezes'],$tetel['netto_ar'],$tetel['brutto_ar'],$tetel['mennyiseg'],$tetel['mennyiseg_egyseg'],$tetel['afa'],$tetel['vamtarifaszam']);
+    }
+
     function process()
     {
         $aktID = $_POST['id'];
@@ -35,10 +71,11 @@ class SzamlaKomponens extends Site_Component
         {
             $this->szamlaData=$this->pm->getObject($aktID)->getSzamlaAdatok();
             $_SESSION['szamla_edit_id']=$aktID;
-        }
-
-        if (!empty($_POST['back']) || !empty($_POST['save'])) {
-            $this->showFormPage = false;
+            $tetelek = $this->szamlaData['tetelek'];
+            foreach($tetelek as $tetel)
+            {
+                echo '<script type="text/javascript">  newRow(); </script>';
+            }
         }
 
 		//beiras
@@ -64,6 +101,7 @@ class SzamlaKomponens extends Site_Component
 				'megjegyzes' => $_POST['megjegyzes']
             );
 
+            $sztid = $_POST['sztetel_id'];
             $megnevezes = $_POST['megnevezes'];
             $netto = $_POST['netto'];
             $brutto = $_POST['brutto'];
@@ -75,25 +113,20 @@ class SzamlaKomponens extends Site_Component
             $tetelek = array();
             for($i = 0; $i < sizeof($megnevezes); $i++)
             {
-                $tetelek[] = array('megnevezes'=>$megnevezes[$i], 'netto_ar'=>$netto[$i], 'brutto_ar'=>$brutto[$i], 'mennyiseg'=>$mennyiseg[$i], 'mennyiseg_egyseg'=>$mennyisegi_egyseg[$i],'afa'=> $afa[$i], 'vamtarifaszam'=>$vtsz[$i]);
+                $tetelek[] = array('id' => $sztid[$i], 'megnevezes'=>$megnevezes[$i], 'netto_ar'=>$netto[$i], 'brutto_ar'=>$brutto[$i], 'mennyiseg'=>$mennyiseg[$i], 'mennyiseg_egyseg'=>$mennyisegi_egyseg[$i],'afa'=> $afa[$i], 'vamtarifaszam'=>$vtsz[$i]);
             }
-
             $szla_adatok['tetelek'] = $tetelek;
 
-
+            $errors = array();
 			// módosítás vagy létrehozás
             if(isset($_SESSION['szamla_edit_id']))    // Edit
             {
                 $szamla=$this->pm->getObject($_SESSION['szamla_edit_id']);
-                $result = $szamla->setSzamlaAdatok($szla_adatok);
-                if(is_array($result)) {
-                    $msg = implode(', ', $result);
-                    echo "<script>alert('Edit error: " . $msg . "')</script>";
-                }
-                else
-                {
-                    unset($_SESSION['szamla_edit_id']);
-                }
+                $result = $szamla->setSzamlaAdatok($szla_adatok, $errors);
+                if(!empty($errors))   $msg = "Edit errors: ".implode(', ', $errors);
+                else $msg = sprintf("Successfully edited %s instances", $result);
+                echo"<script>alert('".$msg."')</script>";
+                unset($_SESSION['szamla_edit_id']);
             }
             else    // Create
             {
@@ -103,6 +136,16 @@ class SzamlaKomponens extends Site_Component
                     $msg = implode(', ', $szla);
                     echo "<script>alert('Create error: " . $msg . "')</script>";
                 }
+            }
+
+            if (!empty($_POST['back'])) {
+                $this->showFormPage = false;
+            }
+
+            if(!empty($_POST['save']))
+            {
+              if(empty($errors))  $this->showFormPage = true;
+                else $this->showFormPage = false;
             }
         }
 		
@@ -265,6 +308,7 @@ class SzamlaKomponens extends Site_Component
             <table cellspacing="0" cellpadding="0" class="listtable szamla_tetel_tabla">
                 <thead>
                 <tr>
+                    <th>Azonosító</th>
                     <th>Megnevezés</th>
                     <th>Nettó egység / össz ár</th>
                     <th>Bruttó egység / össz ár</th>
@@ -276,32 +320,22 @@ class SzamlaKomponens extends Site_Component
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>
-                        <input name="megnevezes[]" type="text">
-                    </td>
-                    <td>
-                        <input class="egy_netto" name="netto[]" type="text">
-                    </td>
-                    <td>
-                        <input class="egy_brutto" name="brutto[]" type="text">
-                    </td>
-                    <td>
-                        <input name="mennyiseg[]" type="text">
-                    </td>
-                    <td>
-                        <input name="mennyisegi_egyseg[]" type="text">
-                    </td>
-                    <td>
-                        <input name="afa[]" type="text">
-                    </td>
-                    <td>
-                        <input name="vtsz[]" type="text">
-                    </td>
-                    <td>
-                        <button class="torles_gomb" name="torles">Törlés</button>
-                    </td>
-                </tr>
+
+                <?php
+
+
+                if(!is_null($this->szamlaData))
+                {
+                    $tetelek = $this->szamlaData['tetelek'];
+                    foreach($tetelek as $tetel)
+                    {
+                        $this->printTetel($tetel);
+                    }
+                }
+                else $this->printTetel();
+
+                ?>
+
 
 
                 <tr id="osszegzo" style="font-weight:bold;font-size:15px;">
@@ -358,10 +392,13 @@ class SzamlaKomponens extends Site_Component
                     $('.fizetesi_hatarido').val(datum);
                 });
 
-                $('.uj_szamla_tetel').on('click', this, function (e) {
-                    e.preventDefault();
+                $('.uj_szamla_tetel').on('click', this, newRowClick );
 
+                function newRowClick(e)
+                {
+                    e.preventDefault();
                     var tr = '<tr>';
+                    tr += '<td> <input name="sztetel_id[]" type="text"> </td>';
                     tr += '<td> <input name="megnevezes[]" type="text"> </td>';
                     tr += '<td> <input class="egy_netto" name="netto[]" type="text"> </td>';
                     tr += '<td> <input class="egy_brutto" name="brutto[]" type="text"> </td>';
@@ -373,7 +410,8 @@ class SzamlaKomponens extends Site_Component
                     tr += '</tr>';
 
                     $(tr).insertBefore('#osszegzo');
-                });
+                }
+
 
                 $('.szamla_tetel_tabla').on('click', '.torles_gomb', function (e) {
                     e.preventDefault();

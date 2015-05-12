@@ -33,6 +33,10 @@ class Szamla_Lazy_Data_Table extends Abstract_Lazy_Data_Table
         $this->tableName = 'szamla-datatable';
 
         $this->dataColumns = array(
+            "id" => array(
+                'name' => 'Azonosító',
+                'sortable' => false
+            ),
             "szla_sorszam" => array(
                 'name' => 'Sorszám',
                 'sortable' => true
