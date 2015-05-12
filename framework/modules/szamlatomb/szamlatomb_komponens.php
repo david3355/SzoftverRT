@@ -96,14 +96,6 @@ class SzamlatombKomponens extends Site_Component
                                         <td><span class="mandatory">Megnevezés<span style="color:red">*</span></span></td>
                                         <td><input size="32" type="text" name="megnevezes" value="<?php echo $this->actualSzamlatomb['megnevezes'] ?>"></td>
                                     </tr>
-                                    <tr>
-                                        <td><span>Előtag</span></td>
-                                        <td><input size="32" type="text" name="szamla_elotag" value="<?php echo $this->actualSzamlatomb['szamla_elotag'] ?>"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>Kezdőszám</span></td>
-                                        <td><input size="32" <?php if(!empty($_POST['edit'])) {echo 'readonly';}   ?> type="number" name="szamla_aktual_szam" value="<?php echo $this->actualSzamlatomb['szamla_aktual_szam'] ?>"></td>
-                                    </tr>
                                     </tbody>
                                 </table>
                             </td>
