@@ -60,6 +60,8 @@ class SzamlaKomponens extends Site_Component
             $this->showFormPage = true;
         }
 
+        if (!empty($_POST['new'])) unset($_SESSION['szamla_edit_id']);
+
         //törlés
         if (isset($_POST['delete'])) {
             $szamla =$this->pm->getObject($aktID);
