@@ -43,6 +43,7 @@ class Ugyfel extends Persistent
         if (empty($params['cim_irszam'])) $errors[] = 'CIM_IRSZAM_NINCS_MEGADVA';
         if (empty($params['cim_varos'])) $errors[] = 'CIM_VAROS_NINCS_MEGADVA';
         if (empty($params['cim_utca_hsz'])) $errors[] = 'CIM_UTCA_HSZ_NINCS_MEGADVA';
+		if(!filter_var($params['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'EMAIL_FORMAT_HIBAS';
 
         /*azonosító:
 			-GENERÁLT

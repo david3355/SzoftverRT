@@ -42,6 +42,7 @@ class Felhasznalo extends Persistent
         $errors = array();
 
         if (empty($params['email'])) $errors[] = 'EMAIL_NINCS_MEGADVA';
+		if(!filter_var($params['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'EMAIL_FORMAT_HIBAS';
 
         /*nev:
             -nem üres
