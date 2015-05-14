@@ -81,7 +81,7 @@ class Szamla_Lazy_Data_Table extends Abstract_Lazy_Data_Table
         $this->operationColumns = array(
             array(
                 'name' => 'edit',
-                'text' => 'Szerkesztés'
+                'text' => 'Részletek'
             ),
             array(
                 'name' => 'delete',
