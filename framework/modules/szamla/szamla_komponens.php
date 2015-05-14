@@ -18,7 +18,12 @@ class SzamlaKomponens extends Site_Component
 
     function printTetel(array $tetel = null)
     {
-        if($tetel==null) $tetel = array('id'=>"", 'megnevezes'=>"", 'netto_ar'=>"", 'brutto_ar'=>"", 'mennyiseg'=>"", 'mennyiseg_egyseg'=>"",'afa'=> "", 'vamtarifaszam'=>"");
+        if($tetel==null)
+		{
+			$tetel = array('id'=>"", 'megnevezes'=>"", 'netto_ar'=>"", 'brutto_ar'=>"", 'mennyiseg'=>"", 'mennyiseg_egyseg'=>"",'afa'=> "", 'vamtarifaszam'=>"");
+			$ro = '';
+		}
+		else $ro = 'readonly';
 
         echo  sprintf(
             '<tr>
@@ -26,30 +31,30 @@ class SzamlaKomponens extends Site_Component
                         <input name="sztetel_id[]" type="text" value="%s" readonly>
                     </td>
                     <td>
-                        <input name="megnevezes[]" type="text" value="%s">
+                        <input name="megnevezes[]" type="text" value="%s" %s>
                     </td>
                     <td>
-                        <input class="egy_netto" name="netto[]" type="text" value="%s">
+                        <input class="egy_netto" name="netto[]" type="text" value="%s" %s>
                     </td>
                     <td>
-                        <input class="egy_brutto" name="brutto[]" type="text" value="%s">
+                        <input class="egy_brutto" name="brutto[]" type="text" value="%s" %s>
                     </td>
                     <td>
-                        <input name="mennyiseg[]" type="text" value="%s">
+                        <input name="mennyiseg[]" type="text" value="%s" %s>
                     </td>
                     <td>
-                        <input name="mennyisegi_egyseg[]" type="text" value="%s">
+                        <input name="mennyisegi_egyseg[]" type="text" value="%s" %s>
                     </td>
                     <td>
-                        <input name="afa[]" type="text" value="%s">
+                        <input name="afa[]" type="text" value="%s" %s>
                     </td>
                     <td>
-                        <input name="vtsz[]" type="text" value="%s">
+                        <input name="vtsz[]" type="text" value="%s" %s>
                     </td>
                     <td>
                         <button class="torles_gomb" name="torles">Törlés</button>
                     </td>
-                </tr>', $tetel['id'],  $tetel['megnevezes'],$tetel['netto_ar'],$tetel['brutto_ar'],$tetel['mennyiseg'],$tetel['mennyiseg_egyseg'],$tetel['afa'],$tetel['vamtarifaszam']);
+                </tr>', $tetel['id'],  $tetel['megnevezes'],$ro ,$tetel['netto_ar'],$ro,$tetel['brutto_ar'],$ro,$tetel['mennyiseg'],$ro,$tetel['mennyiseg_egyseg'],$ro,$tetel['afa'],$ro,$tetel['vamtarifaszam'],$ro);
     }
 
     function process()
@@ -170,9 +175,15 @@ class SzamlaKomponens extends Site_Component
         ?>
         <form action="" method="POST">
 		<div class="form_box">
-            <h1>Bejövő számla szerkesztése (Számla)</h1>
-            <input type="submit" name="save" value="Mentés" class="save_button">
-            <input type="submit" name="save_and_new" value="Mentés és új" class="save_and_new_button">
+            <h1>
+                <?php
+                if(!is_null($this->szamlaData)) echo sprintf('Számla adatai (%s)', $this->szamlaData['szla_sorszam']);
+                else echo 'Új számla létrehozása';
+                ?>
+                </h1>
+            <?php
+            if(is_null($this->szamlaData))  echo '<input type="submit" name="save" value="Mentés" class="save_button">';
+            ?>
             <input type="submit" name="back" value="Vissza" class="back_button">
             <br><br>
 
@@ -186,13 +197,13 @@ class SzamlaKomponens extends Site_Component
                         <tbody>
                         <tr>
                             <td><span class="mandatory">Számlatömb<span style="color:red">*</span></span></td>
-                            <td><select class="fizetesi_mod_dropdown" name="szlatomb_obj_id" >
+                            <td><select class="fizetesi_mod_dropdown" name="szlatomb_obj_id" <?php if(!is_null($this->szamlaData)) echo 'disabled'; ?> >
                                     <?php
                                         $sztombok = $this->pm->select('Szamlatomb', array('id', 'megnevezes'))->exeSelect();
                                     foreach($sztombok as $szt)
                                     {
-                                        if(!is_null($this->szamlaData) && $this->szamlaData['szlatomb_obj_id'] == $szt['id'])   $selected = "selected";
-                                        else  $selected = "";
+                                        if(!is_null($this->szamlaData) && $this->szamlaData['szlatomb_obj_id'] == $szt['id']) $selected = "selected";
+                                        else $selected = "";
                                         echo sprintf('<option  value="%s" %s>%s</option>', $szt['id'], $selected, $szt['megnevezes']);
                                     }
                                     ?>
@@ -200,13 +211,13 @@ class SzamlaKomponens extends Site_Component
                         </tr>
 						<tr>
                             <td><span class="mandatory">Fizetési mód<span style="color:red">*</span></span></td>
-                            <td><select class="fizetesi_mod_dropdown" name="fizetesi_mod">
+                            <td><select class="fizetesi_mod_dropdown" name="fizetesi_mod" <?php if(!is_null($this->szamlaData)) echo 'disabled'; ?>>
                                     <?php
                                     $fm = array('0'=>'Válasszon', '1'=>'Csekk', '2'=>'Készpénzes', '3'=>'Utalásos', '4'=>'Utánvétes');
                                     foreach($fm as $key=>$val)
                                     {
-                                        if(!is_null($this->szamlaData) && $this->szamlaData['fizetesi_mod'] == $key)   $selected = "selected";
-                                        else  $selected = "";
+                                        if(!is_null($this->szamlaData) && $this->szamlaData['fizetesi_mod'] == $key) $selected = "selected";
+                                        else $selected = "";
                                         echo sprintf('<option value="%s" %s>%s</option>', $key, $selected, $val);
                                     }
                                     ?>
@@ -216,7 +227,7 @@ class SzamlaKomponens extends Site_Component
                             <td><span class="mandatory">Kiállítás dátuma<span style="color:red">*</span></span></td>
                             <td>
                                 <input class="kiallitas_datum datepicker" size="15" id="" type="text"
-                                       name="kiallitas_datum" value="<?php echo date('Y-m-d'); ?>">
+                                       name="kiallitas_datum" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallitas_datum']); else echo sprintf('value="%s"', date('Y-m-d')); ?>>
                                 <a class="datum_masolas" href="#"
                                    title="Másolás a teljesítési dátumba és fizetési határidőbe"
                                    style="color:black;">▼</a>
@@ -225,14 +236,14 @@ class SzamlaKomponens extends Site_Component
                         <tr>
                             <td><span class="mandatory">Teljesítés dátuma<span style="color:red">*</span></span></td>
                             <td><input class="teljesites_datum datepicker" size="15" type="text" name="teljesites_datum"
-                                       value="<?php echo date('Y-m-d'); ?>">
+                                       <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['teljesites_datum']); else echo sprintf('value="%s"', date('Y-m-d')); ?>>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Fizetési határidő<span style="color:red">*</span></span></td>
                             <td>
                                 <input class="fizetesi_hatarido datepicker" size="15" type="text"
-                                       name="fizetesi_hatarido" value="<?php echo date('Y-m-d'); ?>">
+                                       name="fizetesi_hatarido" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['fizetes_datum']); else echo sprintf('value="%s"', date('Y-m-d')); ?>>
                             </td>
                         </tr>
                         </tbody>
@@ -252,22 +263,22 @@ class SzamlaKomponens extends Site_Component
                                 <span class="mandatory">Név<span style="color:red">*</span></span>
                             </td>
                             <td>
-                                <input size="32" type="text" name="kiallito_neve" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_neve'];   ?>">
+                                <input size="32" type="text" name="kiallito_neve" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_neve']); ?>>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="kiallito_cim" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_cim'];   ?>">
+                                <input size="32" type="text" name="kiallito_cim" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_cim']); ?>>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Adószám<span style="color:red">*</span></span></td>
-                            <td><input size="32" type="text" name="kiallito_adoszam" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_adoszam'];   ?>"></td>
+                            <td><input size="32" type="text" name="kiallito_adoszam" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_adoszam']); ?>></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="kiallito_bszla" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['kiallito_bszla'];   ?>"></td>
+                            <td><input size="32" type="text" name="kiallito_bszla" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_bszla']); ?>></td>
                         </tr>
                         </tbody>
                     </table>
@@ -284,21 +295,21 @@ class SzamlaKomponens extends Site_Component
                         <tr>
                             <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
                             <td>
-                                        <input size="32" type="text" name="befogado_nev" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_nev'];   ?>"></td>
+                                        <input size="32" type="text" name="befogado_nev" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_nev']); ?>></td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="befogado_cim" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_cim'];   ?>">
+                                <input size="32" type="text" name="befogado_cim" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_cim']); ?>>
                             </td>
                         </tr>
                         <tr>
                             <td><span>Adószám</span></td>
-                            <td><input size="32" type="text" name="befogado_adoszam" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_adoszam'];   ?>"></td>
+                            <td><input size="32" type="text" name="befogado_adoszam" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_adoszam']); ?> ></td>
                         </tr>
                         <tr>
                             <td><span>Bankszámlaszám</span></td>
-                            <td><input size="32" type="text" name="befogado_bszla" value="<?php if(!is_null($this->szamlaData)) echo $this->szamlaData['befogado_bszla'];   ?>"></td>
+                            <td><input size="32" type="text" name="befogado_bszla" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_bszla']); ?>></td>
                         </tr>
                         </tbody>
                     </table>
@@ -307,7 +318,10 @@ class SzamlaKomponens extends Site_Component
             </div>
 
             <h2>Számla tételek (0)</h2>
-            <button class="uj_szamla_tetel">Új számlatétel</button>
+            <?php
+            if(is_null($this->szamlaData)) echo '<button class="uj_szamla_tetel">Új számlatétel</button>';
+            ?>
+
 
             <table cellspacing="0" cellpadding="0" class="listtable szamla_tetel_tabla">
                 <thead>
@@ -354,11 +368,11 @@ class SzamlaKomponens extends Site_Component
             </table>
 
             <h2><span>Megjegyzés</span></h2>
-            <textarea cols="65" rows="6" name="o1744899"></textarea>
-            <input type="hidden" name="" value="" id="id_y_pos">
+            <textarea cols="65" rows="6" name="megjegyzes" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['megjegyzes']); ?>></textarea>
             <br>
-            <input type="submit" name="save" value="Mentés" class="save_button">
-            <input type="submit" name="save_and_new" value="Mentés és új" class="save_and_new_button">
+            <?php
+            if(is_null($this->szamlaData))  echo '<input type="submit" name="save" value="Mentés" class="save_button">';
+            ?>
             <input type="submit" name="back" value="Vissza" class="back_button">
         </div>
 		</form>
@@ -413,6 +427,19 @@ class SzamlaKomponens extends Site_Component
 
                     $(tr).insertBefore('#osszegzo');
                 }
+
+                $(".search_all").checked(function() {
+                    if(this.checked) {
+                        document.getElementById("search_kibocsato").checked = true;
+                        document.getElementById("search_kibocsato").checked = true;
+                    }
+                    else
+                    {
+                        document.getElementById("search_kibocsato").checked = false;
+                        document.getElementById("search_kibocsato").checked = false;
+                    }
+                });
+
 
 
                 $('.szamla_tetel_tabla').on('click', '.torles_gomb', function (e) {
@@ -474,6 +501,21 @@ class SzamlaKomponens extends Site_Component
             <div class="search">
                 <input id="search_field" size="32" type="text" name="search_field" value=""/>
                 <input type="submit" name="search_button" value="Keres" class="search_button"/>
+                <div class="searchfields">
+                <div class="float_left">
+                    <input type="checkbox" id="search_all" name="search_all" checked>
+                    <label for="search_all">Összes</label>
+                </div>
+                <div class="float_left">
+                    <input type="checkbox" id="search_kibocsato" name="search_kibocsato" checked>
+                    <label for="search_kibocsato">Kibocsátó neve</label>
+                </div>
+                <div class="float_left">
+                    <input type="checkbox" id="search_befogado" name="search_befogado" checked>
+                    <label for="search_befogado">Befogadó neve</label>
+                </div>
+                <div class="clear"></div>
+                </div>
             </div>
             <div class="clear_right"></div>
             <div class="defaultoperationsbox">
