@@ -48,7 +48,8 @@ class Database
      */
     final function query($sql)
     {
-        $this->queries[] = $sql;
+        //$sql=$this->getEscaped($sql);
+		$this->queries[] = $sql;
 
         $res = mysqli_query($this->resource, $sql);
         if ($res === false) throw new Exception(mysqli_error($this->resource));;
