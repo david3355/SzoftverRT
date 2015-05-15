@@ -22,7 +22,7 @@ class IgenylesKomponens extends Site_Component{
 			$params=json_encode(array("id"=>$_POST['id'], "statusz"=>$_POST['statusz']));
 			
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, "http://ugyfelkapu.fejlesztesgyak2015.info/api.php?module=erp_api&function=updateIgenyles");
+			curl_setopt($ch, CURLOPT_URL, "http://ugyfelkapu.fejlesztesgyak2015.info/api.php?module=erp_api&function=setIgenyles");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_POST, count($params));
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
