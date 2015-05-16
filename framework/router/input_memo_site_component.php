@@ -16,12 +16,12 @@ abstract class Input_Memo_Site_Component extends Site_Component{
             throw new Exception('Using Input_Memo_Site_Component without required config file: "'.$cfn.'"');
         }
         
-        $this->setCookiesFromPost();
-        $this->subProcess();
-        $this->getCookiesToInputValues();
+        $this->setSessionFromPost();
+        $this->getSessionToPost();
+        $this->subProcess();       
     }
     
-    private function setCookiesFromPost(){
+    private function setSessionFromPost(){
         foreach($this->inputIds as $inputId){
             $value = $_POST[$inputId];
             if(isset($value)){
@@ -30,9 +30,10 @@ abstract class Input_Memo_Site_Component extends Site_Component{
         }
     }
     
-    private function getCookiesToInputValues(){
+    private function getSessionToPost(){
         foreach($this->inputIds as $inputId){
             $value = $_SESSION[$this->childClassName.$inputId];
+            $_POST[$inputId] = $value;
             $this->inputValues[$inputId] = $value;
         }
     }
