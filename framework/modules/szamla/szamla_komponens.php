@@ -199,7 +199,7 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                             <td><span class="mandatory">Számlatömb<span style="color:red">*</span></span></td>
                             <td><select class="fizetesi_mod_dropdown" name="szlatomb_obj_id" <?php if(!is_null($this->szamlaData)) echo 'disabled'; ?> >
                                     <?php
-                                        $sztombok = $this->pm->select('Szamlatomb', array('id', 'megnevezes'))->exeSelect();
+                                        $sztombok = $this->pm->select('Szamlatomb', array('id', 'megnevezes'))->where('lezaras_datum', '=', '0000-00-00')->exeSelect();
                                     foreach($sztombok as $szt)
                                     {
                                         if(!is_null($this->szamlaData) && $this->szamlaData['szlatomb_obj_id'] == $szt['id']) $selected = "selected";

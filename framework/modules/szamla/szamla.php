@@ -53,7 +53,14 @@ class Szamla extends Persistent
     public function validate(array $params = null)
     {
         $errors = array();
-		
+        
+        if(isset($params['szlatomb_obj_id'])){
+            $lezarasDatum = $this->pm->getObject($params['szlatomb_obj_id'])->getSzamlatombAdatok()['lezaras_datum'];
+            if($lezarasDatum != '0000-00-00'){
+                $errors[] = 'LEZART_SZLA_TOMB';
+            }
+        }
+        
         if (empty($params['szlatomb_obj_id'])) $errors[] = 'NINCS_SZLA_TOMB';
         if (empty($params['kiallito_neve'])) $errors[] = 'KIALLITO_NEVE_NINCS_MEGADVA';
         if (empty($params['kiallito_cim'])) $errors[] = 'KIALLITO_CIM_NINCS_MEGADVA';
