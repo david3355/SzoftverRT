@@ -1,4 +1,4 @@
-<?
+<?php
 
 abstract class Site_Template {
   private $components=array();

@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Site_Router{
   protected $get=array();

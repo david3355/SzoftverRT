@@ -1,4 +1,4 @@
-<?
+<?php
 
 define("APPLICATIONROOT",realpath(__DIR__."/../"));
 define("LOADERROOT",APPLICATIONROOT);

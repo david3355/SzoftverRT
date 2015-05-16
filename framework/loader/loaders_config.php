@@ -22,7 +22,7 @@ return array(
     "KifizetesLoader" => "/modules/kifizetes/loader.php",
     "AutentikacioLoader" => "/modules/autentikacio/loader.php",
     "PDF_API_Loader" => "/modules/pdf_api/loader.php",
-	"Excel_API_Loader" => "/modules/excel_api/loader.php",
+    "Excel_API_Loader" => "/modules/excel_api/loader.php",
     "PersistentLoader" => "/modules/perzisztencia/loader.php",
     "DataTableLoader" => "/modules/datatable/loader.php"
 );

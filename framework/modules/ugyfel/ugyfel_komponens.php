@@ -3,7 +3,7 @@
 /**
  * Class UgyfelKomponens
  */
-class UgyfelKomponens extends Site_Component
+class UgyfelKomponens extends Input_Memo_Site_Component
 {
 
     private $showFormPage = false;
@@ -19,7 +19,7 @@ class UgyfelKomponens extends Site_Component
         $this->ugyfelDataTable = new Ugyfel_Lazy_Data_Table();
     }
 
-    function process()
+    function subProcess()
     {
         if(!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])){
             $this->showFormPage = true;
@@ -155,7 +155,7 @@ class UgyfelKomponens extends Site_Component
         <div class="list_upper_box">
             <div class="search">
                 <form action="" method="POST">
-                    <input id="search_field" size="32" type="text" name="search_field" value=""/>
+                    <input id="search_field" size="32" type="text" name="search_field" value="<?php echo $this->getInputValues()['search_field']?>"/>
                     <input type="submit" name="search_button" value="Keres" class="search_button"/>
                 </form>
             </div>

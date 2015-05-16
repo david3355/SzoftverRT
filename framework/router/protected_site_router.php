@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Protected_Site_Router{
   protected $login_site_name,$protected_site_name;
