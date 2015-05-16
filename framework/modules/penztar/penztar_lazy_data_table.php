@@ -10,8 +10,16 @@ class Penztar_Lazy_Data_Table  extends Abstract_Lazy_Data_Table{
         $this->numberOfAllRows = $this->pm->select('Penztar',['count(*) as rn'])->exeSelect()[0]['rn'];
 
         if(!empty($post['search_button']) || !empty($post['search_field'])) $this->pm->where('megnevezes', 'LIKE', $find);
-
-        return $this->pm->select('Penztar')->exeSelect();
+        $this->pm->select('Penztar');
+        if(!empty($this->selectedSortColumn['column']) && !empty($this->selectedSortColumn['dest'])){
+            $this->pm->orderBy($this->selectedSortColumn['column'],$this->selectedSortColumn['dest']);
+        }
+        if($this->selectedPageNumber == 1 || $this->selectedStep == 1){
+            $this->pm->limit($this->selectedPageNumber-1,$this->selectedStep);
+        } else {
+            $this->pm->limit($this->selectedPageNumber,$this->selectedStep);
+        }
+        return $this->pm->exeSelect();
     }
 
     protected function init()
