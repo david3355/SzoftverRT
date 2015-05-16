@@ -9,10 +9,10 @@ class Szamla_Lazy_Data_Table extends Abstract_Lazy_Data_Table
     {
         $find = '%' . $post['search_field'] . '%';
 
-        if (!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('sorszam', 'LIKE', $find);
+        if (!empty($post['search_button']) || !empty($post['search_field'])) $this->pm->where('sorszam', 'LIKE', $find);
         $this->numberOfAllRows = $this->pm->select('Szamla', ['count(*) as rn'])->exeSelect()[0]['rn'];
 
-        if (!empty($post['search_button']) && !empty($post['search_field'])) $this->pm->where('sorszam', 'LIKE', $find);
+        if (!empty($post['search_button']) || !empty($post['search_field'])) $this->pm->where('sorszam', 'LIKE', $find);
         $this->pm->select('Szamla');
         if (!empty($this->selectedSortColumn['column']) && !empty($this->selectedSortColumn['dest'])) {
             $this->pm->orderBy($this->selectedSortColumn['column'], $this->selectedSortColumn['dest']);

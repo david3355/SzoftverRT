@@ -3,7 +3,7 @@
 /**
  * Class FelhasznaloKomponens
  */
-class FelhasznaloKomponens extends Site_Component
+class FelhasznaloKomponens extends Input_Memo_Site_Component
 {
 
     private $showFormPage = false;
@@ -17,7 +17,7 @@ class FelhasznaloKomponens extends Site_Component
         $this->felhasznaloDataTable = new Felhasznalo_Lazy_Data_Table();
     }
 
-    function process()
+    function subProcess()
     {
         $actualId = $_POST['id'];
         
@@ -162,7 +162,7 @@ class FelhasznaloKomponens extends Site_Component
         <div class="list_upper_box">
             <div class="search">
                 <form action="" method="POST">
-                    <input id="search_field" size="32" type="text" name="search_field" value=""/>
+                    <input id="search_field" size="32" type="text" name="search_field" value="<?php echo $this->getInputValues()['search_field']?>"/>
                     <input type="submit" name="search_button" value="Keres" class="search_button"/>
                 </form>
             </div>

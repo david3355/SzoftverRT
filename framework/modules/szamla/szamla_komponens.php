@@ -3,7 +3,7 @@
 /**
  * Class SzamlaKomponens
  */
-class SzamlaKomponens extends Site_Component
+class SzamlaKomponens extends Input_Memo_Site_Component
 {
     private $showFormPage = false;
     private $szamlaDataTable;
@@ -57,7 +57,7 @@ class SzamlaKomponens extends Site_Component
                 </tr>', $tetel['id'],  $tetel['megnevezes'],$ro ,$tetel['netto_ar'],$ro,$tetel['brutto_ar'],$ro,$tetel['mennyiseg'],$ro,$tetel['mennyiseg_egyseg'],$ro,$tetel['afa'],$ro,$tetel['vamtarifaszam'],$ro);
     }
 
-    function process()
+    function subProcess()
     {
         $aktID = $_POST['id'];
 
@@ -499,23 +499,25 @@ class SzamlaKomponens extends Site_Component
 
         <div class="list_upper_box">
             <div class="search">
-                <input id="search_field" size="32" type="text" name="search_field" value=""/>
-                <input type="submit" name="search_button" value="Keres" class="search_button"/>
-                <div class="searchfields">
-                <div class="float_left">
-                    <input type="checkbox" id="search_all" name="search_all" checked>
-                    <label for="search_all">Összes</label>
-                </div>
-                <div class="float_left">
-                    <input type="checkbox" id="search_kibocsato" name="search_kibocsato" checked>
-                    <label for="search_kibocsato">Kibocsátó neve</label>
-                </div>
-                <div class="float_left">
-                    <input type="checkbox" id="search_befogado" name="search_befogado" checked>
-                    <label for="search_befogado">Befogadó neve</label>
-                </div>
-                <div class="clear"></div>
-                </div>
+                <form action="" method="POST">
+                    <input id="search_field" size="32" type="text" name="search_field" value="<?php echo $this->getInputValues()['search_field']?>"/>
+                    <input type="submit" name="search_button" value="Keres" class="search_button"/>
+                    <div class="searchfields">
+                    <div class="float_left">
+                        <input type="checkbox" id="search_all" name="search_all" checked>
+                        <label for="search_all">Összes</label>
+                    </div>
+                    <div class="float_left">
+                        <input type="checkbox" id="search_kibocsato" name="search_kibocsato" checked>
+                        <label for="search_kibocsato">Kibocsátó neve</label>
+                    </div>
+                    <div class="float_left">
+                        <input type="checkbox" id="search_befogado" name="search_befogado" checked>
+                        <label for="search_befogado">Befogadó neve</label>
+                    </div>
+                    <div class="clear"></div>
+                    </div>
+                </form>
             </div>
             <div class="clear_right"></div>
             <div class="defaultoperationsbox">
