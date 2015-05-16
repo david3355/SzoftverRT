@@ -60,9 +60,11 @@ class PersistenceManager
         $sql = sprintf("SELECT * FROM %s WHERE id = %s", $this->mainObjectTableName, $id);
 
         $result = $this->db->query($sql);
-
-        // Visszatérés vak példánnyal
-        return new $result[0]['class']($result[0]['id']);
+        
+        if(isset($result[0]['class'])){
+            return new $result[0]['class']($result[0]['id']);
+        }
+        return null;
     }
 
 

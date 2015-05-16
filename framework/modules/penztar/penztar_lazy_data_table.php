@@ -41,6 +41,10 @@ class Penztar_Lazy_Data_Table  extends Abstract_Lazy_Data_Table{
                 'text' => 'Szerkesztés'
             ),
             array(
+                'name' => 'penztarTetels',
+                'text' => 'Pénztár tételek'
+            ),
+            array(
                 'name' => 'delete',
                 'text' => 'Törlés'
             )

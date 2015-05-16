@@ -27,7 +27,10 @@ class Penztar extends Persistent
      */
     protected function onBeforeDelete()
     {
-
+        $penztarTetels = $this->pm->select('PenztarTetel')->where('penztar_fk', '=', $this->getID())->exeSelect();
+        foreach ($penztarTetels as $penztarTetel){
+            $this->pm->getObject($penztarTetel['id'])->delete();
+        }
     }
 
     /**
@@ -63,6 +66,13 @@ class Penztar extends Persistent
 
     protected static function getOwnParameters() {
         return array('id', 'megnevezes', 'egyenleg');
+    }
+    
+    public function addOsszeg($osszeg){
+        $actualEgyenleg = $this->getFields(array('egyenleg'))['egyenleg'];
+        if(is_numeric($osszeg)){
+            $this->setFields(array('egyenleg' => $actualEgyenleg + $osszeg));
+        }
     }
 }
 

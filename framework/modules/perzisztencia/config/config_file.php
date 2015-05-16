@@ -3,7 +3,7 @@
 return [
     
     // Az osztályokhoz tartozó táblanevek
-    'PenztarTetel' => 'penztar_tetel',
+    'PenztarTetel' => 'penztartetel',
     'Penztar' => 'penztar',
     'Kifizetes' => 'szamla_kifizetes',
     'SzamlaTetel' => 'szamla_tetel',
