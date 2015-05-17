@@ -155,8 +155,9 @@ class PersistenceManager
      */
     public function orWhere($attrib, $operator, $value)
     {
-
-        $this->sql['where'][] = ' OR ' . $attrib . ' ' . $operator . " '" . $value . "' ";
+        if(!empty($this->sql['where'])) $w = ' OR ';
+        else $w = '';
+        $this->sql['where'][] = $w . $attrib . ' ' . $operator . " '" . $value . "' ";
 
         return $this;
     }
@@ -169,8 +170,9 @@ class PersistenceManager
      */
     public function andWhere($attrib, $operator, $value)
     {
-
-        $this->sql['where'][] = ' AND ' . $attrib . ' ' . $operator . " '" . $value . "' ";
+        if(!empty($this->sql['where'])) $w = ' AND ';
+        else $w = '';
+        $this->sql['where'][] = $w . $attrib . ' ' . $operator . " '" . $value . "' ";
 
         return $this;
     }
@@ -228,7 +230,7 @@ class PersistenceManager
     /**
      * @param bool $iWantObject
      */
-    public function exeSelect(){
+    public function exeSelect($saveWhere = false, $deleteQueryData = true){
         $sql = sprintf('SELECT %s FROM %s ',$this->sql['select'],$this->sql['from']);
 
         if(isset($this->sql['where'])){
@@ -246,14 +248,16 @@ class PersistenceManager
 
         $result = $this->db->query($sql);
 
-        unset($this->sql);
+        $where = $this->sql['where'];
+        if( $deleteQueryData ) unset($this->sql);
+        if($saveWhere) $this->sql['where'] = $where;
 
         return $result;
     }
 
 
 
-    public function exeDelete()
+    public function exeDelete($deleteQueryData = true)
     {
         $sql = sprintf("DELETE FROM %s", $this->sql['table']);
 
@@ -270,13 +274,13 @@ class PersistenceManager
             $this->db->query(sprintf('DELETE FROM %s WHERE id=%s', $this->mainObjectTableName, $object['id']));
         }
 
-        unset($this->sql);
+        if( $deleteQueryData ) unset($this->sql);
 
        return $result;
     }
 
 
-    public function exeUpdate()
+    public function exeUpdate($deleteQueryData = true)
     {
         $sql = sprintf("UPDATE %s SET %s", $this->sql['table'], implode(',', $this->sql['set']));
 
@@ -285,7 +289,7 @@ class PersistenceManager
             $sql .= sprintf(' WHERE %s ',$where);
         }
 
-        unset($this->sql);
+        if( $deleteQueryData ) unset($this->sql);
 
         $result = $this->db->query($sql);
         return $result;

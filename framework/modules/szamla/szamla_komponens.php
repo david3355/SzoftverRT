@@ -428,20 +428,6 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                     $(tr).insertBefore('#osszegzo');
                 }
 
-                $(".search_all").checked(function() {
-                    if(this.checked) {
-                        document.getElementById("search_kibocsato").checked = true;
-                        document.getElementById("search_kibocsato").checked = true;
-                    }
-                    else
-                    {
-                        document.getElementById("search_kibocsato").checked = false;
-                        document.getElementById("search_kibocsato").checked = false;
-                    }
-                });
-
-
-
                 $('.szamla_tetel_tabla').on('click', '.torles_gomb', function (e) {
                     e.preventDefault();
 
@@ -504,8 +490,8 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                     <input type="submit" name="search_button" value="Keres" class="search_button"/>
                     <div class="searchfields">
                     <div class="float_left">
-                        <input type="checkbox" id="search_all" name="search_all" checked>
-                        <label for="search_all">Összes</label>
+                        <input type="checkbox" id="search_sorszam" name="search_sorszam" checked>
+                        <label for="search_sorszam">Sorszám</label>
                     </div>
                     <div class="float_left">
                         <input type="checkbox" id="search_kibocsato" name="search_kibocsato" checked>
