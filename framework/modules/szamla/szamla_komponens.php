@@ -490,15 +490,15 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                     <input type="submit" name="search_button" value="Keres" class="search_button"/>
                     <div class="searchfields">
                     <div class="float_left">
-                        <input type="checkbox" id="search_sorszam" name="search_sorszam" checked>
+                        <input type="checkbox" id="search_sorszam" name="search_sorszam" <?php if(!empty($this->getInputValues()['search_sorszam'])) echo 'checked'; ?>>
                         <label for="search_sorszam">Sorszám</label>
                     </div>
                     <div class="float_left">
-                        <input type="checkbox" id="search_kibocsato" name="search_kibocsato" checked>
+                        <input type="checkbox" id="search_kibocsato" name="search_kibocsato" <?php if(!empty($this->getInputValues()['search_kibocsato'])) echo 'checked'; ?>>
                         <label for="search_kibocsato">Kibocsátó neve</label>
                     </div>
                     <div class="float_left">
-                        <input type="checkbox" id="search_befogado" name="search_befogado" checked>
+                        <input type="checkbox" id="search_befogado" name="search_befogado" <?php if(!empty($this->getInputValues()['search_befogado'])) echo 'checked'; ?>>
                         <label for="search_befogado">Befogadó neve</label>
                     </div>
                     <div class="clear"></div>
