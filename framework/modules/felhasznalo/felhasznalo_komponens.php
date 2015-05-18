@@ -53,8 +53,10 @@ class FelhasznaloKomponens extends Input_Memo_Site_Component
                 unset($felhasznalo_adatok['jelszo']);
                 $result = $felh->setFelhasznaloAdatok($felhasznalo_adatok);
                 if(is_array($result)) {
-                    $msg = implode(', ', $result);
-                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                    //$msg = implode(', ', $result);
+                    //echo "<script>alert('Edit error: " . $msg . "')</script>";
+                    $_SESSION['msg'] = $result;
+                    $this->showFormPage = true;
                 }
                 else
                 {
@@ -66,8 +68,10 @@ class FelhasznaloKomponens extends Input_Memo_Site_Component
                 $felh = $this->pm->createObject('Felhasznalo', $felhasznalo_adatok);
                 // Hibakód visszaadása a felületre, ha az $felh egy array, majd ide kell valami elegáns:
                 if(is_array($felh)) {
-                    $msg = implode(', ', $felh);
-                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                    //$msg = implode(', ', $felh);
+                    //echo "<script>alert('Create error: " . $msg . "')</script>";
+                    $_SESSION['msg'] = $felh;
+                    $this->showFormPage = true;
                 }
             }
         }

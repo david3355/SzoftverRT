@@ -30,7 +30,8 @@ class UgyfelKomponens extends Input_Memo_Site_Component
 		{
             $uf=$this->pm->getObject($_POST['id']);
 			$msg=$uf->delete();
-			echo"<script>alert('".$msg."')</script>";
+			//echo"<script>alert('".$msg."')</script>";
+            $_SESSION['msg'] = $msg;
         }
 
         //módosítás
@@ -60,8 +61,10 @@ class UgyfelKomponens extends Input_Memo_Site_Component
                 $uf=$this->pm->getObject($_SESSION['ugyfel_edit_id']);
                 $result = $uf->setUgyfelAdatok($uf_adatok);
                 if(is_array($result)) {
-                    $msg = implode(', ', $result);
-                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                    /*$msg = implode(', ', $result);
+                    echo "<script>alert('Edit error: " . $msg . "')</script>";*/
+                    $_SESSION['msg'] = $result;
+                    $this->showFormPage = true;
                 }
                 else
                 {
@@ -73,8 +76,10 @@ class UgyfelKomponens extends Input_Memo_Site_Component
                 $uf = $this->pm->createObject('Ugyfel', $uf_adatok);
                 // Hibakód visszaadása a felületre, ha az $uf egy array, majd ide kell valami elegáns:
                 if(is_array($uf)) {
-                    $msg = implode(', ', $uf);
-                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                    /*$msg = implode(', ', $uf);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";*/
+                    $_SESSION['msg'] = $uf;
+                    $this->showFormPage = true;
                 }
             }
         }

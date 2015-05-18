@@ -51,7 +51,8 @@ class PenztarKomponens extends Input_Memo_Site_Component
             $res = $this->pm->getObject($actualId)->delete();
             if($res > 1) $msg = "Törölve";      // Az objektumnak minimum 2 helyről kell törlődnie
             else $msg = "Törlés sikertelen!";
-            echo"<script>alert('".$msg."')</script>";
+            //echo"<script>alert('".$msg."')</script>";
+            $_SESSION['msg'] = $msg;
             unset($_SESSION['penztar_edit_id']);
         }
 		
@@ -78,8 +79,9 @@ class PenztarKomponens extends Input_Memo_Site_Component
                 $penztar=$this->pm->getObject($_SESSION['penztar_edit_id']);
                 $result = $penztar->setPenztarAdatok($p_adatok);
                 if(is_array($result)) {
-                    $msg = implode(', ', $result);
-                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                    /*$msg = implode(', ', $result);
+                    echo "<script>alert('Edit error: " . $msg . "')</script>";*/
+                    $_SESSION['msg'] = $result;
                     $this->showFormPage = true;
                 }
                 else
@@ -92,8 +94,9 @@ class PenztarKomponens extends Input_Memo_Site_Component
                 $penztar = $this->pm->createObject('Penztar', $p_adatok);
                 // Hibakód visszaadása a felületre, ha a $penztar egy array, majd ide kell valami elegáns:
                 if(is_array($penztar)) {
-                    $msg = implode(', ', $penztar);
-                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                    /*$msg = implode(', ', $penztar);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";*/
+                    $_SESSION['msg'] = $penztar;
                     $this->showFormPage = true;
                 }
             }
@@ -121,8 +124,9 @@ class PenztarKomponens extends Input_Memo_Site_Component
                 $penztartetel = $this->pm->createObject('PenztarTetel', $penztartetel_adatok);
                 // Hibakód visszaadása a felületre, ha a $penztar egy array, majd ide kell valami elegáns:
                 if(is_array($penztartetel)) {
-                    $msg = implode(', ', $penztar);
-                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                    /*$msg = implode(', ', $penztar);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";*/
+                    $_SESSION['msg'] = $penztartetel;
                     $this->showPenztarTetelsFormPage = true;
                 } else {
                     if(isset($_POST['save_pentartetel'])){

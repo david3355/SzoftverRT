@@ -46,14 +46,18 @@ class KifizetesKomponens extends Input_Memo_Site_Component
                 $kifizetes = $this->pm->getObject($actualId);
                 $result = $kifizetes->setSzamlaKifizetesAdatok($kifizetes_adatok);
                 if(is_array($result)) {
-                    $msg = implode(', ', $result);
-                    echo "<script>alert('Edit error: " . $msg . "')</script>";
+                    /*$msg = implode(', ', $result);
+                    echo "<script>alert('Edit error: " . $msg . "')</script>";*/
+                    $_SESSION['msg'] = $result;
+                    $this->showFormPage = true;
                 }
             } else {
                 $kifizetes = $this->pm->createObject('Kifizetes', $kifizetes_adatok);
                 if(is_array($kifizetes)) {
-                    $msg = implode(', ', $felh);
-                    echo "<script>alert('Create error: " . $msg . "')</script>";
+                    /*$msg = implode(', ', $felh);
+                    echo "<script>alert('Create error: " . $msg . "')</script>";*/
+                    $_SESSION['msg'] = $kifizetes;
+                    $this->showFormPage = true;
                 }
             }
         }

@@ -43,8 +43,9 @@ class SzamlatombKomponens extends Input_Memo_Site_Component
             }
             
             if(is_array($result)) {
-                $msg = implode(', ', $result);
-                echo "<script>alert('Edit error: " . $msg . "')</script>";
+                /*$msg = implode(', ', $result);
+                echo "<script>alert('Edit error: " . $msg . "')</script>";*/
+                $_SESSION['msg'] = $result;
                 $this->showFormPage = true;
             }
         }
