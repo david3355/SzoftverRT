@@ -44,7 +44,7 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                         <input name="mennyisegi_egyseg[]" type="text" value="%s" %s>
                     </td>
                     <td>
-                        <input name="afa[]" type="text" value="%s" %s>
+                        <input class="egy_afa" name="afa[]" type="text" value="%s" %s>
                     </td>
                     <td>
                         <input name="vtsz[]" type="text" value="%s" %s>
@@ -504,7 +504,7 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                     tr += '<td> <input class="egy_brutto" name="brutto[]" type="text"> </td>';
                     tr += '<td> <input name="mennyiseg[]" type="text"> </td>';
                     tr += '<td> <input name="mennyisegi_egyseg[]" type="text"> </td>';
-                    tr += '<td> <input name="afa[]" type="text"> </td>';
+                    tr += '<td> <input class="egy_afa" name="afa[]" type="text"> </td>';
                     tr += '<td> <input name="vtsz[]" type="text"> </td>';
                     tr += '<td> <button class="torles_gomb" name="torles"> Törlés </button> </td>';
                     tr += '</tr>';
@@ -526,6 +526,13 @@ class SzamlaKomponens extends Input_Memo_Site_Component
 
                     setNetto();
 
+                    var netto = $(this);
+                    var afa = $(this).closest('tr').find('.egy_afa');
+                    var brutto = $(this).closest('tr').find('.egy_brutto');
+
+                    nettoToBrutto(netto,afa,brutto);
+                    setBrutto();
+
                 });
 
                 $('.szamla_tetel_tabla').on('keyup', '.egy_brutto', function (e) {
@@ -534,6 +541,29 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                     setBrutto();
 
                 });
+
+                $('.szamla_tetel_tabla').on('keyup', '.egy_afa', function (e) {
+                    e.preventDefault();
+
+                    var netto = $(this).closest('tr').find('.egy_netto');
+                    var afa = $(this);
+                    var brutto = $(this).closest('tr').find('.egy_brutto');
+
+                    nettoToBrutto(netto,afa,brutto);
+                    setBrutto();
+
+                });
+
+                var nettoToBrutto = function(netto,afa,brutto){
+                    var value = 0;
+                    if(afa.val() !== undefined) {
+                        value = netto.val() * (1+(afa.val() / 100));
+                    }else{
+                        value = netto.val();
+                    }
+
+                    brutto.val(parseInt(value));
+                }
 
 
                 var setNetto = function () {
