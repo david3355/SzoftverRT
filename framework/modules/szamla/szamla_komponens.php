@@ -258,18 +258,41 @@ class SzamlaKomponens extends Input_Memo_Site_Component
 
                     <table cellspacing="0" cellpadding="0" class="formtable">
                         <tbody>
+
+                        <?php
+                        if(is_null($this->szamlaData))
+                        {
+                            echo
+                            '<tr>
+                                <td>
+                                     <span>Ügyfelek</span>
+                                </td>
+                                <td>
+                                    <select class="fizetesi_mod_dropdown" name="select_kiall_ugyfelek" id="select_kiall_ugyfelek"  onchange="ugyfel_selected(\'select_kiall_ugyfelek\', \'kiallito_neve\', \'kiallito_cim\'); ">';
+                            $ugyfelek = $this->pm->select('Ugyfel')->exeSelect();
+                            foreach($ugyfelek as $ugyfel)
+                            {
+                                echo sprintf('<option id="%s">%s</option>', $ugyfel['id'], $ugyfel['nev']);
+                            }
+                            echo
+                                     '</select>
+                                </td>
+                            </tr>';
+                        }
+                        ?>
+
                         <tr>
                             <td>
                                 <span class="mandatory">Név<span style="color:red">*</span></span>
                             </td>
                             <td>
-                                <input size="32" type="text" name="kiallito_neve" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_neve']); ?>>
+                                <input size="32" type="text" name="kiallito_neve" id="kiallito_neve" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_neve']); ?>>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="kiallito_cim" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_cim']); ?>>
+                                <input size="32" type="text" name="kiallito_cim" id="kiallito_cim" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['kiallito_cim']); ?>>
                             </td>
                         </tr>
                         <tr>
@@ -292,15 +315,38 @@ class SzamlaKomponens extends Input_Memo_Site_Component
 
                     <table cellspacing="0" cellpadding="0" class="formtable">
                         <tbody>
+
+                        <?php
+                        if(is_null($this->szamlaData))
+                        {
+                            echo
+                            '<tr>
+                                <td>
+                                     <span>Ügyfelek</span>
+                                </td>
+                                <td>
+                                    <select class="fizetesi_mod_dropdown" name="select_befog_ugyfelek" id="select_befog_ugyfelek"  onchange="ugyfel_selected(\'select_befog_ugyfelek\', \'befogado_nev\', \'befogado_cim\'); ">';
+                            $ugyfelek = $this->pm->select('Ugyfel')->exeSelect();
+                            foreach($ugyfelek as $ugyfel)
+                            {
+                                echo sprintf('<option id="%s">%s</option>', $ugyfel['id'], $ugyfel['nev']);
+                            }
+                            echo
+                            '</select>
+                                </td>
+                            </tr>';
+                        }
+                        ?>
+
                         <tr>
                             <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
                             <td>
-                                        <input size="32" type="text" name="befogado_nev" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_nev']); ?>></td>
+                                        <input size="32" type="text" name="befogado_nev" id="befogado_nev"<?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_nev']); ?>></td>
                         </tr>
                         <tr>
                             <td><span class="mandatory">Székhely<span style="color:red">*</span></span></td>
                             <td>
-                                <input size="32" type="text" name="befogado_cim" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_cim']); ?>>
+                                <input size="32" type="text" name="befogado_cim" id="befogado_cim" <?php if(!is_null($this->szamlaData)) echo  sprintf('value="%s" readonly', $this->szamlaData['befogado_cim']); ?>>
                             </td>
                         </tr>
                         <tr>
@@ -356,6 +402,7 @@ class SzamlaKomponens extends Input_Memo_Site_Component
 
                 <tr id="osszegzo" style="font-weight:bold;font-size:15px;">
                     <td align="right">Összesen:</td>
+                    <td></td>
                     <td align="center">
                         Nettó összeg: <span class="netto">0</span> <span class="penznem">Forint</span>
                     </td>
@@ -379,6 +426,39 @@ class SzamlaKomponens extends Input_Memo_Site_Component
 
 
         <script>
+
+            function ugyfel_selected(select_id, nev_id, cim_id)
+            {
+                var ids = new Array();
+                var names = new Array();
+                var addrs = new Array();
+                <?php
+                $ugyfelek = $this->pm->select('Ugyfel')->exeSelect();
+               $i = 0;
+               while($i< sizeof($ugyfelek))
+               {
+               $id = $ugyfelek[$i]['id'];
+               $name = $ugyfelek[$i]['nev'];
+               $addr = sprintf('%s %s, %s', $ugyfelek[$i]['cim_irszam'], $ugyfelek[$i]['cim_varos'],  $ugyfelek[$i]['cim_utca_hsz']);
+               echo "ids[$i]=$id;";
+               echo "names[$i]='$name';";
+               echo "addrs[$i]='$addr';";
+               $i++;
+               }
+               ?>
+
+                var ugyfel = document.getElementById(select_id);
+                var id = ugyfel.options[ugyfel.selectedIndex].id;
+                for(var i = 0; i < names.length; i++)
+                {
+                    if(ids[i] == id)
+                    {
+                        document.getElementById(nev_id).value = names[i];
+                        document.getElementById(cim_id).value = addrs[i];
+                    }
+                }
+            }
+
             $(document).ready(function () {
 
                 $(".datepicker").datepicker({
@@ -469,6 +549,8 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                     });
                     $('.brutto').html(ossz);
                 }
+
+
 
             });
         </script>
