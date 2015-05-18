@@ -71,11 +71,9 @@ class IgenylesKomponens extends Site_Component{
                                     <tr>
                                         <td><span class="mandatory">Státusz<span style="color:red">*</span></span></td>
                                         <td><select name="statusz">
-                                    <option value="0">Válasszon</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
+                                    <option value="Folyamatban">Folyamatban</option>
+                                    <option value="Aktív">Aktív</option>
+                                    <option value="Lezárt">Lezárt</option>
                                 </select></td>
                                     </tr>
                                     </tbody>
