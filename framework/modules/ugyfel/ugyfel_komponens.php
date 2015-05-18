@@ -119,15 +119,15 @@ class UgyfelKomponens extends Input_Memo_Site_Component
                                         <td><input class="ugyfel_nev" size="32" type="text" name="nev" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['nev'];}   ?>"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Irányítószám</span></td>
+                                        <td><span class="mandatory">Irányítószám<span style="color:red">*</span></span></td>
                                         <td><input size="32" type="text" name="cim_irszam" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['cim_irszam'];}   ?>"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Város</span></td>
+                                        <td><span class="mandatory">Város<span style="color:red">*</span></span></td>
                                         <td><input size="32" type="text" name="cim_varos" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['cim_varos'];}   ?>"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Utca, házszám</span></td>
+                                        <td><span class="mandatory">Utca, házszám<span style="color:red">*</span></span></td>
                                         <td><input size="32" type="text" name="cim_utca_hsz" value="<?php  if(!empty($_POST['edit'])) {echo $this->ufdata['cim_utca_hsz'];}   ?>"></td>
                                     </tr>
                                     <tr>
