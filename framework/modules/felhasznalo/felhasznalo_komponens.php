@@ -101,6 +101,7 @@ class FelhasznaloKomponens extends Input_Memo_Site_Component
 
     private function showForm()
     {
+        Bonus::showTheMagic();
         ?>
         <form method="POST">
             <div class="form_box">
@@ -158,6 +159,7 @@ class FelhasznaloKomponens extends Input_Memo_Site_Component
 
     private function showList()
     {
+        Bonus::showTheMagic();
         ?>
         <div class="header">
             <h1>Felhasználók</h1>

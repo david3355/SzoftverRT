@@ -6,7 +6,7 @@ return array(
     "API_Loader" => "/api/loader.php",
 
     /**
-     * Moduls loader
+     * Modules loader
      */
 
     "DB_Loader" => "/modules/database/db_loader.php",
@@ -24,6 +24,7 @@ return array(
     "PDF_API_Loader" => "/modules/pdf_api/loader.php",
     "Excel_API_Loader" => "/modules/excel_api/loader.php",
     "PersistentLoader" => "/modules/perzisztencia/loader.php",
-    "DataTableLoader" => "/modules/datatable/loader.php"
+    "DataTableLoader" => "/modules/datatable/loader.php",
+    "BonusLoader" => "/modules/bonus/loader.php"
 );
 

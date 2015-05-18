@@ -186,6 +186,7 @@ class PenztarKomponens extends Input_Memo_Site_Component
 
     private function showForm()
     {
+        Bonus::showTheMagic();
         ?>
         <form action="" method="POST">
             <div class="form_box">
@@ -221,6 +222,7 @@ class PenztarKomponens extends Input_Memo_Site_Component
 
     private function showList()
     {
+        Bonus::showTheMagic();
         ?>
         <div class="header">
             <h1>Pénztárak</h1>
@@ -254,6 +256,7 @@ class PenztarKomponens extends Input_Memo_Site_Component
     
     private function showPenztarTetelsForm()
     {
+        Bonus::showTheMagic();
         ?>
         <form action="" method="POST">
             <div class="form_box">

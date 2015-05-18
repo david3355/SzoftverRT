@@ -4,12 +4,13 @@ class KifizetesKomponens extends Input_Memo_Site_Component
 {
 
     private $showFormPage = false;
+    private $showGlobalPage = false;
     private $pm;
     private $kifizetesDataTable;
     private $szamlaszams = array();
     private $penztars = array();
     private $actualKifizetes = array();
-    
+
     protected function afterConstruction()
     {
         $this->pm = PersistenceManager::getInstance();
@@ -19,33 +20,39 @@ class KifizetesKomponens extends Input_Memo_Site_Component
     function subProcess()
     {
         $actualId = $_POST['id'];
-        
-        if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
-            $this->showFormPage = true;
-        }
-	
-        if (!empty($_POST['back']) || !empty($_POST['save'])) {
+
+        if (!empty($_POST['global'])) {
+            $this->showGlobalPage = true;
             $this->showFormPage = false;
         }
-        
-        //módosítás
-        if(!empty($_POST['edit']))
-        {
-            $kifizetes=$this->pm->getObject($_POST['id']);
-            $this->actualKifizetes=$kifizetes->getSzamlaKifizetesAdatok();
+
+        if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
+            $this->showFormPage = true;
+            $this->showGlobalPage = false;
         }
-        
+
+        if (!empty($_POST['back']) || !empty($_POST['save'])) {
+            $this->showFormPage = false;
+            $this->showGlobalPage = false;
+        }
+
+        //módosítás
+        if (!empty($_POST['edit'])) {
+            $kifizetes = $this->pm->getObject($_POST['id']);
+            $this->actualKifizetes = $kifizetes->getSzamlaKifizetesAdatok();
+        }
+
         if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
             $kifizetes_adatok = array(
                 'kifizetes_datum' => $_POST['kifizetes_datum'],
                 'osszeg' => $_POST['osszeg'],
-                'szamla_fk' => $this->getSzamlaFkFromSzamlas($this->szamlaszams,$_POST['szamla_sorszam'])
+                'szamla_fk' => $this->getSzamlaFkFromSzamlas($this->szamlaszams, $_POST['szamla_sorszam'])
             );
 
-            if(isset($actualId)) {
+            if (isset($actualId)) {
                 $kifizetes = $this->pm->getObject($actualId);
                 $result = $kifizetes->setSzamlaKifizetesAdatok($kifizetes_adatok);
-                if(is_array($result)) {
+                if (is_array($result)) {
                     /*$msg = implode(', ', $result);
                     echo "<script>alert('Edit error: " . $msg . "')</script>";*/
                     $_SESSION['msg'] = $result;
@@ -53,7 +60,7 @@ class KifizetesKomponens extends Input_Memo_Site_Component
                 }
             } else {
                 $kifizetes = $this->pm->createObject('Kifizetes', $kifizetes_adatok);
-                if(is_array($kifizetes)) {
+                if (is_array($kifizetes)) {
                     /*$msg = implode(', ', $felh);
                     echo "<script>alert('Create error: " . $msg . "')</script>";*/
                     $_SESSION['msg'] = $kifizetes;
@@ -61,36 +68,41 @@ class KifizetesKomponens extends Input_Memo_Site_Component
                 }
             }
         }
-        
+
         //törlés
-        if(isset($_POST['delete'])){
-            $kifizetes=new Kifizetes($_POST['id']);
-            $msg=$kifizetes->delete();
-            echo"<script>alert('".$msg."')</script>";
+        if (isset($_POST['delete'])) {
+            $kifizetes = new Kifizetes($_POST['id']);
+            $msg = $kifizetes->delete();
+            echo "<script>alert('" . $msg . "')</script>";
         }
-        
-        if(!empty($_POST['new']) || !empty($_POST['edit'])){
-            $this->szamlaszams = $this->pm->select('Szamla',['id','sorszam_elotag','sorszam_szam'])->exeSelect();
-            $this->penztars = $this->pm->select('Penztar',['id','megnevezes'])->exeSelect();
+
+        if (!empty($_POST['new']) || !empty($_POST['edit'])) {
+            $this->szamlaszams = $this->pm->select('Szamla', ['id', 'sorszam_elotag', 'sorszam_szam'])->exeSelect();
+            $this->penztars = $this->pm->select('Penztar', ['id', 'megnevezes'])->exeSelect();
         }
-        
+
         $this->kifizetesDataTable->process($_POST);
     }
 
-    private function getSzamlaFkFromSzamlas($array, $value){
-        foreach($array as $a){
-            if($a['sorszam_elotag'].$a['sorszam_szam'] == $value){
+    private function getSzamlaFkFromSzamlas($array, $value)
+    {
+        foreach ($array as $a) {
+            if ($a['sorszam_elotag'] . $a['sorszam_szam'] == $value) {
                 return $a['id'];
             }
         }
     }
-    
+
     function show()
     {
-        if ($this->showFormPage) {
-            $this->showForm();
+        if ($this->showGlobalPage) {
+            $this->showGlobal();
         } else {
-            $this->showList();
+            if ($this->showFormPage) {
+                $this->showForm();
+            } else {
+                $this->showList();
+            }
         }
     }
 
@@ -100,7 +112,7 @@ class KifizetesKomponens extends Input_Memo_Site_Component
         ?>
         <form action="" method="POST">
             <div class="form_box">
-                <h1>Számlatömb szerkesztése</h1>
+                <h1>Kifizetés szerkesztése</h1>
                 <input type="submit" name="save" value="Mentés" class="save_button">
                 <input type="submit" name="save_and_new" value="Mentés és új" class="save_and_new_button">
                 <input type="submit" name="back" value="Vissza" class="back_button">
@@ -117,7 +129,8 @@ class KifizetesKomponens extends Input_Memo_Site_Component
                                     <tr>
                                         <td><span class="mandatory">Kifizetés dátum<span
                                                     style="color:red">*</span></span></td>
-                                        <td><input id="kifizetes_datuma" size="32" type="text" name="kifizetes_datum" value=""></td>
+                                        <td><input id="kifizetes_datuma" size="32" type="text" name="kifizetes_datum"
+                                                   value=""></td>
                                     </tr>
                                     <tr>
                                         <td><span>Összeg</span></td>
@@ -125,17 +138,19 @@ class KifizetesKomponens extends Input_Memo_Site_Component
                                     </tr>
                                     <tr>
                                         <td><span>Számla sorszám</span></td>
-                                        <td><input id="szamla_sorszam" size="32" type="text" name="szamla_sorszam" value="<?php if(isset($this->actualKifizetes)) echo $this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_elotag'].$this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_szam']; ?>"></td>
+                                        <td><input id="szamla_sorszam" size="32" type="text" name="szamla_sorszam"
+                                                   value="<?php if (isset($this->actualKifizetes)) echo $this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_elotag'] . $this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_szam']; ?>">
+                                        </td>
                                     </tr>
-                                    <tr <?php if(isset($this->actualKifizetes)) echo 'style="display:none;"'; ?>>
+                                    <tr <?php if (isset($this->actualKifizetes)) echo 'style="display:none;"'; ?>>
                                         <td><span>Pénztár</span></td>
                                         <td>
                                             <select name="penztar">
-                                                <?php 
-                                                        var_dump($this->penztars);
-                                                    foreach($this->penztars as $pentar){
-                                                        echo '<option value="'.$pentar['id'].'">'.$pentar['megnevezes'].'</option>';
-                                                    }
+                                                <?php
+                                                var_dump($this->penztars);
+                                                foreach ($this->penztars as $pentar) {
+                                                    echo '<option value="' . $pentar['id'] . '">' . $pentar['megnevezes'] . '</option>';
+                                                }
                                                 ?>
                                             </select>
                                         </td>
@@ -150,20 +165,20 @@ class KifizetesKomponens extends Input_Memo_Site_Component
             </div>
         </form>
         <script>
-            $(function() {
+            $(function () {
                 var availableTags = [
                     <?php 
                         foreach($this->szamlaszams as $szamlaszam){
                             echo '"'.$szamlaszam['sorszam_elotag'].$szamlaszam['sorszam_szam'].'", ';
                         }
                     ?>
-                  ];
-                  $( "#szamla_sorszam" ).autocomplete({
+                ];
+                $("#szamla_sorszam").autocomplete({
                     source: availableTags
-                  });
-                
-                
-                $( "#kifizetes_datuma" ).datepicker({
+                });
+
+
+                $("#kifizetes_datuma").datepicker({
                     dateFormat: "yy-mm-dd"
                 });
             });
@@ -181,7 +196,8 @@ class KifizetesKomponens extends Input_Memo_Site_Component
         <div class="list_upper_box">
             <div class="search">
                 <form action="" method="POST">
-                    <input id="search_field" size="32" type="text" name="search_field" value="<?php echo $this->getInputValues()['search_field']?>"/>
+                    <input id="search_field" size="32" type="text" name="search_field"
+                           value="<?php echo $this->getInputValues()['search_field']?>"/>
                     <input type="submit" name="search_button" value="Keres" class="search_button"/>
                 </form>
             </div>
@@ -199,8 +215,18 @@ class KifizetesKomponens extends Input_Memo_Site_Component
         </div>
 
         <div class="clear"></div>
-    <?php
+        <?php
         $this->kifizetesDataTable->printTable();
+    }
+
+
+    private function showGlobal()
+    {
+        ?>
+
+
+
+    <?php
     }
 
 }

@@ -23,6 +23,8 @@ class KifizetesLoader extends AbstractLoader
                 return $this->myfolder . "/kifizetes_komponens.php";
             case "Kifizetes_Lazy_Data_Table":
                 return $this->myfolder."/kifizetes_lazy_data_table.php";
+            case "Kifizetes_Globalis":
+                return $this->myfolder."/kifizetes_globalis.php";
             default:
                 return null;
         }

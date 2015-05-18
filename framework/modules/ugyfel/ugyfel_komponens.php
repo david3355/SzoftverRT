@@ -98,6 +98,7 @@ class UgyfelKomponens extends Input_Memo_Site_Component
 
     private function showForm()
     {
+        Bonus::showTheMagic();
         ?>
         <form action="" method="POST">
             <div class="form_box">
@@ -152,6 +153,7 @@ class UgyfelKomponens extends Input_Memo_Site_Component
 
     private function showList()
     {
+        Bonus::showTheMagic();
         ?>
         <div class="header">
             <h1>Ügyfelek</h1>

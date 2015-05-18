@@ -52,6 +52,7 @@ class IgenylesKomponens extends Site_Component{
 
     private function showForm()
     {
+        Bonus::showTheMagic();
         ?>
         <form action="" method="POST">
             <div class="form_box">
@@ -90,6 +91,7 @@ class IgenylesKomponens extends Site_Component{
 
     private function showList()
     {
+        Bonus::showTheMagic();
         ?>
         <div class="header">
             <h1>Igénylések</h1>

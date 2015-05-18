@@ -33,6 +33,7 @@ class AutentikacioKomponens extends Site_Component
 
     private function showLogin()
     {
+        Bonus::showTheMagic();
         ?>
         <form class="form_box" action="" method="POST">
             <table>
