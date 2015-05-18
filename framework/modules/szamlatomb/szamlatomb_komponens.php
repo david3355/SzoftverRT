@@ -94,7 +94,17 @@ class SzamlatombKomponens extends Input_Memo_Site_Component
                             <td valign="top">
                                 <table>
                                     <tbody>                                   
+                                    <?if(!empty($_POST['new'])):?>
+									<tr>
+                                        <td><span>Előtag</span></td>
+                                        <td><input size="32" type="text" name="szamla_elotag" value=""></td>
+                                    </tr>
                                     <tr>
+                                        <td><span>Kezdőszám</span></td>
+                                        <td><input size="32" type="number" name="szamla_aktual_szam" value=""></td>
+                                    </tr>
+									<?endif;?>
+									<tr>
                                         <td><span class="mandatory">Megnevezés<span style="color:red">*</span></span></td>
                                         <td><input size="32" type="text" name="megnevezes" value="<?php echo $this->actualSzamlatomb['megnevezes'] ?>"></td>
                                     </tr>
