@@ -24,7 +24,7 @@ class Kifizetes_Lazy_Data_Table extends Abstract_Lazy_Data_Table {
             array_push($ret, array("id" => $kifizetes['id'],
                                    "kifizetes_datum" => $kifizetes['kifizetes_datum'],
                                    "osszeg" => $kifizetes['osszeg']." Ft",
-                                   "szamla_sorszam" => $szamleFields['sorszam_elotag'].$szamleFields['sorszam_szam']));
+                                   "szamla_sorszam" => $szamleFields['szla_sorszam']));
         }
         
         return $ret;

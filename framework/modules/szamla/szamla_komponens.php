@@ -6,6 +6,7 @@
 class SzamlaKomponens extends Input_Memo_Site_Component
 {
     private $showFormPage = false;
+    private $showKifizetesFormPage = false;
     private $szamlaDataTable;
     private $pm;
     private $szamlaData = null;
@@ -58,7 +59,30 @@ class SzamlaKomponens extends Input_Memo_Site_Component
     function subProcess()
     {
         $aktID = $_POST['id'];
-
+        
+        if(isset($_POST['kifizetes'])){
+            $_SESSION['SZAMLA_KIFIZETES_SZAMLA_ID'] = $aktID;
+            $this->showKifizetesFormPage = true;
+            //$aktID
+        }
+        
+        if(isset($_POST['kifizetes_save'])){
+            $kifizetes_adatok = array(
+                'kifizetes_datum' => $_POST['kifizetes_datum'],
+                'osszeg' => $_POST['osszeg'],
+                'szamla_fk' => $_SESSION['SZAMLA_KIFIZETES_SZAMLA_ID']
+            );
+            
+            $kifizetes = $this->pm->createObject('Kifizetes', $kifizetes_adatok);
+            if (is_array($kifizetes)) {
+                $_SESSION['msg'] = $kifizetes;
+                $this->showKifizetesFormPage = true;
+            } else {
+                unset($_SESSION['SZAMLA_KIFIZETES_SZAMLA_ID']);
+                $this->showKifizetesFormPage = false;
+            }
+        }
+        
         if (!empty($_POST['new']) || !empty($_POST['edit']) || !empty($_POST['save_and_new'])) {
             $this->showFormPage = true;
         }
@@ -145,8 +169,9 @@ class SzamlaKomponens extends Input_Memo_Site_Component
                 }
             }
 
-            if (!empty($_POST['back'])) {
+            if (!empty($_POST['back']) || !empty($_POST['kifizetes_back'])) {
                 $this->showFormPage = false;
+                $this->showKifizetesFormPage = false;
             }
 
             if (!empty($_POST['save'])) {
@@ -155,6 +180,10 @@ class SzamlaKomponens extends Input_Memo_Site_Component
             }
         }
 
+        if(isset($_POST['generatePDF'])){
+            //TODO  Számla PDF #13 https://github.com/david3355/SzoftverRT/issues/13
+        }
+        
         $this->szamlaDataTable->process($_POST);
     }
 
@@ -162,6 +191,8 @@ class SzamlaKomponens extends Input_Memo_Site_Component
     {
         if ($this->showFormPage) {
             $this->showForm();
+        } else if($this->showKifizetesFormPage){
+            $this->showKifizetesForm();
         } else {
             $this->showList();
         }
@@ -590,7 +621,85 @@ class SzamlaKomponens extends Input_Memo_Site_Component
 
     <?php
     }
+    
+    private function showKifizetesForm()
+    {
+        ?>
+        <form action="" method="POST">
+            <div class="form_box">
+                <h1>Kifizetés szerkesztése</h1>
+                <input type="submit" name="kifizetes_save" value="Mentés" class="save_button">
+                <input type="submit" name="kifizetes_back" value="Vissza" class="back_button">
+                <br/>
+                <br/>
 
+                <div class="form_szurke_doboz">
+                    <table class="formtable">
+                        <tbody>
+                        <tr>
+                            <td valign="top">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td><span class="mandatory">Kifizetés dátum<span
+                                                    style="color:red">*</span></span></td>
+                                        <td><input id="kifizetes_datuma" size="32" type="text" name="kifizetes_datum"
+                                                   value=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Összeg</span></td>
+                                        <td><input type="number" name="osszeg" value=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Számla sorszám</span></td>
+                                        <td><input id="szamla_sorszam" size="32" type="text" name="szamla_sorszam" readonly
+                                                   value="<?php echo $this->pm->getObject($_SESSION['SZAMLA_KIFIZETES_SZAMLA_ID'])->getSzamlaAdatok()['szla_sorszam']; ?>"/>   
+                                        </td>
+                                    </tr>
+                                    <tr style="display:none;">
+                                        <td><span>Pénztár</span></td>
+                                        <td>
+                                            <select name="penztar">
+                                                <?php
+                                                var_dump($this->penztars);
+                                                foreach ($this->penztars as $pentar) {
+                                                    echo '<option value="' . $pentar['id'] . '">' . $pentar['megnevezes'] . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+        <script>
+            $(function () {
+                var availableTags = [
+                    <?php 
+                        foreach($this->szamlaszams as $szamlaszam){
+                            echo '"'.$szamlaszam['szla_sorszam'].'", ';
+                        }
+                    ?>
+                ];
+                $("#szamla_sorszam").autocomplete({
+                    source: availableTags
+                });
+
+
+                $("#kifizetes_datuma").datepicker({
+                    dateFormat: "yy-mm-dd"
+                });
+            });
+        </script>
+    <?php
+    }
+    
     private function showList()
     {
         Bonus::showTheMagic();

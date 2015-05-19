@@ -88,6 +88,14 @@ class Szamla_Lazy_Data_Table extends Abstract_Lazy_Data_Table
                 'text' => 'Részletek'
             ),
             array(
+                'name' => 'generatePDF',
+                'text' => 'PDF generálás'
+            ),
+            array(
+                'name' => 'kifizetes',
+                'text' => 'Kifizetés'
+            ),
+            array(
                 'name' => 'delete',
                 'text' => 'Törlés'
             ),

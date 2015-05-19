@@ -43,12 +43,13 @@ class KifizetesKomponens extends Input_Memo_Site_Component
         }
 
         if (!empty($_POST['save_and_new']) || !empty($_POST['save'])) {
+            $this->szamlaszams = $this->pm->select('Szamla', ['id', 'szla_sorszam'])->exeSelect();
             $kifizetes_adatok = array(
                 'kifizetes_datum' => $_POST['kifizetes_datum'],
                 'osszeg' => $_POST['osszeg'],
                 'szamla_fk' => $this->getSzamlaFkFromSzamlas($this->szamlaszams, $_POST['szamla_sorszam'])
             );
-
+            
             if (isset($actualId)) {
                 $kifizetes = $this->pm->getObject($actualId);
                 $result = $kifizetes->setSzamlaKifizetesAdatok($kifizetes_adatok);
@@ -77,7 +78,7 @@ class KifizetesKomponens extends Input_Memo_Site_Component
         }
 
         if (!empty($_POST['new']) || !empty($_POST['edit'])) {
-            $this->szamlaszams = $this->pm->select('Szamla', ['id', 'sorszam_elotag', 'sorszam_szam'])->exeSelect();
+            $this->szamlaszams = $this->pm->select('Szamla', ['id', 'szla_sorszam'])->exeSelect();
             $this->penztars = $this->pm->select('Penztar', ['id', 'megnevezes'])->exeSelect();
         }
 
@@ -87,7 +88,7 @@ class KifizetesKomponens extends Input_Memo_Site_Component
     private function getSzamlaFkFromSzamlas($array, $value)
     {
         foreach ($array as $a) {
-            if ($a['sorszam_elotag'] . $a['sorszam_szam'] == $value) {
+            if ($a['szla_sorszam'] == $value) {
                 return $a['id'];
             }
         }
@@ -139,7 +140,7 @@ class KifizetesKomponens extends Input_Memo_Site_Component
                                     <tr>
                                         <td><span>Számla sorszám</span></td>
                                         <td><input id="szamla_sorszam" size="32" type="text" name="szamla_sorszam"
-                                                   value="<?php if (isset($this->actualKifizetes)) echo $this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_elotag'] . $this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['sorszam_szam']; ?>">
+                                                   value="<?php if (isset($this->actualKifizetes['szamla_fk'])) echo $this->pm->getObject($this->actualKifizetes['szamla_fk'])->getSzamlaAdatok()['szla_sorszam']; ?>"/>   
                                         </td>
                                     </tr>
                                     <tr <?php if (isset($this->actualKifizetes)) echo 'style="display:none;"'; ?>>
@@ -169,7 +170,7 @@ class KifizetesKomponens extends Input_Memo_Site_Component
                 var availableTags = [
                     <?php 
                         foreach($this->szamlaszams as $szamlaszam){
-                            echo '"'.$szamlaszam['sorszam_elotag'].$szamlaszam['sorszam_szam'].'", ';
+                            echo '"'.$szamlaszam['szla_sorszam'].'", ';
                         }
                     ?>
                 ];

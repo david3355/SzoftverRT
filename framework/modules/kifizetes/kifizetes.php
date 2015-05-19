@@ -76,7 +76,7 @@ class Kifizetes extends Persistent
      * @return mixed array
      */
     protected static function getOwnParameters() {
-        return array('id', 'kifizetes_datum', 'osszeg');
+        return array('id', 'kifizetes_datum', 'osszeg', 'szamla_fk');
     }
 }
 
