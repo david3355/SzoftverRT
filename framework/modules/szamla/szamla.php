@@ -55,10 +55,22 @@ class Szamla extends Persistent
         $errors = array();
         
         if(isset($params['szlatomb_obj_id'])){
-            $lezarasDatum = $this->pm->getObject($params['szlatomb_obj_id'])->getSzamlatombAdatok()['lezaras_datum'];
-            if($lezarasDatum != '0000-00-00'){
-                $errors[] = 'LEZART_SZLA_TOMB';
-            }
+            
+			$szt=$this->pm->getObject($params['szlatomb_obj_id']);
+			if(!empty($szt))
+			{
+				$lezarasDatum = $this->pm->getObject($params['szlatomb_obj_id'])->getSzamlatombAdatok()['lezaras_datum'];
+				if($lezarasDatum != '0000-00-00'){
+					$errors[] = 'LEZART_SZLA_TOMB';
+				}
+			}
+			else
+			{
+				$errors[]="INVALID_SZLA_TOMB";
+				$errors[]="<script>alert('Az ördög nem alszik, de mi sem! :D');</script>";
+			}
+			
+			
         }
         
         if (empty($params['szlatomb_obj_id'])) $errors[] = 'NINCS_SZLA_TOMB';
