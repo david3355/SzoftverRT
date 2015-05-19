@@ -181,7 +181,8 @@ class SzamlaKomponens extends Input_Memo_Site_Component
         }
 
         if(isset($_POST['generatePDF'])){
-            //TODO  Számla PDF #13 https://github.com/david3355/SzoftverRT/issues/13
+            $pdf_api = new PDF_API();
+            $pdf_api->handleRequest("getPDF",array('id' => $aktID));
         }
         
         $this->szamlaDataTable->process($_POST);
